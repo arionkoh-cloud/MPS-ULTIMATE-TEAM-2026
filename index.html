@@ -401,7 +401,12 @@
     'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/ArrDee%20-%20Oliver%20Twist%20%5BMusic%20Video%5D%20%20GRM%20Daily.mp3',
     'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/ijuswant.mp3',
     'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/Imagine%20Dragons%20-%20On%20Top%20Of%20The%20World%20(Official%20Music%20Video).mp3',
-    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/Young%20Miko%20-%20WASSUP%20(Official).mp3'
+    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/Young%20Miko%20-%20WASSUP%20(Official).mp3',
+    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/truenoturrazo.mp3',
+    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/truenollantas.mp3',
+    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/sofybigtalk.mp3',
+    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/nombespacefortwo.mp3',
+    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/gorillazorange.mp3'
 ];
         let musicaFondo = new Audio();
         musicaFondo.volume = 0.2;
@@ -479,10 +484,12 @@
                     const filas = csv.split('\n').slice(1);
                     databaseJugadores = filas.map(f => {
                         const d = f.split(',');
-                        return { id: d[0]?.trim(), name: d[1]?.trim(), grl: parseInt(d[2]?.trim()) || 0, pos: d[3]?.trim(), rareza: d[4]?.trim().toLowerCase(), foto: d[5]?.trim() };
+                        return { id: d[0]?.trim(), name: d[1]?.trim(), grl: parseInt(d[2]?.trim()) || 0, pos: d[3]?.trim(), rareza: d[4]?.trim().toLowerCase(), robloxId: d[5]?.trim(), foto: "" };
                     });
                 }
             } catch (e) { console.warn("Error Sheets"); }
+
+            await cargarFotosRoblox();
 
             bar.style.width = "50%";
 
@@ -502,6 +509,53 @@
             onSnapshot(qMercado, (snapshot) => {
                 renderizarMercado(snapshot);
             });
+        }
+
+
+        // --- FOTOS ROBLOX ---
+        const ROBLOX_FALLBACK = 'https://tr.rbxcdn.com/38c9c0fcce0f3ae07e2ac9e5afe7e9b2/150/150/AvatarHeadshot/Png';
+
+        async function cargarFotosRoblox() {
+            const ids = [...new Set(
+                databaseJugadores
+                    .map(j => j.robloxId)
+                    .filter(id => id && id !== '' && !isNaN(Number(id)))
+            )];
+
+            if (ids.length === 0) return;
+
+            const fotosMap = {};
+
+            // La API de Roblox acepta hasta 100 IDs por petición
+            const BATCH_SIZE = 100;
+            for (let i = 0; i < ids.length; i += BATCH_SIZE) {
+                const lote = ids.slice(i, i + BATCH_SIZE);
+                const robloxUrl = 'https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=' + lote.join(',') + '&size=420x420&format=Png&isCircular=false';
+
+                try {
+                    const res = await fetch('https://corsproxy.io/?' + encodeURIComponent(robloxUrl));
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    const json = await res.json();
+
+                    for (const item of (json.data || [])) {
+                        fotosMap[String(item.targetId)] = (item.state === 'Completed' && item.imageUrl)
+                            ? item.imageUrl
+                            : ROBLOX_FALLBACK;
+                    }
+                } catch (err) {
+                    console.warn('[Roblox] Proxy falló, usando URL directa:', err);
+                    // Fallback: URL directa funciona como <img src> aunque no como fetch
+                    for (const id of lote) {
+                        fotosMap[id] = fotosMap[id] || ('https://www.roblox.com/headshot-thumbnail/image?userId=' + id + '&width=420&height=420&format=png');
+                    }
+                }
+            }
+
+            // Asignar foto a TODOS los jugadores con ese robloxId
+            for (const jugador of databaseJugadores) {
+                const id = jugador.robloxId;
+                jugador.foto = (id && fotosMap[id]) ? fotosMap[id] : ROBLOX_FALLBACK;
+            }
         }
 
         function actualizarUI() {
@@ -539,7 +593,7 @@
                                     <div class="badge-venta">EN VENTA</div>
                                     <div class="ovr">${j.grl}</div>
                                     <div class="pos">${j.pos}</div>
-                                    <img src="${j.foto}">
+                                    <img src="${j.foto}" onerror="this.onerror=null;this.src=ROBLOX_FALLBACK">
                                     <div class="name">${j.name}</div>
                                 </div>
                                 <div class="card-actions-container">
@@ -571,7 +625,7 @@
                         <div class="card ${j.rareza}">
                             <div class="ovr">${j.grl}</div>
                             <div class="pos">${j.pos}</div>
-                            <img src="${j.foto}">
+                            <img src="${j.foto}" onerror="this.onerror=null;this.src=ROBLOX_FALLBACK">
                             <div class="name">${j.name}</div>
                         </div>
                         <div class="card-actions-container">
@@ -688,7 +742,7 @@ document.getElementById('btn-confirm-yes').onclick = () => {
                 <div class="card ${j.rareza}" style="transform: scale(0.9); margin: 0 auto;">
                     <div class="ovr">${j.grl}</div>
                     <div class="pos">${j.pos}</div>
-                    <img src="${j.foto}">
+                    <img src="${j.foto}" onerror="this.onerror=null;this.src=ROBLOX_FALLBACK">
                     <div class="name">${j.name}</div>
                 </div>
             `;
@@ -740,7 +794,7 @@ document.getElementById('btn-confirm-yes').onclick = () => {
                     <div class="card ${j.rareza}">
                         <div class="ovr">${j.grl}</div>
                         <div class="pos">${j.pos}</div>
-                        <img src="${j.foto}">
+                        <img src="${j.foto}" onerror="this.onerror=null;this.src=ROBLOX_FALLBACK">
                         <div class="name">${j.name}</div>
                     </div>
                     <div class="card-actions-container">
@@ -868,7 +922,7 @@ function mostrarAnimacionPack(jugador) {
         <div class="card ${jugador.rareza} walkout-animation" style="width: 280px; transform: scale(1.1);">
             <div class="ovr" style="font-size: 2.2rem;">${jugador.grl}</div>
             <div class="pos">${jugador.pos}</div>
-            <img src="${jugador.foto}">
+            <img src="${jugador.foto}" onerror="this.onerror=null;this.src=ROBLOX_FALLBACK">
             <div class="name" style="font-size: 1.4rem; bottom: 18%;">${jugador.name}</div>
         </div>
     `;
@@ -897,5 +951,3 @@ window.finalizarApertura = () => {
 
 
 </html>
-
-
