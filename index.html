@@ -342,22 +342,19 @@
     </div>
     
     <div class="pack-container">
-        <div class="pack" style="background: linear-gradient(135deg, #1a1a2e 0%, #cd7f32 100%); border-color: #cd7f32;">
-            <h2 style="font-style: italic; font-size: 2rem;">BRONCE</h2>
-            <p style="color: white; margin-bottom: 15px; font-weight: bold;">GRATIS</p>
+        <div class="pack" style="background: transparent; border-color: #cd7f32;">
+            <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/eacfef44e11bc8afda3957f7d14a71fc59c6ee94/assets/sbronce.png?raw=true" style="width: 100%; height: 200px; object-fit: contain; margin-bottom: 10px;">
             <button class="btn-card-action" onclick="abrirPack('bronce', 'gratis')">ABRIR GRATIS</button>
         </div>
 
-        <div class="pack" style="background: linear-gradient(135deg, #1a1a2e 0%, #95a5a6 100%); border-color: #95a5a6;">
-            <h2 style="font-style: italic; font-size: 2rem;">PLATA</h2>
-            <p style="color: white; margin-bottom: 15px; font-weight: bold;">66-85 GRL</p>
+        <div class="pack" style="background: transparent; border-color: #95a5a6;">
+            <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/main/assets/splata.png?raw=true" style="width: 100%; height: 200px; object-fit: contain; margin-bottom: 10px;">
             <button class="btn-card-action" onclick="abrirPack('plata', 'coins')">🪙 1,000</button>
             <button class="btn-card-action" style="background: #0066ff; margin-top: 5px;" onclick="abrirPack('plata', 'points')">💎 20</button>
         </div>
 
-        <div class="pack" style="background: linear-gradient(135deg, #1a1a2e 0%, #f1c40f 100%); border-color: #f1c40f;">
-            <h2 style="font-style: italic; font-size: 2rem;">ORO</h2>
-            <p style="color: white; margin-bottom: 15px; font-weight: bold;">75-95 GRL</p>
+        <div class="pack" style="background: transparent; border-color: #f1c40f;">
+            <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/main/assets/soro.png?raw=true" style="width: 100%; height: 200px; object-fit: contain; margin-bottom: 10px;">
             <button class="btn-card-action" onclick="abrirPack('oro', 'coins')">🪙 5,000</button>
             <button class="btn-card-action" style="background: #0066ff; margin-top: 5px;" onclick="abrirPack('oro', 'points')">💎 100</button>
         </div>
@@ -401,12 +398,7 @@
     'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/ArrDee%20-%20Oliver%20Twist%20%5BMusic%20Video%5D%20%20GRM%20Daily.mp3',
     'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/ijuswant.mp3',
     'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/Imagine%20Dragons%20-%20On%20Top%20Of%20The%20World%20(Official%20Music%20Video).mp3',
-    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/Young%20Miko%20-%20WASSUP%20(Official).mp3',
-    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/truenoturrazo.mp3',
-    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/truenollantas.mp3',
-    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/sofybigtalk.mp3',
-    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/nombespacefortwo.mp3',
-    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/gorillazorange.mp3'
+    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/Young%20Miko%20-%20WASSUP%20(Official).mp3'
 ];
         let musicaFondo = new Audio();
         musicaFondo.volume = 0.2;
@@ -436,21 +428,6 @@
                 document.getElementById('auth-form').style.display = 'flex';
                 document.getElementById('p-container').style.display = 'none';
             }
-            
-            let ultimaCancion = -1;
-
-window.reproducirSiguienteCualquiera = () => {
-    let indice;
-
-    do {
-        indice = Math.floor(Math.random() * playlist.length);
-    } while (playlist.length > 1 && indice === ultimaCancion);
-
-    ultimaCancion = indice;
-
-    musicaFondo.src = playlist[indice];
-    musicaFondo.play().catch(e => console.log(e));
-};
         });
 
         // --- AUTH LÓGICA ---
