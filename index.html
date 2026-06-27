@@ -205,15 +205,17 @@
 .pack-container {
     display: flex;
     justify-content: center;
-    gap: 30px;
-    padding: 50px;
-    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px 30px;
+    flex-wrap: nowrap;
+    height: calc(100vh - 160px);
 }
 
 .pack {
-    width: 220px;
-    height: 320px;
-    background: linear-gradient(135deg, #1a1a2e 0%, #00ffaa 100%);
+    flex: 1;
+    max-width: 33%;
+    height: 100%;
+    background: transparent;
     border-radius: 12px;
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
@@ -343,18 +345,18 @@
     
     <div class="pack-container">
         <div class="pack" style="background: transparent; border-color: #cd7f32;">
-            <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/eacfef44e11bc8afda3957f7d14a71fc59c6ee94/assets/sbronce.png?raw=true" style="width: 100%; height: 200px; object-fit: contain; margin-bottom: 10px;">
+            <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/eacfef44e11bc8afda3957f7d14a71fc59c6ee94/assets/sbronce.png?raw=true" style="width: 100%; flex: 1; object-fit: contain; margin-bottom: 15px; min-height: 0;">
             <button class="btn-card-action" onclick="abrirPack('bronce', 'gratis')">ABRIR GRATIS</button>
         </div>
 
         <div class="pack" style="background: transparent; border-color: #95a5a6;">
-            <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/main/assets/splata.png?raw=true" style="width: 100%; height: 200px; object-fit: contain; margin-bottom: 10px;">
+            <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/main/assets/splata.png?raw=true" style="width: 100%; flex: 1; object-fit: contain; margin-bottom: 15px; min-height: 0;">
             <button class="btn-card-action" onclick="abrirPack('plata', 'coins')">🪙 1,000</button>
             <button class="btn-card-action" style="background: #0066ff; margin-top: 5px;" onclick="abrirPack('plata', 'points')">💎 20</button>
         </div>
 
         <div class="pack" style="background: transparent; border-color: #f1c40f;">
-            <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/main/assets/soro.png?raw=true" style="width: 100%; height: 200px; object-fit: contain; margin-bottom: 10px;">
+            <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/main/assets/soro.png?raw=true" style="width: 100%; flex: 1; object-fit: contain; margin-bottom: 15px; min-height: 0;">
             <button class="btn-card-action" onclick="abrirPack('oro', 'coins')">🪙 5,000</button>
             <button class="btn-card-action" style="background: #0066ff; margin-top: 5px;" onclick="abrirPack('oro', 'points')">💎 100</button>
         </div>
@@ -943,3 +945,5 @@ window.finalizarApertura = () => {
 
 
 </html>
+
+
