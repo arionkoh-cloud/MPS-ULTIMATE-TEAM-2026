@@ -9,8 +9,6 @@
             --primary: #00ffaa;
             --bg: #050508;
             --smooth-curve: cubic-bezier(0.19, 1, 0.22, 1);
-            
-            /* TEXTURAS DE CARTAS */
             --bg-oro: url('https://cdn3.futbin.com/content/fifa26/img/cards/hd/1_gold.png?fm=png&ixlib=java-2.1.0&verzion=5&w=644&s=f0389e2700687b8be1ceb7f5294462ae');
             --bg-plata: url('https://cdn3.futbin.com/content/fifa26/img/cards/hd/1_silver.png?fm=png&ixlib=java-2.1.0&verzion=5&w=644&s=b1079f24f16767420cb6396ed3f5fe9b');
             --bg-bronce: url('https://cdn3.futbin.com/content/fifa26/img/cards/hd/1_bronze.png?fm=png&ixlib=java-2.1.0&verzion=5&w=644&s=4ad307433d3abe0e4eaf4e06573784e0');
@@ -20,146 +18,63 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'DIN Condensed', 'Arial Narrow', sans-serif; }
         body { background-color: var(--bg); color: white; overflow: hidden; height: 100vh; }
 
-        /* --- PANTALLA DE CARGA Y ACCESO --- */
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: radial-gradient(circle at 30% 50%, #1a1a2e 0%, #050508 100%);
             display: flex; align-items: center; z-index: 1000;
             transition: opacity 0.8s var(--smooth-curve), visibility 0.8s; padding: 0 10%;
         }
-
         .loader-left { position: relative; flex: 1; z-index: 10; }
         .loader-logo { font-size: 8rem; font-weight: 900; font-style: italic; margin-bottom: -10px; color: white; letter-spacing: -3px; line-height: 1; }
         .edition { color: var(--primary); font-size: 1.8rem; margin-bottom: 30px; letter-spacing: 8px; font-weight: bold; }
-
         #auth-form { display: flex; flex-direction: column; gap: 12px; width: 350px; margin-bottom: 20px; }
-        #auth-form input { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 255, 170, 0.3); padding: 12px; color: white; border-radius: 4px; outline: none; font-size: 1.1rem; transition: 0.3s; }
-        #auth-form input:focus { border-color: var(--primary); background: rgba(255, 255, 255, 0.1); }
-
+        #auth-form input { background: rgba(255,255,255,0.05); border: 1px solid rgba(0,255,170,0.3); padding: 12px; color: white; border-radius: 4px; outline: none; font-size: 1.1rem; transition: 0.3s; }
+        #auth-form input:focus { border-color: var(--primary); background: rgba(255,255,255,0.1); }
         .auth-buttons { display: flex; gap: 10px; }
         .btn-action { flex: 1; padding: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; border-radius: 4px; transition: 0.3s; }
         #login-btn { background: var(--primary); color: black; border: none; }
         #register-btn { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
-        
         .progress-container { width: 350px; height: 6px; background: rgba(255,255,255,0.1); margin-bottom: 30px; border-radius: 10px; overflow: hidden; display: none; }
         .progress-bar { width: 0%; height: 100%; background: var(--primary); box-shadow: 0 0 20px var(--primary); transition: width 0.4s ease; }
-
         #continue-btn { background: transparent; border: 2px solid var(--primary); color: var(--primary); padding: 15px 45px; font-size: 1.8rem; text-transform: uppercase; font-style: italic; cursor: pointer; opacity: 0; transform: translateY(30px); transition: all 0.5s var(--smooth-curve); pointer-events: none; border-radius: 4px; }
         #continue-btn.ready { opacity: 1; transform: translateY(0); pointer-events: auto; animation: blink 1.5s infinite; }
-
         .player-render { position: absolute; left: 15%; bottom: -5%; height: 115vh; z-index: 1; pointer-events: none; }
-        .player-render img { height: 100%; width: auto; filter: drop-shadow(20px 0 50px rgba(0, 255, 170, 0.15)); animation: slideIn 1.8s var(--smooth-curve); }
+        .player-render img { height: 100%; width: auto; filter: drop-shadow(20px 0 50px rgba(0,255,170,0.15)); animation: slideIn 1.8s var(--smooth-curve); }
 
         @keyframes slideIn { from { transform: translateX(-150px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
         @keyframes blink { 0%, 100% { opacity: 1; box-shadow: 0 0 5px var(--primary); } 50% { opacity: 0.7; box-shadow: 0 0 25px var(--primary); } }
 
-        /* --- MENÚ PRINCIPAL --- */
         #main-content { opacity: 0; display: flex; flex-direction: column; height: 100vh; transition: opacity 1s ease; pointer-events: none; }
         header { padding: 40px 60px; display: flex; justify-content: space-between; align-items: center; }
         .user-box { display: flex; align-items: center; gap: 20px; }
-        #logout-btn { background: rgba(255, 50, 50, 0.2); border: 1px solid #ff3232; color: #ff3232; padding: 5px 15px; cursor: pointer; text-transform: uppercase; font-weight: bold; border-radius: 4px; }
-        .stats { display: flex; gap: 20px; background: rgba(255, 255, 255, 0.05); padding: 10px 25px; border-radius: 50px; }
-        
+        #logout-btn { background: rgba(255,50,50,0.2); border: 1px solid #ff3232; color: #ff3232; padding: 5px 15px; cursor: pointer; text-transform: uppercase; font-weight: bold; border-radius: 4px; }
+        .stats { display: flex; gap: 20px; background: rgba(255,255,255,0.05); padding: 10px 25px; border-radius: 50px; }
         .main-menu { flex: 1; display: flex; padding: 0 40px 60px; gap: 15px; }
-        .menu-btn { flex: 1; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; padding: 40px; display: flex; flex-direction: column; justify-content: flex-end; transition: flex 0.6s var(--smooth-curve), background 0.4s ease; cursor: pointer; position: relative; overflow: hidden; }
-        .menu-btn:hover { flex: 3; background: rgba(255, 255, 255, 0.08); border-color: var(--primary); }
+        .menu-btn { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 40px; display: flex; flex-direction: column; justify-content: flex-end; transition: flex 0.6s var(--smooth-curve), background 0.4s ease; cursor: pointer; position: relative; overflow: hidden; }
+        .menu-btn:hover { flex: 3; background: rgba(255,255,255,0.08); border-color: var(--primary); }
         .menu-btn h2 { font-size: 3.5rem; text-transform: uppercase; font-style: italic; line-height: 0.9; }
 
-        /* --- SECCIONES FULL SCREEN --- */
-        .full-screen-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #10101a 0%, #050508 100%);
-            z-index: 500; display: none; padding: 60px; overflow-y: auto;
-            animation: fadeIn 0.4s var(--smooth-curve);
-        }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; border-bottom: 1px solid rgba(0, 255, 170, 0.2); padding-bottom: 20px; }
+        .full-screen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #10101a 0%, #050508 100%); z-index: 500; display: none; padding: 60px; overflow-y: auto; animation: fadeIn 0.4s var(--smooth-curve); }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; border-bottom: 1px solid rgba(0,255,170,0.2); padding-bottom: 20px; }
         .italic-title { font-size: 3.5rem; font-style: italic; text-transform: uppercase; }
         .primary-text { color: var(--primary); }
 
-        /* MODIFICADO: Ajuste de Grid para soportar contenedores más altos (carta + botones) */
-        .grid-container { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); 
-            gap: 50px 25px; /* Más espacio vertical */
-            align-items: start; 
-        }
-
-        /* --- CONTENEDOR DE CARTA Y ACCIONES --- */
-        .card-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 8px; /* Espacio entre carta y botones */
-        }
-
-        .card {
-            aspect-ratio: 2/3;
-            border-radius: 0; 
-            padding: 0; 
-            position: relative;
-            color: #3e3e3e; 
-            text-align: center;
-            transition: transform 0.3s;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
-            background-position: center;
-            overflow: hidden; 
-        }
-
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 50px 25px; align-items: start; }
+        .card-wrapper { display: flex; flex-direction: column; gap: 8px; }
+        .card { aspect-ratio: 2/3; border-radius: 0; padding: 0; position: relative; color: #3e3e3e; text-align: center; transition: transform 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.4); background-size: 100% 100%; background-repeat: no-repeat; background-position: center; overflow: hidden; }
         .card:hover { transform: translateY(-5px) scale(1.02); z-index: 2; }
-
-        /* Backgrounds */
         .card.oro { background-image: var(--bg-oro); color: #3e3e3e; }
         .card.plata { background-image: var(--bg-plata); color: #3e3e3e; }
         .card.bronce { background-image: var(--bg-bronce); color: #3e3e3e; }
         .card.especial { background: var(--especial); color: white; border-radius: 10px; }
-        
-        /* Stats y Foto */
         .card img { width: 80%; position: absolute; top: 22%; left: 50%; transform: translateX(-50%); z-index: 0; }
         .card .ovr { position: absolute; top: 18%; left: 18%; font-size: 1.6rem; font-weight: 900; z-index: 1; }
         .card .pos { position: absolute; top: 32%; left: 18%; font-size: 0.9rem; font-weight: bold; z-index: 1; }
-        
-        /* MODIFICADO: Nombre bajado considerablemente */
-        .card .name { 
-            position: absolute;
-            bottom: 18%; /* Antes 38%, ahora 18% para que quede debajo de la foto */
-            width: 100%; 
-            font-weight: 900; 
-            text-transform: uppercase; 
-            text-align: center;
-            font-size: 1rem;
-            z-index: 1;
-            white-space: nowrap; 
-            overflow: hidden; 
-            text-overflow: ellipsis; 
-            padding: 0 10px;
-        }
+        .card .name { position: absolute; bottom: 18%; width: 100%; font-weight: 900; text-transform: uppercase; text-align: center; font-size: 1rem; z-index: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 10px; }
 
-        /* --- BOTONES DEBAJO DE LA CARTA (NUEVO) --- */
-        .card-actions-container {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            width: 100%;
-        }
-
-        .btn-card-action { 
-            /* Quitamos posición absoluta y estilos antiguos */
-            position: static;
-            width: 100%;
-            background: rgba(255,255,255,0.1); 
-            color: white; 
-            border: 1px solid rgba(255,255,255,0.2); 
-            padding: 8px; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-size: 0.75rem; 
-            font-weight: bold; 
-            transition: 0.2s; 
-            text-transform: uppercase; 
-        }
+        .card-actions-container { display: flex; flex-direction: column; gap: 5px; width: 100%; }
+        .btn-card-action { position: static; width: 100%; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: bold; transition: 0.2s; text-transform: uppercase; }
         .btn-card-action:hover { background: var(--primary); color: black; border-color: var(--primary); }
-        
         .seller-info { font-size: 0.65rem; font-weight: bold; text-transform: uppercase; text-align: center; color: rgba(255,255,255,0.7); margin-bottom: 2px; }
 
         .btn-ui { padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; border: none; text-transform: uppercase; }
@@ -167,92 +82,29 @@
         .btn-back:hover { background: var(--primary); }
         .btn-duplicates { background: #ff3232; color: white; margin-right: 10px; }
 
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
-            z-index: 2000; display: none; align-items: center; justify-content: center;
-        }
-
-        .modal-content {
-            background: #1a1a2e; border: 2px solid var(--primary);
-            padding: 30px; border-radius: 15px; text-align: center; width: 320px;
-            box-shadow: 0 0 50px rgba(0, 255, 170, 0.2); animation: slideUp 0.3s var(--smooth-curve);
-        }
-
-        #input-precio-venta {
-            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--primary); padding: 12px;
-            color: white; border-radius: 4px; font-size: 1.5rem; margin-top: 20px; outline: none; text-align: center;
-        }
-
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); z-index: 2000; display: none; align-items: center; justify-content: center; }
+        .modal-content { background: #1a1a2e; border: 2px solid var(--primary); padding: 30px; border-radius: 15px; text-align: center; width: 320px; box-shadow: 0 0 50px rgba(0,255,170,0.2); animation: slideUp 0.3s var(--smooth-curve); }
+        #input-precio-venta { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--primary); padding: 12px; color: white; border-radius: 4px; font-size: 1.5rem; margin-top: 20px; outline: none; text-align: center; }
         #modal-card-preview { margin: 15px auto; width: 160px; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    
-        .sub-titulo {
-            font-size: 1.8rem; font-style: italic; color: var(--primary); margin-bottom: 20px;
-            text-transform: uppercase; border-left: 4px solid var(--primary); padding-left: 15px;
-        }
 
+        .sub-titulo { font-size: 1.8rem; font-style: italic; color: var(--primary); margin-bottom: 20px; text-transform: uppercase; border-left: 4px solid var(--primary); padding-left: 15px; }
         .card-venda { filter: saturate(0.5); }
-        .badge-venta {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg);
-            background: #ff3232; color: white; padding: 5px 15px; font-weight: bold; font-size: 1.2rem;
-            border: 2px solid white; z-index: 15; pointer-events: none; box-shadow: 0 0 15px rgba(255, 50, 50, 0.5);
-        }
-    
-    /* --- ESTILOS DE LA TIENDA Y ANIMACIÓN --- */
-.pack-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 40px;
-    padding: 20px 30px;
-    height: calc(100vh - 160px);
-}
+        .badge-venta { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); background: #ff3232; color: white; padding: 5px 15px; font-weight: bold; font-size: 1.2rem; border: 2px solid white; z-index: 15; pointer-events: none; box-shadow: 0 0 15px rgba(255,50,50,0.5); }
 
-.pack {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    background: transparent;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
-    border: 3px solid var(--primary);
-    padding: 12px;
-}
+        .pack-container { display: flex; justify-content: center; align-items: center; gap: 40px; padding: 20px 30px; height: calc(100vh - 160px); }
+        .pack { display: flex; flex-direction: column; align-items: center; gap: 10px; background: transparent; border-radius: 12px; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; border: 3px solid var(--primary); padding: 12px; }
+        .pack:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--primary); }
 
-.pack:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 30px var(--primary);
-}
-
-#reveal-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: radial-gradient(circle, #1a1a2e 0%, #050508 100%);
-    z-index: 3000;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.walkout-animation {
-    animation: packFlash 1.5s forwards, slideUp 0.8s var(--smooth-curve);
-}
-
-@keyframes packFlash {
-    0% { filter: brightness(1) blur(0px); }
-    50% { filter: brightness(5) blur(15px); }
-    100% { filter: brightness(1) blur(0px); }
-}
+        #reveal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, #1a1a2e 0%, #050508 100%); z-index: 3000; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        .walkout-animation { animation: packFlash 1.5s forwards, slideUp 0.8s var(--smooth-curve); }
+        @keyframes packFlash { 0% { filter: brightness(1) blur(0px); } 50% { filter: brightness(5) blur(15px); } 100% { filter: brightness(1) blur(0px); } }
     </style>
 </head>
+<body>
 
-    <body>
     <div id="loader">
         <div class="loader-left">
             <div class="loader-logo">MPS UT</div>
@@ -287,31 +139,29 @@
             </div>
         </header>
         <main class="main-menu">
-    <div class="menu-btn"><h2>DIVISION<br>RIVALS</h2></div>
-    <div class="menu-btn" onclick="abrirSeccion('club-section')"><h2>MI<br>CLUB</h2></div>
-    <div class="menu-btn" onclick="abrirSeccion('mercado-section')"><h2>MERCADO DE<br>FICHAJES</h2></div>
-    <div class="menu-btn" onclick="abrirSeccion('tienda-section')"><h2>TIENDA</h2></div>
-</main>
+            <div class="menu-btn"><h2>DIVISION<br>RIVALS</h2></div>
+            <div class="menu-btn" onclick="abrirSeccion('club-section')"><h2>MI<br>CLUB</h2></div>
+            <div class="menu-btn" onclick="abrirSeccion('mercado-section')"><h2>MERCADO DE<br>FICHAJES</h2></div>
+            <div class="menu-btn" onclick="abrirSeccion('tienda-section')"><h2>TIENDA</h2></div>
+        </main>
     </div>
 
-   <div id="club-section" class="full-screen-overlay">
-    <div class="section-header">
-        <h1 class="italic-title">MI <span class="primary-text">CLUB</span></h1>
-        <div>
-            <button class="btn-ui btn-duplicates" onclick="venderRepetidos()">Vender Repetidos</button>
-            <button class="btn-ui btn-back" onclick="cerrarSeccion('club-section')">VOLVER</button>
+    <div id="club-section" class="full-screen-overlay">
+        <div class="section-header">
+            <h1 class="italic-title">MI <span class="primary-text">CLUB</span></h1>
+            <div>
+                <button class="btn-ui btn-duplicates" onclick="venderRepetidos()">Vender Repetidos</button>
+                <button class="btn-ui btn-back" onclick="cerrarSeccion('club-section')">VOLVER</button>
+            </div>
         </div>
+        <div id="seccion-mis-ventas" style="display:none; margin-bottom:40px;">
+            <h2 class="sub-titulo">MIS SUBASTAS ACTIVAS</h2>
+            <div class="grid-container" id="club-ventas-grid"></div>
+            <hr style="border:0; border-top:1px solid rgba(0,255,170,0.2); margin-top:30px;">
+        </div>
+        <h2 class="sub-titulo">MI PLANTILLA</h2>
+        <div class="grid-container" id="club-grid"></div>
     </div>
-
-    <div id="seccion-mis-ventas" style="display: none; margin-bottom: 40px;">
-        <h2 class="sub-titulo">MIS SUBASTAS ACTIVAS</h2>
-        <div class="grid-container" id="club-ventas-grid"></div>
-        <hr style="border: 0; border-top: 1px solid rgba(0, 255, 170, 0.2); margin-top: 30px;">
-    </div>
-
-    <h2 class="sub-titulo">MI PLANTILLA</h2>
-    <div class="grid-container" id="club-grid"></div>
-</div>
 
     <div id="mercado-section" class="full-screen-overlay">
         <div class="section-header">
@@ -323,52 +173,61 @@
 
     <div id="venta-modal" class="modal-overlay">
         <div class="modal-content">
-            <h2 class="italic-title" style="font-size: 2rem;">PONER EN <span class="primary-text">VENTA</span></h2>
+            <h2 class="italic-title" style="font-size:2rem;">PONER EN <span class="primary-text">VENTA</span></h2>
             <div id="modal-card-preview"></div>
             <input type="number" id="input-precio-venta" placeholder="PRECIO MONEDAS">
-            <div class="auth-buttons" style="margin-top: 20px;">
-                <button class="btn-action" id="confirmar-venta-btn" style="background: var(--primary); color: black;">PUBLICAR</button>
-                <button class="btn-action" onclick="cerrarModalVenta()" style="background: #ff3232; color: white;">CANCELAR</button>
+            <div class="auth-buttons" style="margin-top:20px;">
+                <button class="btn-action" id="confirmar-venta-btn" style="background:var(--primary); color:black;">PUBLICAR</button>
+                <button class="btn-action" onclick="cerrarModalVenta()" style="background:#ff3232; color:white;">CANCELAR</button>
             </div>
         </div>
     </div>
 
-       <div id="tienda-section" class="full-screen-overlay">
-    <div class="section-header">
-        <h1 class="italic-title">TIENDA DE <span class="primary-text">SOBRES</span></h1>
-        <button class="btn-ui btn-back" onclick="cerrarSeccion('tienda-section')">VOLVER</button>
-    </div>
-    
-    <div class="pack-container">
-        <div class="pack" style="background: transparent; border-color: #cd7f32;">
-            <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/eacfef44e11bc8afda3957f7d14a71fc59c6ee94/assets/sbronce.png?raw=true" style="width: 320px; height: 460px; object-fit: cover; border-radius: 8px; display: block; margin: 0 auto; object-position: center;">
-            <button class="btn-card-action" style="width:320px;" onclick="abrirPack('bronce', 'gratis')">ABRIR GRATIS</button>
+    <div id="tienda-section" class="full-screen-overlay">
+        <div class="section-header">
+            <h1 class="italic-title">TIENDA DE <span class="primary-text">SOBRES</span></h1>
+            <button class="btn-ui btn-back" onclick="cerrarSeccion('tienda-section')">VOLVER</button>
         </div>
-
-        <div class="pack" style="background: transparent; border-color: #95a5a6;">
-            <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/main/assets/splata.png?raw=true" style="width: 500px; height: 460px; object-fit: contain; border-radius: 8px; display: block; margin: 0 auto; background: #0a0a0f;">
-            <button class="btn-card-action" style="width:320px;" onclick="abrirPack('plata', 'coins')">🪙 1,000</button>
-            <button class="btn-card-action" style="width:320px; background:#0066ff;" onclick="abrirPack('plata', 'points')">💎 20</button>
-        </div>
-
-        <div class="pack" style="background: transparent; border-color: #f1c40f;">
-            <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/main/assets/soro.png?raw=true" style="width: 320px; height: 460px; object-fit: cover; border-radius: 8px; display: block; margin: 0 auto; object-position: center;">
-            <button class="btn-card-action" style="width:320px;" onclick="abrirPack('oro', 'coins')">🪙 5,000</button>
-            <button class="btn-card-action" style="width:320px; background:#0066ff;" onclick="abrirPack('oro', 'points')">💎 100</button>
+        <div class="pack-container">
+            <div class="pack" style="border-color:#cd7f32;">
+                <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/eacfef44e11bc8afda3957f7d14a71fc59c6ee94/assets/sbronce.png?raw=true" style="width:320px; height:460px; object-fit:cover; border-radius:8px; display:block; margin:0 auto; object-position:center;">
+                <button class="btn-card-action" style="width:320px;" onclick="abrirPack('bronce','gratis')">ABRIR GRATIS</button>
+            </div>
+            <div class="pack" style="border-color:#95a5a6;">
+                <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/main/assets/splata.png?raw=true" style="width:500px; height:460px; object-fit:contain; border-radius:8px; display:block; margin:0 auto; background:#0a0a0f;">
+                <button class="btn-card-action" style="width:320px;" onclick="abrirPack('plata','coins')">🪙 1,000</button>
+                <button class="btn-card-action" style="width:320px; background:#0066ff;" onclick="abrirPack('plata','points')">💎 20</button>
+            </div>
+            <div class="pack" style="border-color:#f1c40f;">
+                <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/main/assets/soro.png?raw=true" style="width:320px; height:460px; object-fit:cover; border-radius:8px; display:block; margin:0 auto; object-position:center;">
+                <button class="btn-card-action" style="width:320px;" onclick="abrirPack('oro','coins')">🪙 5,000</button>
+                <button class="btn-card-action" style="width:320px; background:#0066ff;" onclick="abrirPack('oro','points')">💎 100</button>
+            </div>
         </div>
     </div>
-</div>
 
-<div id="reveal-overlay">
-    <div id="pack-animation-container"></div>
-    <button class="btn-ui btn-back" id="btn-cerrar-sobre" style="margin-top: 40px; display:none;" onclick="finalizarApertura()">CONTINUAR</button>
-</div>
+    <div id="reveal-overlay">
+        <div id="pack-animation-container"></div>
+        <button class="btn-ui btn-back" id="btn-cerrar-sobre" style="margin-top:40px; display:none;" onclick="finalizarApertura()">CONTINUAR</button>
+    </div>
+
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal-content" style="border-color:#ff3232;">
+            <h2 class="italic-title" style="font-size:2rem; color:#ff3232;">¿ESTÁS SEGURO?</h2>
+            <p id="confirm-text" style="margin:20px 0; font-size:1.2rem; color:white;"></p>
+            <div class="auth-buttons">
+                <button class="btn-action" id="btn-confirm-yes" style="background:#ff3232; color:white;">SÍ, ELIMINAR</button>
+                <button class="btn-action" onclick="cerrarConfirmacion()" style="background:rgba(255,255,255,0.1); color:white;">CANCELAR</button>
+            </div>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, onSnapshot, setDoc, updateDoc, collection, addDoc, deleteDoc, query, orderBy, getDoc, getDocs, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+        // ── CONFIG ──────────────────────────────────────────────
         const firebaseConfig = {
             apiKey: "AIzaSyAbqA2K0AJcIuN4JVUAI6VrKCiQF2xX0gQ",
             authDomain: "mps-ut-26.firebaseapp.com",
@@ -377,451 +236,281 @@
             messagingSenderId: "524484879031",
             appId: "1:524484879031:web:ee60cdb79834f689646332"
         };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        const app  = initializeApp(firebaseConfig);
+        const db   = getFirestore(app);
         const auth = getAuth(app);
 
-        const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTRZ3aXiCltsIuIyA9lWBNSF6svc6QAxIHuQ8nkqS7NnBNUK0NWAsc5tNn8hDbcUff-IHJzI2hsg4Lj/pub?output=csv";
+        const SHEET_URL      = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTRZ3aXiCltsIuIyA9lWBNSF6svc6QAxIHuQ8nkqS7NnBNUK0NWAsc5tNn8hDbcUff-IHJzI2hsg4Lj/pub?output=csv";
+        const ROBLOX_FALLBACK = "https://tr.rbxcdn.com/38c9c0fcce0f3ae07e2ac9e5afe7e9b2/150/150/AvatarHeadshot/Png";
+        const PRECIOS_VENTA  = { bronce: 30, plata: 100, oro: 500, especial: 1000 };
+
         let databaseJugadores = [];
         let gameData = { coins: 0, points: 0, inventario: [], username: "" };
         let jugadorSeleccionadoParaVenta = null;
-        const PRECIOS_VENTA = { bronce: 30, plata: 100, oro: 500, especial: 1000 };
+        let accionPendiente = null;
+        let mercadoSuscrito = false; // FIX 5: suscribir mercado solo cuando se abre
 
-        // --- SISTEMA DE PLAYLIST GLOBAL ---
+        // ── MÚSICA ──────────────────────────────────────────────
         const playlist = [
-    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/feetdo.mp3',
-    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/geni.mp3',
-    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/loveme.mp3',
-    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/ArrDee%20-%20Oliver%20Twist%20%5BMusic%20Video%5D%20%20GRM%20Daily.mp3',
-    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/ijuswant.mp3',
-    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/Imagine%20Dragons%20-%20On%20Top%20Of%20The%20World%20(Official%20Music%20Video).mp3',
-    'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/Young%20Miko%20-%20WASSUP%20(Official).mp3'
-];
-        let musicaFondo = new Audio();
+            'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/feetdo.mp3',
+            'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/geni.mp3',
+            'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/loveme.mp3',
+            'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/ArrDee%20-%20Oliver%20Twist%20%5BMusic%20Video%5D%20%20GRM%20Daily.mp3',
+            'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/ijuswant.mp3',
+            'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/Imagine%20Dragons%20-%20On%20Top%20Of%20The%20World%20(Official%20Music%20Video).mp3',
+            'https://raw.githubusercontent.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/main/assets/musica/Young%20Miko%20-%20WASSUP%20(Official).mp3'
+        ];
+        const musicaFondo = new Audio();
         musicaFondo.volume = 0.2;
         let musicaIniciada = false;
-
         window.reproducirSiguienteCualquiera = () => {
-            const proxima = playlist[Math.floor(Math.random() * playlist.length)];
-            musicaFondo.src = proxima;
-            musicaFondo.play().catch(e => console.log("Esperando interacción..."));
+            musicaFondo.src = playlist[Math.floor(Math.random() * playlist.length)];
+            musicaFondo.play().catch(() => {});
         };
-
-        // Cuando termine una canción, salta a otra aleatoria
         musicaFondo.onended = () => window.reproducirSiguienteCualquiera();
-
-        // EL DISPARADOR: Al hacer click en cualquier sitio por primera vez
         document.addEventListener('click', () => {
-            if (!musicaIniciada) {
-                window.reproducirSiguienteCualquiera();
-                musicaIniciada = true;
-            }
-        }, { once: true }); // 'once' asegura que este código solo se ejecute el primer click
+            if (!musicaIniciada) { window.reproducirSiguienteCualquiera(); musicaIniciada = true; }
+        }, { once: true });
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                startGameLoad(user.uid);
-            } else {
+        // ── AUTH ─────────────────────────────────────────────────
+        onAuthStateChanged(auth, user => {
+            if (user) startGameLoad(user.uid);
+            else {
                 document.getElementById('auth-form').style.display = 'flex';
                 document.getElementById('p-container').style.display = 'none';
             }
         });
 
-        // --- AUTH LÓGICA ---
         document.getElementById('register-btn').onclick = async () => {
-            const userNick = document.getElementById('auth-user').value.trim();
+            const nick = document.getElementById('auth-user').value.trim();
             const pass = document.getElementById('auth-pass').value;
-            if(!userNick || pass.length < 6) return alert("Mín. 6 caracteres.");
-            const fakeEmail = `${userNick.toLowerCase()}@mps.com`;
+            if (!nick || pass.length < 6) return alert("Mín. 6 caracteres.");
             try {
                 await setPersistence(auth, browserLocalPersistence);
-                const cred = await createUserWithEmailAndPassword(auth, fakeEmail, pass);
-                await setDoc(doc(db, "jugadores", cred.user.uid), {
-                    username: userNick.toUpperCase(),
-                    coins: 5000,
-                    points: 0,
-                    inventario: []
-                });
-            } catch (err) { alert("Error al registrar."); }
+                const cred = await createUserWithEmailAndPassword(auth, `${nick.toLowerCase()}@mps.com`, pass);
+                await setDoc(doc(db, "jugadores", cred.user.uid), { username: nick.toUpperCase(), coins: 5000, points: 0, inventario: [] });
+            } catch { alert("Error al registrar."); }
         };
 
         document.getElementById('login-btn').onclick = async () => {
-            const userNick = document.getElementById('auth-user').value.trim();
+            const nick = document.getElementById('auth-user').value.trim();
             const pass = document.getElementById('auth-pass').value;
-            const fakeEmail = `${userNick.toLowerCase()}@mps.com`;
             try {
                 await setPersistence(auth, browserLocalPersistence);
-                await signInWithEmailAndPassword(auth, fakeEmail, pass);
-            } catch (err) { alert("Datos incorrectos."); }
+                await signInWithEmailAndPassword(auth, `${nick.toLowerCase()}@mps.com`, pass);
+            } catch { alert("Datos incorrectos."); }
         };
 
-        document.getElementById('logout-btn').onclick = async () => {
-            await signOut(auth);
-            location.reload();
-        };
+        document.getElementById('logout-btn').onclick = async () => { await signOut(auth); location.reload(); };
 
-        // --- CARGA Y TIEMPO REAL ---
+        // ── CARGA INICIAL ────────────────────────────────────────
         async function startGameLoad(uid) {
             document.getElementById('auth-form').style.display = 'none';
             document.getElementById('p-container').style.display = 'block';
             const bar = document.getElementById('progress');
-            
+
+            // FIX 4: parseo CSV robusto que maneja comas dentro de comillas
             try {
                 const res = await fetch(SHEET_URL);
-                if(res.ok){
+                if (res.ok) {
                     const csv = await res.text();
-                    const filas = csv.split('\n').slice(1);
-                    databaseJugadores = filas.map(f => {
-                        const d = f.split(',');
-                        return { id: d[0]?.trim(), name: d[1]?.trim(), grl: parseInt(d[2]?.trim()) || 0, pos: d[3]?.trim(), rareza: d[4]?.trim().toLowerCase(), robloxId: d[5]?.trim(), foto: "" };
-                    });
+                    databaseJugadores = csv.split('\n').slice(1)
+                        .map(fila => {
+                            const d = parsearCSVFila(fila);
+                            return {
+                                id:       d[0]?.trim(),
+                                name:     d[1]?.trim(),
+                                grl:      parseInt(d[2]?.trim()) || 0,
+                                pos:      d[3]?.trim(),
+                                rareza:   d[4]?.trim().toLowerCase(),
+                                robloxId: d[5]?.trim(),
+                                foto:     ''
+                            };
+                        })
+                        .filter(j => j.id); // descartar filas vacías
                 }
-            } catch (e) { console.warn("Error Sheets"); }
-
-            await cargarFotosRoblox();
+            } catch { console.warn("Error cargando Sheets"); }
 
             bar.style.width = "50%";
 
-            onSnapshot(doc(db, "jugadores", uid), (docSnap) => {
-                if (docSnap.exists()) {
-                    gameData = docSnap.data();
-                    if(!gameData.inventario) gameData.inventario = [];
+            // FIX 3: fotos en segundo plano, no bloquean la barra de progreso
+            cargarFotosRoblox();
+
+            onSnapshot(doc(db, "jugadores", uid), snap => {
+                if (snap.exists()) {
+                    gameData = snap.data();
+                    if (!gameData.inventario) gameData.inventario = [];
                     actualizarUI();
-                    if(document.getElementById('club-section').style.display === "block") renderizarClub();
-                    
+                    if (document.getElementById('club-section').style.display === "block") renderizarClub();
                     bar.style.width = "100%";
                     document.getElementById('continue-btn').classList.add('ready');
                 }
             });
-
-            const qMercado = query(collection(db, "mercado"), orderBy("fecha", "desc"));
-            onSnapshot(qMercado, (snapshot) => {
-                renderizarMercado(snapshot);
-            });
         }
 
+        // FIX 4: parser CSV que respeta campos entre comillas
+        function parsearCSVFila(fila) {
+            const resultado = [];
+            let actual = '';
+            let dentroComillas = false;
+            for (const char of fila) {
+                if (char === '"') { dentroComillas = !dentroComillas; }
+                else if (char === ',' && !dentroComillas) { resultado.push(actual); actual = ''; }
+                else { actual += char; }
+            }
+            resultado.push(actual);
+            return resultado;
+        }
 
-        // --- FOTOS ROBLOX ---
-        const ROBLOX_FALLBACK = 'https://tr.rbxcdn.com/38c9c0fcce0f3ae07e2ac9e5afe7e9b2/150/150/AvatarHeadshot/Png';
-
+        // ── FOTOS ROBLOX ─────────────────────────────────────────
         async function cargarFotosRoblox() {
             const ids = [...new Set(
-                databaseJugadores
-                    .map(j => j.robloxId)
-                    .filter(id => id && id !== '' && !isNaN(Number(id)))
+                databaseJugadores.map(j => j.robloxId).filter(id => id && !isNaN(Number(id)))
             )];
-
             if (ids.length === 0) return;
 
             const fotosMap = {};
+            const BATCH = 100;
 
-            // La API de Roblox acepta hasta 100 IDs por petición
-            const BATCH_SIZE = 100;
-            for (let i = 0; i < ids.length; i += BATCH_SIZE) {
-                const lote = ids.slice(i, i + BATCH_SIZE);
-                const robloxUrl = 'https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=' + lote.join(',') + '&size=420x420&format=Png&isCircular=false';
-
+            for (let i = 0; i < ids.length; i += BATCH) {
+                const lote = ids.slice(i, i + BATCH);
+                const robloxUrl = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${lote.join(',')}&size=420x420&format=Png&isCircular=false`;
                 try {
-                    const res = await fetch('https://corsproxy.io/?' + encodeURIComponent(robloxUrl));
+                    const res  = await fetch(`https://corsproxy.io/?${encodeURIComponent(robloxUrl)}`);
                     if (!res.ok) throw new Error('HTTP ' + res.status);
                     const json = await res.json();
-
                     for (const item of (json.data || [])) {
                         fotosMap[String(item.targetId)] = (item.state === 'Completed' && item.imageUrl)
-                            ? item.imageUrl
-                            : ROBLOX_FALLBACK;
+                            ? item.imageUrl : ROBLOX_FALLBACK;
                     }
-                } catch (err) {
-                    console.warn('[Roblox] Proxy falló, usando URL directa:', err);
-                    // Fallback: URL directa funciona como <img src> aunque no como fetch
+                } catch {
                     for (const id of lote) {
-                        fotosMap[id] = fotosMap[id] || ('https://www.roblox.com/headshot-thumbnail/image?userId=' + id + '&width=420&height=420&format=png');
+                        fotosMap[id] = fotosMap[id] || `https://www.roblox.com/headshot-thumbnail/image?userId=${id}&width=420&height=420&format=png`;
                     }
                 }
             }
 
-            // Asignar foto a TODOS los jugadores con ese robloxId
-            for (const jugador of databaseJugadores) {
-                const id = jugador.robloxId;
-                jugador.foto = (id && fotosMap[id]) ? fotosMap[id] : ROBLOX_FALLBACK;
+            for (const j of databaseJugadores) {
+                j.foto = (j.robloxId && fotosMap[j.robloxId]) ? fotosMap[j.robloxId] : ROBLOX_FALLBACK;
             }
         }
 
+        // FIX 1: helper para img con fallback inline (ROBLOX_FALLBACK como string literal)
+        function imgTag(foto) {
+            return `<img src="${foto}" onerror="this.onerror=null;this.src='${ROBLOX_FALLBACK}'">`;
+        }
+
+        // ── UI ───────────────────────────────────────────────────
         function actualizarUI() {
             document.getElementById('coins-display').innerText = `🪙 ${gameData.coins.toLocaleString('es-ES')}`;
             document.getElementById('points-display').innerText = `💎 ${gameData.points.toLocaleString('es-ES')}`;
         }
 
-        // --- CLUB ---
+        // ── CLUB ─────────────────────────────────────────────────
         window.renderizarClub = async function() {
             const gridInventario = document.getElementById('club-grid');
-            const gridVentas = document.getElementById('club-ventas-grid');
-            const seccionVentas = document.getElementById('seccion-mis-ventas');
-            
+            const gridVentas     = document.getElementById('club-ventas-grid');
+            const seccionVentas  = document.getElementById('seccion-mis-ventas');
             if (!gridInventario || !gridVentas) return;
-
             gridInventario.innerHTML = "";
             gridVentas.innerHTML = "";
 
-            // 1. OBTENER MIS VENTAS DESDE FIREBASE
             try {
-                const q = query(collection(db, "mercado"), where("vendedorId", "==", auth.currentUser.uid));
-                const querySnapshot = await getDocs(q);
-                
-                if (!querySnapshot.empty) {
+                const q    = query(collection(db, "mercado"), where("vendedorId", "==", auth.currentUser.uid));
+                const snap = await getDocs(q);
+                if (!snap.empty) {
                     seccionVentas.style.display = "block";
-                    querySnapshot.forEach((docSnap) => {
+                    snap.forEach(docSnap => {
                         const oferta = docSnap.data();
                         const j = databaseJugadores.find(p => p.id === oferta.jugadorId);
-                        if(j) {
-                            // MODIFICADO: Usamos wrapper para separar carta y botones
-                            const wrapper = document.createElement('div');
-                            wrapper.className = 'card-wrapper';
-                            wrapper.innerHTML = `
-                                <div class="card ${j.rareza} card-venda">
-                                    <div class="badge-venta">EN VENTA</div>
-                                    <div class="ovr">${j.grl}</div>
-                                    <div class="pos">${j.pos}</div>
-                                    <img src="${j.foto}" onerror="this.onerror=null;this.src=ROBLOX_FALLBACK">
-                                    <div class="name">${j.name}</div>
-                                </div>
-                                <div class="card-actions-container">
-                                    <div style="font-weight:bold; color:var(--primary); text-align:center;">🪙 ${oferta.precio.toLocaleString()}</div>
-                                    <button class="btn-card-action" style="background:#ff3232" onclick="cancelarVenta('${docSnap.id}', '${j.id}')">RETIRAR</button>
-                                </div>
-                            `;
-                            gridVentas.appendChild(wrapper);
-                        }
+                        if (!j) return;
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'card-wrapper';
+                        wrapper.innerHTML = `
+                            <div class="card ${j.rareza} card-venda">
+                                <div class="badge-venta">EN VENTA</div>
+                                <div class="ovr">${j.grl}</div>
+                                <div class="pos">${j.pos}</div>
+                                ${imgTag(j.foto)}
+                                <div class="name">${j.name}</div>
+                            </div>
+                            <div class="card-actions-container">
+                                <div style="font-weight:bold; color:var(--primary); text-align:center;">🪙 ${oferta.precio.toLocaleString()}</div>
+                                <button class="btn-card-action" style="background:#ff3232" onclick="cancelarVenta('${docSnap.id}','${j.id}')">RETIRAR</button>
+                            </div>`;
+                        gridVentas.appendChild(wrapper);
                     });
                 } else {
                     seccionVentas.style.display = "none";
                 }
-            } catch (e) { 
-                console.error("Error cargando mis ventas", e); 
-            }
+            } catch (e) { console.error("Error cargando ventas", e); }
 
-            // 2. RENDERIZAR INVENTARIO NORMAL
-            if (gameData.inventario && gameData.inventario.length > 0) {
-                let misJugadores = gameData.inventario.map(id => databaseJugadores.find(j => j.id === id)).filter(j => j);
-                misJugadores.sort((a, b) => b.grl - a.grl);
-                
-                misJugadores.forEach((j) => {
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'card-wrapper'; // Usamos wrapper
-                    const valorDescarte = PRECIOS_VENTA[j.rareza] || 30;
-                    
-                    wrapper.innerHTML = `
-                        <div class="card ${j.rareza}">
-                            <div class="ovr">${j.grl}</div>
-                            <div class="pos">${j.pos}</div>
-                            <img src="${j.foto}" onerror="this.onerror=null;this.src=ROBLOX_FALLBACK">
-                            <div class="name">${j.name}</div>
-                        </div>
-                        <div class="card-actions-container">
-                            <button class="btn-card-action" style="background:white; color:black;" onclick="venderEnMercado('${j.id}')">VENDER MERCADO</button>
-                            <button class="btn-card-action" onclick="descartarJugador('${j.id}')">DESCARTAR (🪙${valorDescarte})</button>
-                        </div>
-                    `;
-                    gridInventario.appendChild(wrapper);
-                });
+            if (gameData.inventario?.length > 0) {
+                [...gameData.inventario]
+                    .map(id => databaseJugadores.find(j => j.id === id))
+                    .filter(Boolean)
+                    .sort((a, b) => b.grl - a.grl)
+                    .forEach(j => {
+                        const valorDescarte = PRECIOS_VENTA[j.rareza] || 30;
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'card-wrapper';
+                        wrapper.innerHTML = `
+                            <div class="card ${j.rareza}">
+                                <div class="ovr">${j.grl}</div>
+                                <div class="pos">${j.pos}</div>
+                                ${imgTag(j.foto)}
+                                <div class="name">${j.name}</div>
+                            </div>
+                            <div class="card-actions-container">
+                                <button class="btn-card-action" style="background:white; color:black;" onclick="venderEnMercado('${j.id}')">VENDER MERCADO</button>
+                                <button class="btn-card-action" onclick="descartarJugador('${j.id}')">DESCARTAR (🪙${valorDescarte})</button>
+                            </div>`;
+                        gridInventario.appendChild(wrapper);
+                    });
             }
         };
 
-        window.cancelarVenta = async (docId, jugadorId) => {
-            try {
-                await deleteDoc(doc(db, "mercado", docId));
-                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), {
-                    inventario: [...gameData.inventario, jugadorId]
-                });
-                alert("Jugador retirado del mercado.");
-            } catch (e) { alert("Error al retirar."); }
-        };
-
-        window.descartarJugador = async (id) => {
-    const j = databaseJugadores.find(p => p.id === id);
-    const valor = PRECIOS_VENTA[j.rareza] || 30;
-    
-    // Nueva ventana de confirmación
-    const mensaje = `¿Estás seguro de que quieres descartar a ${j.name} (${j.grl}) por 🪙 ${valor}?`;
-    if (!confirm(mensaje)) return;
-
-    const index = gameData.inventario.indexOf(id);
-    if(index > -1) {
-        const nuevoInv = [...gameData.inventario];
-        nuevoInv.splice(index, 1);
-        await updateDoc(doc(db, "jugadores", auth.currentUser.uid), {
-            inventario: nuevoInv,
-            coins: gameData.coins + valor
-        });
-    }
-};
-
-        // Variable para guardar la acción pendiente
-let accionPendiente = null;
-
-window.cerrarConfirmacion = () => {
-    document.getElementById('confirm-modal').style.display = "none";
-    accionPendiente = null;
-};
-
-// --- MODIFICACIÓN: DESCARTAR JUGADOR ---
-window.descartarJugador = (id) => {
-    const j = databaseJugadores.find(p => p.id === id);
-    const valor = PRECIOS_VENTA[j.rareza] || 30;
-    
-    document.getElementById('confirm-text').innerText = `Vas a descartar a ${j.name} por 🪙 ${valor}. Esta acción no se puede deshacer.`;
-    document.getElementById('confirm-modal').style.display = "flex";
-    
-    accionPendiente = async () => {
-        const index = gameData.inventario.indexOf(id);
-        if(index > -1) {
-            const nuevoInv = [...gameData.inventario];
-            nuevoInv.splice(index, 1);
-            await updateDoc(doc(db, "jugadores", auth.currentUser.uid), {
-                inventario: nuevoInv,
-                coins: gameData.coins + valor
-            });
-        }
-        cerrarConfirmacion();
-    };
-};
-
-// --- MODIFICACIÓN: VENDER REPETIDOS ---
-window.venderRepetidos = () => {
-    let monedasGanadas = 0;
-    let unicos = [];
-    let repetidosContador = 0;
-
-    gameData.inventario.forEach(id => {
-        if (!unicos.includes(id)) {
-            unicos.push(id);
-        } else {
-            const j = databaseJugadores.find(p => p.id === id);
-            monedasGanadas += (PRECIOS_VENTA[j.rareza] || 30);
-            repetidosContador++;
-        }
-    });
-
-    if (repetidosContador === 0) return alert("No tienes jugadores repetidos.");
-
-    document.getElementById('confirm-text').innerText = `Vas a vender ${repetidosContador} jugadores repetidos por un total de 🪙 ${monedasGanadas.toLocaleString()}.`;
-    document.getElementById('confirm-modal').style.display = "flex";
-
-    accionPendiente = async () => {
-        await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { 
-            inventario: unicos, 
-            coins: gameData.coins + monedasGanadas 
-        });
-        cerrarConfirmacion();
-        alert(`Has recibido 🪙 ${monedasGanadas} por tus repetidos.`);
-    };
-};
-
-// Escuchador para el botón de confirmar del modal
-document.getElementById('btn-confirm-yes').onclick = () => {
-    if (accionPendiente) accionPendiente();
-};
-
-        // --- LÓGICA DE VENTA (MODAL) ---
-        window.venderEnMercado = (idJugador) => {
-            jugadorSeleccionadoParaVenta = idJugador;
-            const j = databaseJugadores.find(p => p.id === idJugador);
-            // El preview del modal solo muestra la carta, sin botones
-            document.getElementById('modal-card-preview').innerHTML = `
-                <div class="card ${j.rareza}" style="transform: scale(0.9); margin: 0 auto;">
-                    <div class="ovr">${j.grl}</div>
-                    <div class="pos">${j.pos}</div>
-                    <img src="${j.foto}" onerror="this.onerror=null;this.src=ROBLOX_FALLBACK">
-                    <div class="name">${j.name}</div>
-                </div>
-            `;
-            document.getElementById('input-precio-venta').value = "";
-            document.getElementById('venta-modal').style.display = "flex";
-        };
-
-        window.cerrarModalVenta = () => {
-            document.getElementById('venta-modal').style.display = "none";
-            jugadorSeleccionadoParaVenta = null;
-        };
-
-        document.getElementById('confirmar-venta-btn').onclick = async () => {
-            const precio = parseInt(document.getElementById('input-precio-venta').value);
-            if(!precio || precio <= 0) return alert("Introduce un precio válido.");
-
-            const idJugador = jugadorSeleccionadoParaVenta;
-            const index = gameData.inventario.indexOf(idJugador);
-            const nuevoInv = [...gameData.inventario];
-            nuevoInv.splice(index, 1);
-
-            try {
-                cerrarModalVenta();
-                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { inventario: nuevoInv });
-                await addDoc(collection(db, "mercado"), {
-                    jugadorId: idJugador,
-                    precio: precio,
-                    vendedorId: auth.currentUser.uid,
-                    vendedorNombre: gameData.username,
-                    fecha: Date.now()
-                });
-            } catch (e) { alert("Error al publicar."); }
-        };
-
-        // --- MERCADO ---
+        // ── MERCADO ──────────────────────────────────────────────
         function renderizarMercado(snapshot) {
             const grid = document.getElementById('mercado-grid');
-            if(!grid) return;
+            if (!grid) return;
             grid.innerHTML = "";
             snapshot.forEach(docSnap => {
                 const oferta = docSnap.data();
                 const j = databaseJugadores.find(p => p.id === oferta.jugadorId);
-                if(!j) return;
-
-                // MODIFICADO: Usamos wrapper
+                if (!j) return;
                 const wrapper = document.createElement('div');
                 wrapper.className = 'card-wrapper';
                 wrapper.innerHTML = `
                     <div class="card ${j.rareza}">
                         <div class="ovr">${j.grl}</div>
                         <div class="pos">${j.pos}</div>
-                        <img src="${j.foto}" onerror="this.onerror=null;this.src=ROBLOX_FALLBACK">
+                        ${imgTag(j.foto)}
                         <div class="name">${j.name}</div>
                     </div>
                     <div class="card-actions-container">
                         <div class="seller-info">POR: ${oferta.vendedorNombre}</div>
-                        <button class="btn-card-action" onclick="ficharJugador('${docSnap.id}', ${oferta.precio}, '${oferta.vendedorId}', '${j.id}')">
+                        <button class="btn-card-action" onclick="ficharJugador('${docSnap.id}',${oferta.precio},'${oferta.vendedorId}','${j.id}')">
                             COMPRAR 🪙${oferta.precio.toLocaleString()}
                         </button>
-                    </div>
-                `;
+                    </div>`;
                 grid.appendChild(wrapper);
             });
         }
 
-        window.ficharJugador = async (ofertaId, precio, vendedorId, jugadorId) => {
-            if (gameData.coins < precio) return alert("Monedas insuficientes.");
-            if (vendedorId === auth.currentUser.uid) return alert("Tu propia carta.");
-
-            try {
-                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), {
-                    coins: gameData.coins - precio,
-                    inventario: [...gameData.inventario, jugadorId]
-                });
-                const vRef = doc(db, "jugadores", vendedorId);
-                const vSnap = await getDoc(vRef);
-                await updateDoc(vRef, { coins: vSnap.data().coins + precio });
-                await deleteDoc(doc(db, "mercado", ofertaId));
-            } catch (e) { alert("Error en el fichaje."); }
-        };
-
-        // --- NAVEGACIÓN ---
-        window.abrirSeccion = (id) => { 
-            document.getElementById(id).style.display = "block"; 
-            if(id === 'club-section') renderizarClub();
+        // ── NAVEGACIÓN ───────────────────────────────────────────
+        window.abrirSeccion = (id) => {
+            document.getElementById(id).style.display = "block";
+            if (id === 'club-section') renderizarClub();
+            // FIX 5: suscribir mercado solo la primera vez que se abre
+            if (id === 'mercado-section' && !mercadoSuscrito) {
+                mercadoSuscrito = true;
+                onSnapshot(query(collection(db, "mercado"), orderBy("fecha", "desc")), renderizarMercado);
+            }
         };
         window.cerrarSeccion = (id) => { document.getElementById(id).style.display = "none"; };
 
-        window.enterGame = function() {
+        window.enterGame = () => {
             document.getElementById('user-display').innerHTML = `MPS 26 | <strong>${gameData.username}</strong>`;
             document.getElementById('loader').style.opacity = "0";
             setTimeout(() => {
@@ -829,115 +518,147 @@ document.getElementById('btn-confirm-yes').onclick = () => {
                 document.getElementById('main-content').style.opacity = "1";
                 document.getElementById('main-content').style.pointerEvents = "auto";
             }, 800);
+        };
+
+        // ── ACCIONES DE CARTAS ───────────────────────────────────
+        window.cancelarVenta = async (docId, jugadorId) => {
+            try {
+                await deleteDoc(doc(db, "mercado", docId));
+                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { inventario: [...gameData.inventario, jugadorId] });
+                alert("Jugador retirado del mercado.");
+            } catch { alert("Error al retirar."); }
+        };
+
+        // FIX 2: solo una definición de descartarJugador (la del modal)
+        window.descartarJugador = (id) => {
+            const j = databaseJugadores.find(p => p.id === id);
+            const valor = PRECIOS_VENTA[j.rareza] || 30;
+            document.getElementById('confirm-text').innerText = `Vas a descartar a ${j.name} por 🪙 ${valor}. Esta acción no se puede deshacer.`;
+            document.getElementById('confirm-modal').style.display = "flex";
+            accionPendiente = async () => {
+                const nuevoInv = [...gameData.inventario];
+                nuevoInv.splice(nuevoInv.indexOf(id), 1);
+                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { inventario: nuevoInv, coins: gameData.coins + valor });
+                cerrarConfirmacion();
+            };
+        };
+
+        window.cerrarConfirmacion = () => {
+            document.getElementById('confirm-modal').style.display = "none";
+            accionPendiente = null;
+        };
+        document.getElementById('btn-confirm-yes').onclick = () => { if (accionPendiente) accionPendiente(); };
+
+        window.venderRepetidos = () => {
+            let monedasGanadas = 0, repetidosContador = 0;
+            const unicos = [];
+            gameData.inventario.forEach(id => {
+                if (!unicos.includes(id)) { unicos.push(id); }
+                else { const j = databaseJugadores.find(p => p.id === id); monedasGanadas += PRECIOS_VENTA[j.rareza] || 30; repetidosContador++; }
+            });
+            if (repetidosContador === 0) return alert("No tienes jugadores repetidos.");
+            document.getElementById('confirm-text').innerText = `Vas a vender ${repetidosContador} jugadores repetidos por un total de 🪙 ${monedasGanadas.toLocaleString()}.`;
+            document.getElementById('confirm-modal').style.display = "flex";
+            accionPendiente = async () => {
+                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { inventario: unicos, coins: gameData.coins + monedasGanadas });
+                cerrarConfirmacion();
+                alert(`Has recibido 🪙 ${monedasGanadas} por tus repetidos.`);
+            };
+        };
+
+        window.venderEnMercado = (idJugador) => {
+            jugadorSeleccionadoParaVenta = idJugador;
+            const j = databaseJugadores.find(p => p.id === idJugador);
+            document.getElementById('modal-card-preview').innerHTML = `
+                <div class="card ${j.rareza}" style="transform:scale(0.9); margin:0 auto;">
+                    <div class="ovr">${j.grl}</div>
+                    <div class="pos">${j.pos}</div>
+                    ${imgTag(j.foto)}
+                    <div class="name">${j.name}</div>
+                </div>`;
+            document.getElementById('input-precio-venta').value = "";
+            document.getElementById('venta-modal').style.display = "flex";
+        };
+
+        window.cerrarModalVenta = () => { document.getElementById('venta-modal').style.display = "none"; jugadorSeleccionadoParaVenta = null; };
+
+        document.getElementById('confirmar-venta-btn').onclick = async () => {
+            const precio = parseInt(document.getElementById('input-precio-venta').value);
+            if (!precio || precio <= 0) return alert("Introduce un precio válido.");
+            const nuevoInv = [...gameData.inventario];
+            nuevoInv.splice(nuevoInv.indexOf(jugadorSeleccionadoParaVenta), 1);
+            try {
+                cerrarModalVenta();
+                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { inventario: nuevoInv });
+                await addDoc(collection(db, "mercado"), { jugadorId: jugadorSeleccionadoParaVenta, precio, vendedorId: auth.currentUser.uid, vendedorNombre: gameData.username, fecha: Date.now() });
+            } catch { alert("Error al publicar."); }
+        };
+
+        window.ficharJugador = async (ofertaId, precio, vendedorId, jugadorId) => {
+            if (gameData.coins < precio) return alert("Monedas insuficientes.");
+            if (vendedorId === auth.currentUser.uid) return alert("Tu propia carta.");
+            try {
+                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { coins: gameData.coins - precio, inventario: [...gameData.inventario, jugadorId] });
+                const vSnap = await getDoc(doc(db, "jugadores", vendedorId));
+                await updateDoc(doc(db, "jugadores", vendedorId), { coins: vSnap.data().coins + precio });
+                await deleteDoc(doc(db, "mercado", ofertaId));
+            } catch { alert("Error en el fichaje."); }
+        };
+
+        // ── SOBRES ───────────────────────────────────────────────
+        window.abrirPack = async (tipoPack, metodoPago) => {
+            const configs = {
+                bronce: { coins: 0,    points: 0,   rangos: [[55,60,90],[61,65,99],[66,70,99.8],[71,75,100]] },
+                plata:  { coins: 1000, points: 20,  rangos: [[66,70,90],[71,75,99],[76,80,99.8],[81,85,100]] },
+                oro:    { coins: 5000, points: 100, rangos: [[75,80,90],[81,85,99],[86,90,99.8],[91,95,100]] }
+            };
+            const { coins: costoCoins, points: costoPoints, rangos } = configs[tipoPack];
+            if (metodoPago === 'coins'  && gameData.coins  < costoCoins)  return alert("Monedas insuficientes.");
+            if (metodoPago === 'points' && gameData.points < costoPoints) return alert("MPS Points insuficientes.");
+
+            const azar = Math.random() * 100;
+            let minGrl, maxGrl;
+            for (const [min, max, prob] of rangos) { if (azar <= prob) { minGrl = min; maxGrl = max; break; } }
+
+            const posibles = databaseJugadores.filter(j => j.grl >= minGrl && j.grl <= maxGrl);
+            const elegido  = posibles.length
+                ? posibles[Math.floor(Math.random() * posibles.length)]
+                : databaseJugadores[Math.floor(Math.random() * databaseJugadores.length)];
+
+            try {
+                const actualizacion = { inventario: [...gameData.inventario, elegido.id] };
+                if (metodoPago === 'coins')  actualizacion.coins  = gameData.coins  - costoCoins;
+                if (metodoPago === 'points') actualizacion.points = gameData.points - costoPoints;
+                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), actualizacion);
+                mostrarAnimacionPack(elegido);
+            } catch (e) { console.error(e); alert("Error al procesar la apertura."); }
+        };
+
+        function mostrarAnimacionPack(jugador) {
+            const overlay   = document.getElementById('reveal-overlay');
+            const container = document.getElementById('pack-animation-container');
+            const btnCerrar = document.getElementById('btn-cerrar-sobre');
+            overlay.style.display = 'flex';
+            btnCerrar.style.display = 'none';
+            overlay.style.background = jugador.grl >= 86
+                ? "radial-gradient(circle, #f1c40f 0%, #000 100%)"
+                : jugador.grl >= 75
+                    ? "radial-gradient(circle, #34495e 0%, #000 100%)"
+                    : "black";
+            container.innerHTML = `
+                <div class="card ${jugador.rareza} walkout-animation" style="width:280px; transform:scale(1.1);">
+                    <div class="ovr" style="font-size:2.2rem;">${jugador.grl}</div>
+                    <div class="pos">${jugador.pos}</div>
+                    ${imgTag(jugador.foto)}
+                    <div class="name" style="font-size:1.4rem; bottom:18%;">${jugador.name}</div>
+                </div>`;
+            setTimeout(() => { btnCerrar.style.display = 'block'; }, 2000);
         }
-    // --- SISTEMA DE SOBRES ---
 
-window.abrirPack = async (tipoPack, metodoPago) => {
-    let costoCoins = 0;
-    let costoPoints = 0;
-    let rangos = [];
-
-    // Definición de Configuración por Pack
-    if (tipoPack === 'bronce') {
-        rangos = [[55, 60, 90], [61, 65, 99], [66, 70, 99.8], [71, 75, 100]];
-    } else if (tipoPack === 'plata') {
-        costoCoins = 1000; costoPoints = 20;
-        rangos = [[66, 70, 90], [71, 75, 99], [76, 80, 99.8], [81, 85, 100]];
-    } else if (tipoPack === 'oro') {
-        costoCoins = 5000; costoPoints = 100;
-        rangos = [[75, 80, 90], [81, 85, 99], [86, 90, 99.8], [91, 95, 100]];
-    }
-
-    // Validación de fondos
-    if (metodoPago === 'coins' && gameData.coins < costoCoins) return alert("Monedas insuficientes.");
-    if (metodoPago === 'points' && gameData.points < costoPoints) return alert("MPS Points insuficientes.");
-
-    // Cálculo de Probabilidad
-    const azar = Math.random() * 100;
-    let minGrl, maxGrl;
-    
-    for (const [min, max, prob] of rangos) {
-        if (azar <= prob) {
-            minGrl = min; maxGrl = max;
-            break;
-        }
-    }
-
-    // Filtrado de Jugadores
-    const posibles = databaseJugadores.filter(j => {
-        const rating = parseInt(j.grl);
-        return rating >= minGrl && rating <= maxGrl;
-    });
-
-    if (posibles.length === 0) {
-        // Si no hay jugadores en el rango específico, buscar en toda la base como fallback
-        alert("Buscando jugadores disponibles...");
-        var elegido = databaseJugadores[Math.floor(Math.random() * databaseJugadores.length)];
-    } else {
-        var elegido = posibles[Math.floor(Math.random() * posibles.length)];
-    }
-
-    // Actualización en Firebase
-    try {
-        const actualizacion = { inventario: [...gameData.inventario, elegido.id] };
-        if (metodoPago === 'coins') actualizacion.coins = gameData.coins - costoCoins;
-        if (metodoPago === 'points') actualizacion.points = gameData.points - costoPoints;
-
-        await updateDoc(doc(db, "jugadores", auth.currentUser.uid), actualizacion);
-        mostrarAnimacionPack(elegido);
-    } catch (e) {
-        console.error(e);
-        alert("Error al procesar la apertura.");
-    }
-};
-
-function mostrarAnimacionPack(jugador) {
-    const overlay = document.getElementById('reveal-overlay');
-    const container = document.getElementById('pack-animation-container');
-    const btnCerrar = document.getElementById('btn-cerrar-sobre');
-
-    overlay.style.display = 'flex';
-    btnCerrar.style.display = 'none';
-    
-    // Color de fondo dinámico
-    if (jugador.grl >= 86) {
-        overlay.style.background = "radial-gradient(circle, #f1c40f 0%, #000 100%)"; // Brillo Oro Top
-    } else if (jugador.grl >= 75) {
-        overlay.style.background = "radial-gradient(circle, #34495e 0%, #000 100%)"; // Brillo Plata/Oro bajo
-    } else {
-        overlay.style.background = "black";
-    }
-
-    container.innerHTML = `
-        <div class="card ${jugador.rareza} walkout-animation" style="width: 280px; transform: scale(1.1);">
-            <div class="ovr" style="font-size: 2.2rem;">${jugador.grl}</div>
-            <div class="pos">${jugador.pos}</div>
-            <img src="${jugador.foto}" onerror="this.onerror=null;this.src=ROBLOX_FALLBACK">
-            <div class="name" style="font-size: 1.4rem; bottom: 18%;">${jugador.name}</div>
-        </div>
-    `;
-
-    setTimeout(() => {
-        btnCerrar.style.display = 'block';
-    }, 2000);
-}
-window.finalizarApertura = () => {
-    document.getElementById('reveal-overlay').style.display = 'none';
-    if(document.getElementById('club-section').style.display === "block") renderizarClub();
-};
+        window.finalizarApertura = () => {
+            document.getElementById('reveal-overlay').style.display = 'none';
+            if (document.getElementById('club-section').style.display === "block") renderizarClub();
+        };
     </script>
-
-    <div id="confirm-modal" class="modal-overlay">
-    <div class="modal-content" style="border-color: #ff3232;">
-        <h2 class="italic-title" style="font-size: 2rem; color: #ff3232;">¿ESTÁS SEGURO?</h2>
-        <p id="confirm-text" style="margin: 20px 0; font-size: 1.2rem; color: white;"></p>
-        <div class="auth-buttons">
-            <button class="btn-action" id="btn-confirm-yes" style="background: #ff3232; color: white;">SÍ, ELIMINAR</button>
-            <button class="btn-action" onclick="cerrarConfirmacion()" style="background: rgba(255,255,255,0.1); color: white;">CANCELAR</button>
-        </div>
-    </div>
-</div>
-    </body>
-
-
+</body>
 </html>
