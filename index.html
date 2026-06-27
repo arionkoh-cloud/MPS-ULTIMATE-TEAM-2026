@@ -686,15 +686,14 @@
         window.ficharJugador = async (ofertaId, precio, vendedorId, jugadorId) => {
             if (gameData.coins < precio) return notif(`Necesitas 🪙 ${precio.toLocaleString()} y tienes 🪙 ${gameData.coins.toLocaleString()}.`, 'error');
             if (vendedorId === auth.currentUser.uid) return notif("No puedes comprar tu propia carta.", 'aviso');
+
+            let paso = 0;
             try {
-                // El comprador SOLO puede restar sus propias monedas y añadirse la carta.
-                // Nunca tocamos el documento del vendedor desde el cliente (evita exploits).
                 await updateDoc(doc(db, "jugadores", auth.currentUser.uid), {
                     coins: gameData.coins - precio,
                     inventario: [...gameData.inventario, jugadorId]
                 });
-                // Guardamos el pago como un registro pendiente para el vendedor.
-                // El vendedor lo cobrará la próxima vez que inicie sesión.
+                paso = 1;
                 await addDoc(collection(db, "pagos_pendientes"), {
                     vendedorId,
                     cantidad: precio,
@@ -702,8 +701,15 @@
                     compradorNombre: gameData.username,
                     fecha: Date.now()
                 });
+                paso = 2;
                 await deleteDoc(doc(db, "mercado", ofertaId));
-            } catch { notif("Error en el fichaje.", 'error'); }
+                paso = 3;
+            } catch(e) {
+                console.error(`[fichar] Error en paso ${paso}:`, e);
+                // Si ya descontamos las monedas y añadimos la carta (paso >= 1),
+                // el fichaje fue exitoso aunque falle algo posterior.
+                if (paso === 0) notif("Error en el fichaje. No se realizó ningún cambio.", 'error');
+            }
         };
 
         // ── SOBRES ───────────────────────────────────────────────
