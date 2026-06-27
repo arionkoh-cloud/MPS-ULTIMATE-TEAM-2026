@@ -82,6 +82,7 @@
         .sub-titulo { font-size: 1.8rem; font-style: italic; color: var(--primary); margin-bottom: 20px; text-transform: uppercase; border-left: 4px solid var(--primary); padding-left: 15px; }
         .card-venda { filter: saturate(0.5); }
         .badge-venta { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); background: #ff3232; color: white; padding: 5px 15px; font-weight: bold; font-size: 1.2rem; border: 2px solid white; z-index: 15; pointer-events: none; box-shadow: 0 0 15px rgba(255,50,50,0.5); }
+        .badge-cantidad { position: absolute; top: 8px; right: 8px; background: var(--primary); color: black; font-weight: 900; font-size: 0.85rem; padding: 3px 9px; border-radius: 20px; z-index: 16; box-shadow: 0 0 10px rgba(0,255,170,0.5); }
 
         .pack-container { display: flex; justify-content: center; align-items: center; gap: 40px; padding: 20px 30px; height: calc(100vh - 160px); }
         .pack { display: flex; flex-direction: column; align-items: center; gap: 10px; background: transparent; border-radius: 12px; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; border: 3px solid var(--primary); padding: 12px; }
@@ -124,6 +125,19 @@
         #notif-text { margin: 14px 0 6px; font-size: 1.05rem; color: rgba(255,255,255,0.82); line-height: 1.5; font-style: normal; font-family: 'Arial Narrow', sans-serif; }
         #notif-close-btn { margin-top: 18px; width: 100%; padding: 13px; font-size: 1rem; font-weight: bold; cursor: pointer; text-transform: uppercase; border-radius: 4px; border: none; letter-spacing: 1px; transition: 0.2s; }
         #notif-close-btn:hover { filter: brightness(1.1); }
+
+        /* FILTROS DE BUSQUEDA */
+        .filtros-bar { display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; align-items: center; }
+        .filtro-busqueda-nombre { flex: 1; min-width: 220px; background: rgba(255,255,255,0.05); border: 1px solid rgba(0,255,170,0.3); padding: 12px 16px; color: white; border-radius: 4px; outline: none; font-size: 1rem; transition: 0.3s; }
+        .filtro-busqueda-nombre::placeholder { color: rgba(255,255,255,0.4); }
+        .filtro-busqueda-nombre:focus { border-color: var(--primary); background: rgba(255,255,255,0.1); box-shadow: 0 0 15px rgba(0,255,170,0.15); }
+        .filtro-posiciones { display: flex; gap: 8px; flex-wrap: wrap; }
+        .filtro-pos-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); padding: 10px 18px; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; transition: 0.2s; letter-spacing: 1px; }
+        .filtro-pos-btn:hover { border-color: var(--primary); color: white; }
+        .filtro-pos-btn.activo { background: var(--primary); color: black; border-color: var(--primary); }
+        .filtro-limpiar-btn { background: transparent; border: 1px solid rgba(255,50,50,0.5); color: #ff3232; padding: 10px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.8rem; transition: 0.2s; }
+        .filtro-limpiar-btn:hover { background: rgba(255,50,50,0.15); }
+        .sin-resultados { color: rgba(255,255,255,0.5); font-size: 1.3rem; text-align: center; padding: 60px 0; font-style: italic; grid-column: 1 / -1; }
     </style>
 </head>
 <body>
@@ -177,6 +191,18 @@
                 <button class="btn-ui btn-back" onclick="cerrarSeccion('club-section')">VOLVER</button>
             </div>
         </div>
+
+        <div class="filtros-bar">
+            <input type="text" class="filtro-busqueda-nombre" id="club-filtro-nombre" placeholder="🔍 BUSCAR JUGADOR POR NOMBRE..." oninput="onFiltroNombreInput('club')">
+            <div class="filtro-posiciones" id="club-filtro-posiciones">
+                <button class="filtro-pos-btn activo" data-pos="todos" onclick="setFiltroPos('club', 'todos')">TODOS</button>
+                <button class="filtro-pos-btn" data-pos="cb" onclick="setFiltroPos('club', 'cb')">CB</button>
+                <button class="filtro-pos-btn" data-pos="mc" onclick="setFiltroPos('club', 'mc')">MC</button>
+                <button class="filtro-pos-btn" data-pos="st" onclick="setFiltroPos('club', 'st')">ST</button>
+            </div>
+            <button class="filtro-limpiar-btn" onclick="limpiarFiltros('club')">LIMPIAR FILTROS</button>
+        </div>
+
         <div id="seccion-mis-ventas" style="display:none; margin-bottom:40px;">
             <h2 class="sub-titulo">MIS SUBASTAS ACTIVAS</h2>
             <div class="grid-container" id="club-ventas-grid"></div>
@@ -191,6 +217,18 @@
             <h1 class="italic-title">MERCADO DE <span class="primary-text">FICHAJES</span></h1>
             <button class="btn-ui btn-back" onclick="cerrarSeccion('mercado-section')">VOLVER</button>
         </div>
+
+        <div class="filtros-bar">
+            <input type="text" class="filtro-busqueda-nombre" id="mercado-filtro-nombre" placeholder="🔍 BUSCAR JUGADOR POR NOMBRE..." oninput="onFiltroNombreInput('mercado')">
+            <div class="filtro-posiciones" id="mercado-filtro-posiciones">
+                <button class="filtro-pos-btn activo" data-pos="todos" onclick="setFiltroPos('mercado', 'todos')">TODOS</button>
+                <button class="filtro-pos-btn" data-pos="cb" onclick="setFiltroPos('mercado', 'cb')">CB</button>
+                <button class="filtro-pos-btn" data-pos="mc" onclick="setFiltroPos('mercado', 'mc')">MC</button>
+                <button class="filtro-pos-btn" data-pos="st" onclick="setFiltroPos('mercado', 'st')">ST</button>
+            </div>
+            <button class="filtro-limpiar-btn" onclick="limpiarFiltros('mercado')">LIMPIAR FILTROS</button>
+        </div>
+
         <div class="grid-container" id="mercado-grid"></div>
     </div>
 
@@ -282,6 +320,54 @@
         let jugadorSeleccionadoParaVenta = null;
         let accionPendiente = null;
         let mercadoSuscrito = false;
+        let ultimoSnapshotMercado = null;
+
+        // ── FILTROS ──────────────────────────────────────────────
+        const filtrosState = {
+            club:    { pos: 'todos', nombre: '' },
+            mercado: { pos: 'todos', nombre: '' }
+        };
+
+        window.setFiltroPos = (seccion, pos) => {
+            filtrosState[seccion].pos = pos;
+            document.querySelectorAll(`#${seccion}-filtro-posiciones .filtro-pos-btn`).forEach(btn => {
+                btn.classList.toggle('activo', btn.dataset.pos === pos);
+            });
+            if (seccion === 'club') renderizarClub();
+            else renderizarMercadoActual();
+        };
+
+        window.limpiarFiltros = (seccion) => {
+            filtrosState[seccion].pos = 'todos';
+            filtrosState[seccion].nombre = '';
+            document.getElementById(`${seccion}-filtro-nombre`).value = '';
+            document.querySelectorAll(`#${seccion}-filtro-posiciones .filtro-pos-btn`).forEach(btn => {
+                btn.classList.toggle('activo', btn.dataset.pos === 'todos');
+            });
+            if (seccion === 'club') renderizarClub();
+            else renderizarMercadoActual();
+        };
+
+        function jugadorPasaFiltro(jugador, seccion) {
+            const f = filtrosState[seccion];
+            if (f.pos !== 'todos' && (jugador.pos || '').trim().toLowerCase() !== f.pos) return false;
+            const nombreInput = document.getElementById(`${seccion}-filtro-nombre`);
+            const nombreBuscado = (nombreInput ? nombreInput.value : f.nombre).trim().toLowerCase();
+            if (nombreBuscado && !(jugador.name || '').toLowerCase().includes(nombreBuscado)) return false;
+            return true;
+        }
+
+        // Debounce: espera a que el usuario deje de teclear ~250ms antes de re-renderizar.
+        // Esto evita disparar múltiples lecturas/renderizados en paralelo mientras se escribe rápido,
+        // que era la causa de que aparecieran tarjetas duplicadas en "Mi Club".
+        const debounceTimers = {};
+        window.onFiltroNombreInput = (seccion) => {
+            clearTimeout(debounceTimers[seccion]);
+            debounceTimers[seccion] = setTimeout(() => {
+                if (seccion === 'club') renderizarClub();
+                else renderizarMercadoActual();
+            }, 250);
+        };
 
         // ── NOTIF ────────────────────────────────────────────────
         function notif(mensaje, tipo = 'error') {
@@ -407,7 +493,9 @@
         }
 
         // ── CLUB ─────────────────────────────────────────────────
+        let clubRenderToken = 0;
         window.renderizarClub = async function() {
+            const miToken = ++clubRenderToken; // identifica esta ejecución como la más reciente
             const gridInv  = document.getElementById('club-grid');
             const gridVent = document.getElementById('club-ventas-grid');
             const secVent  = document.getElementById('seccion-mis-ventas');
@@ -415,42 +503,74 @@
             gridInv.innerHTML = ""; gridVent.innerHTML = "";
             try {
                 const snap = await getDocs(query(collection(db, "mercado"), where("vendedorId", "==", auth.currentUser.uid)));
+                if (miToken !== clubRenderToken) return; // ya hay una llamada más nueva en curso, descartar esta
                 if (!snap.empty) {
                     secVent.style.display = "block";
+                    let hayVentasVisibles = false;
                     snap.forEach(docSnap => {
                         const oferta = docSnap.data();
                         const j = databaseJugadores.find(p => p.id === oferta.jugadorId);
                         if (!j) return;
+                        if (!jugadorPasaFiltro(j, 'club')) return;
+                        hayVentasVisibles = true;
                         const w = document.createElement('div'); w.className = 'card-wrapper';
                         w.innerHTML = `<div class="card ${j.rareza} card-venda"><div class="badge-venta">EN VENTA</div><div class="ovr">${j.grl}</div><div class="pos">${j.pos}</div>${imgTag(j.foto)}<div class="name">${j.name}</div></div><div class="card-actions-container"><div style="font-weight:bold;color:var(--primary);text-align:center;">🪙 ${oferta.precio.toLocaleString()}</div><button class="btn-card-action" style="background:#ff3232" onclick="cancelarVenta('${docSnap.id}','${j.id}')">RETIRAR</button></div>`;
                         gridVent.appendChild(w);
                     });
+                    if (!hayVentasVisibles) gridVent.innerHTML = `<div class="sin-resultados">No hay subastas que coincidan con el filtro.</div>`;
                 } else { secVent.style.display = "none"; }
             } catch(e) { console.error(e); }
+            if (miToken !== clubRenderToken) return; // re-chequeo tras el await, por si llegó otra llamada mientras tanto
             if (gameData.inventario?.length > 0) {
-                [...gameData.inventario].map(id => databaseJugadores.find(j => j.id === id)).filter(Boolean).sort((a,b) => b.grl - a.grl).forEach(j => {
-                    const val = PRECIOS_VENTA[j.rareza] || 30;
-                    const w = document.createElement('div'); w.className = 'card-wrapper';
-                    w.innerHTML = `<div class="card ${j.rareza}"><div class="ovr">${j.grl}</div><div class="pos">${j.pos}</div>${imgTag(j.foto)}<div class="name">${j.name}</div></div><div class="card-actions-container"><button class="btn-card-action" style="background:white;color:black;" onclick="venderEnMercado('${j.id}')">VENDER MERCADO</button><button class="btn-card-action" onclick="descartarJugador('${j.id}')">DESCARTAR (🪙${val})</button></div>`;
-                    gridInv.appendChild(w);
-                });
+                // Agrupar por id para no mostrar tarjetas duplicadas: cada jugador único
+                // se muestra una sola vez con un contador (x2, x3...) si hay copias repetidas.
+                const conteoPorId = {};
+                gameData.inventario.forEach(id => { conteoPorId[id] = (conteoPorId[id] || 0) + 1; });
+
+                const jugadoresFiltrados = Object.keys(conteoPorId)
+                    .map(id => databaseJugadores.find(j => j.id === id))
+                    .filter(Boolean)
+                    .filter(j => jugadorPasaFiltro(j, 'club'))
+                    .sort((a,b) => b.grl - a.grl);
+
+                if (!jugadoresFiltrados.length) {
+                    gridInv.innerHTML = `<div class="sin-resultados">No se encontraron jugadores con esos filtros.</div>`;
+                } else {
+                    jugadoresFiltrados.forEach(j => {
+                        const val = PRECIOS_VENTA[j.rareza] || 30;
+                        const cantidad = conteoPorId[j.id];
+                        const badge = cantidad > 1 ? `<div class="badge-cantidad">x${cantidad}</div>` : '';
+                        const w = document.createElement('div'); w.className = 'card-wrapper';
+                        w.innerHTML = `<div class="card ${j.rareza}">${badge}<div class="ovr">${j.grl}</div><div class="pos">${j.pos}</div>${imgTag(j.foto)}<div class="name">${j.name}</div></div><div class="card-actions-container"><button class="btn-card-action" style="background:white;color:black;" onclick="venderEnMercado('${j.id}')">VENDER MERCADO</button><button class="btn-card-action" onclick="descartarJugador('${j.id}')">DESCARTAR (🪙${val})</button></div>`;
+                        gridInv.appendChild(w);
+                    });
+                }
+            } else {
+                gridInv.innerHTML = `<div class="sin-resultados">No tienes jugadores en tu plantilla.</div>`;
             }
         };
 
         // ── MERCADO ──────────────────────────────────────────────
         function renderizarMercado(snapshot) {
+            ultimoSnapshotMercado = snapshot;
             const grid = document.getElementById('mercado-grid');
             if (!grid) return;
             grid.innerHTML = "";
+            let hayResultados = false;
             snapshot.forEach(docSnap => {
                 const oferta = docSnap.data();
                 const j = databaseJugadores.find(p => p.id === oferta.jugadorId);
                 if (!j) return;
+                if (!jugadorPasaFiltro(j, 'mercado')) return;
+                hayResultados = true;
                 const w = document.createElement('div'); w.className = 'card-wrapper';
                 w.innerHTML = `<div class="card ${j.rareza}"><div class="ovr">${j.grl}</div><div class="pos">${j.pos}</div>${imgTag(j.foto)}<div class="name">${j.name}</div></div><div class="card-actions-container"><div class="seller-info">POR: ${oferta.vendedorNombre}</div><button class="btn-card-action" onclick="ficharJugador('${docSnap.id}',${oferta.precio},'${oferta.vendedorId}','${j.id}')">COMPRAR 🪙${oferta.precio.toLocaleString()}</button></div>`;
                 grid.appendChild(w);
             });
+            if (!hayResultados) grid.innerHTML = `<div class="sin-resultados">No se encontraron jugadores con esos filtros.</div>`;
         }
+
+        window.renderizarMercadoActual = () => { if (ultimoSnapshotMercado) renderizarMercado(ultimoSnapshotMercado); };
 
         // ── NAVEGACIÓN ───────────────────────────────────────────
         window.abrirSeccion = (id) => {
