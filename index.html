@@ -98,6 +98,51 @@
         .pack { display: flex; flex-direction: column; align-items: center; gap: 10px; background: transparent; border-radius: 12px; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; border: 3px solid var(--primary); padding: 12px; }
         .pack:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--primary); }
 
+        /* MODAL DETALLE SOBRE - PANTALLA DIVIDIDA */
+        .pack-detail-content {
+            display: flex;
+            width: 80vw;
+            max-width: 900px;
+            height: 560px;
+            background: #0e0e1a;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 0 60px rgba(0,0,0,0.8);
+            animation: slideUp 0.3s var(--smooth-curve);
+        }
+        .pack-detail-left {
+            flex: 1;
+            min-width: 0;
+        }
+        .pack-detail-left img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .pack-detail-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 50px 40px;
+            background: #0e0e1a;
+        }
+        .pack-detail-right .btn-comprar {
+            width: 100%;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            letter-spacing: 1px;
+        }
+        .pack-detail-right .btn-comprar:hover { filter: brightness(1.15); transform: translateY(-1px); }
+
         #reveal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, #1a1a2e 0%, #050508 100%); z-index: 3000; display: none; flex-direction: column; align-items: center; justify-content: center; }
         .walkout-animation { animation: packFlash 1.5s forwards, slideUp 0.8s var(--smooth-curve); }
         @keyframes packFlash { 0% { filter: brightness(1) blur(0px); } 50% { filter: brightness(5) blur(15px); } 100% { filter: brightness(1) blur(0px); } }
@@ -189,19 +234,29 @@
             <button class="btn-ui btn-back" onclick="cerrarSeccion('tienda-section')">VOLVER</button>
         </div>
         <div class="pack-container">
-            <div class="pack" style="border-color:#cd7f32;">
+            <div class="pack" style="border-color:#cd7f32;" onclick="abrirModalPack('bronce')">
                 <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/eacfef44e11bc8afda3957f7d14a71fc59c6ee94/assets/sbronce.png?raw=true" style="width:320px; height:460px; object-fit:cover; border-radius:8px; display:block; margin:0 auto; object-position:center;">
-                <button class="btn-card-action" style="width:320px;" onclick="abrirPack('bronce','gratis')">ABRIR GRATIS</button>
             </div>
-            <div class="pack" style="border-color:#95a5a6;">
+            <div class="pack" style="border-color:#95a5a6;" onclick="abrirModalPack('plata')">
                 <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/main/assets/splata.png?raw=true" style="width:320px; height:460px; object-fit:cover; border-radius:8px; display:block; margin:0 auto; object-position:center;">
-                <button class="btn-card-action" style="width:320px;" onclick="abrirPack('plata','coins')">🪙 1,000</button>
-                <button class="btn-card-action" style="width:320px; background:#0066ff;" onclick="abrirPack('plata','points')">💎 20</button>
             </div>
-            <div class="pack" style="border-color:#f1c40f;">
+            <div class="pack" style="border-color:#f1c40f;" onclick="abrirModalPack('oro')">
                 <img src="https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/main/assets/soro.png?raw=true" style="width:320px; height:460px; object-fit:cover; border-radius:8px; display:block; margin:0 auto; object-position:center;">
-                <button class="btn-card-action" style="width:320px;" onclick="abrirPack('oro','coins')">🪙 5,000</button>
-                <button class="btn-card-action" style="width:320px; background:#0066ff;" onclick="abrirPack('oro','points')">💎 100</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DETALLE DE SOBRE -->
+    <div id="pack-detail-modal" class="modal-overlay" onclick="cerrarModalPack()" style="align-items:center; justify-content:center;">
+        <div class="pack-detail-content" onclick="event.stopPropagation()">
+            <div class="pack-detail-left">
+                <img id="pack-detail-img" src="" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
+            </div>
+            <div class="pack-detail-right">
+                <h2 id="pack-detail-nombre" class="italic-title" style="font-size:2.5rem; margin-bottom:8px;"></h2>
+                <p id="pack-detail-rating" style="font-size:1.1rem; color:rgba(255,255,255,0.6); margin-bottom:30px; text-transform:uppercase; letter-spacing:2px;"></p>
+                <div id="pack-detail-btns" style="display:flex; flex-direction:column; gap:12px; width:100%;"></div>
+                <button class="btn-ui" onclick="cerrarModalPack()" style="margin-top:24px; background:rgba(255,255,255,0.08); color:white; border:1px solid rgba(255,255,255,0.2); width:100%;">CERRAR</button>
             </div>
         </div>
     </div>
@@ -654,6 +709,62 @@
                 </div>`;
             setTimeout(() => { btnCerrar.style.display = 'block'; }, 2000);
         }
+
+        // ── MODAL DETALLE DE SOBRE ──────────────────────────────
+        const PACK_INFO = {
+            bronce: {
+                nombre: 'SOBRE BRONCE',
+                color:  '#cd7f32',
+                rating: 'Cartas 55+ GRL',
+                img:    'https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/eacfef44e11bc8afda3957f7d14a71fc59c6ee94/assets/sbronce.png?raw=true',
+                btns: [
+                    { label: 'ABRIR GRATIS', bg: '#cd7f32', color: 'black', metodo: 'gratis' }
+                ]
+            },
+            plata: {
+                nombre: 'SOBRE PLATA',
+                color:  '#95a5a6',
+                rating: 'Cartas 65+ GRL',
+                img:    'https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/main/assets/splata.png?raw=true',
+                btns: [
+                    { label: '🪙 1,000 MONEDAS', bg: '#95a5a6', color: 'black', metodo: 'coins' },
+                    { label: '💎 20 JOYAS',       bg: '#0066ff', color: 'white', metodo: 'points' }
+                ]
+            },
+            oro: {
+                nombre: 'SOBRE ORO',
+                color:  '#f1c40f',
+                rating: 'Cartas 75+ GRL',
+                img:    'https://github.com/arionkoh-cloud/MPS-ULTIMATE-TEAM-2026/blob/main/assets/soro.png?raw=true',
+                btns: [
+                    { label: '🪙 5,000 MONEDAS', bg: '#f1c40f', color: 'black', metodo: 'coins' },
+                    { label: '💎 100 JOYAS',      bg: '#0066ff', color: 'white', metodo: 'points' }
+                ]
+            }
+        };
+
+        window.abrirModalPack = (tipo) => {
+            const info = PACK_INFO[tipo];
+            document.getElementById('pack-detail-img').src            = info.img;
+            document.getElementById('pack-detail-img').style.objectPosition = 'center';
+            document.getElementById('pack-detail-nombre').textContent = info.nombre;
+            document.getElementById('pack-detail-nombre').style.color = info.color;
+            document.getElementById('pack-detail-rating').textContent = info.rating;
+
+            const btnsEl = document.getElementById('pack-detail-btns');
+            btnsEl.innerHTML = info.btns.map(b =>
+                `<button class="btn-comprar" style="background:${b.bg}; color:${b.color};"
+                    onclick="cerrarModalPack(); abrirPack('${tipo}','${b.metodo}')">${b.label}</button>`
+            ).join('');
+
+            // Borde del modal acorde al tipo
+            document.querySelector('.pack-detail-content').style.borderColor = info.color;
+            document.getElementById('pack-detail-modal').style.display = 'flex';
+        };
+
+        window.cerrarModalPack = () => {
+            document.getElementById('pack-detail-modal').style.display = 'none';
+        };
 
         window.finalizarApertura = () => {
             document.getElementById('reveal-overlay').style.display = 'none';
