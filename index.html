@@ -696,9 +696,9 @@
             overlay.style.display = 'flex';
             btnCerrar.style.display = 'none';
             overlay.style.background = jugador.grl >= 86
-                ? "radial-gradient(circle, #f1c40f 0%, #000 100%)"
+                ? "radial-gradient(circle, rgba(241,196,15,0.25) 0%, #050508 100%)"
                 : jugador.grl >= 75
-                    ? "radial-gradient(circle, #34495e 0%, #000 100%)"
+                    ? "radial-gradient(circle, rgba(52,73,94,0.4) 0%, #050508 100%)"
                     : "black";
             container.innerHTML = `
                 <div class="card ${jugador.rareza} walkout-animation" style="width:280px; transform:scale(1.1);">
