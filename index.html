@@ -741,12 +741,26 @@
         document.getElementById('confirmar-venta-btn').onclick = async () => {
             const precio = parseInt(document.getElementById('input-precio-venta').value);
             if (!precio || precio <= 0) return notif("Introduce un precio válido antes de publicar la carta.", 'aviso');
+
+            // 👇 FIX: guardamos el id en una variable LOCAL antes de cerrar el modal.
+            // cerrarModalVenta() pone jugadorSeleccionadoParaVenta = null de forma síncrona,
+            // así que si seguimos leyendo la variable global después de llamarla (dentro del
+            // await), ya estará en null. Con la copia local evitamos esa condición de carrera.
+            const idJugadorAVender = jugadorSeleccionadoParaVenta;
+            if (!idJugadorAVender) return notif("No se ha seleccionado ningún jugador para vender.", 'error');
+
             const nuevoInv = [...gameData.inventario];
-            nuevoInv.splice(nuevoInv.indexOf(jugadorSeleccionadoParaVenta), 1);
+            nuevoInv.splice(nuevoInv.indexOf(idJugadorAVender), 1);
             try {
                 cerrarModalVenta();
                 await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { inventario: nuevoInv });
-                await addDoc(collection(db, "mercado"), { jugadorId: jugadorSeleccionadoParaVenta, precio, vendedorId: auth.currentUser.uid, vendedorNombre: gameData.username, fecha: Date.now() });
+                await addDoc(collection(db, "mercado"), {
+                    jugadorId: idJugadorAVender,
+                    precio,
+                    vendedorId: auth.currentUser.uid,
+                    vendedorNombre: gameData.username,
+                    fecha: Date.now()
+                });
             } catch { notif("No se pudo publicar la carta en el mercado. Inténtalo de nuevo.", 'error'); }
         };
 
