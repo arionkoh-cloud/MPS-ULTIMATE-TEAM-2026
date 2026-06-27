@@ -203,6 +203,12 @@
             <button class="filtro-limpiar-btn" onclick="limpiarFiltros('club')">LIMPIAR FILTROS</button>
         </div>
 
+        <div id="seccion-pagos-pendientes" style="display:none; margin-bottom:40px;">
+            <h2 class="sub-titulo">💰 VENTAS COBRADAS</h2>
+            <div class="grid-container" id="club-pagos-grid"></div>
+            <hr style="border:0; border-top:1px solid rgba(0,255,170,0.2); margin-top:30px;">
+        </div>
+
         <div id="seccion-mis-ventas" style="display:none; margin-bottom:40px;">
             <h2 class="sub-titulo">MIS SUBASTAS ACTIVAS</h2>
             <div class="grid-container" id="club-ventas-grid"></div>
@@ -432,6 +438,12 @@
 
         document.getElementById('logout-btn').onclick = async () => { await signOut(auth); location.reload(); };
 
+        window.cobrarPagosPendientesManual = async () => {
+            await cobrarPagosPendientes(auth.currentUser.uid);
+            renderizarClub();
+            notif("¡Monedas cobradas y añadidas a tu cuenta!", 'ok');
+        };
+
         // ── PAGOS PENDIENTES ─────────────────────────────────────
         // Cuando el vendedor abre el juego, revisamos si alguien compró
         // sus cartas mientras estaba offline y le acreditamos las monedas.
@@ -529,15 +541,41 @@
         // ── CLUB ─────────────────────────────────────────────────
         let clubRenderToken = 0;
         window.renderizarClub = async function() {
-            const miToken = ++clubRenderToken; // identifica esta ejecución como la más reciente
-            const gridInv  = document.getElementById('club-grid');
-            const gridVent = document.getElementById('club-ventas-grid');
-            const secVent  = document.getElementById('seccion-mis-ventas');
+            const miToken = ++clubRenderToken;
+            const gridInv   = document.getElementById('club-grid');
+            const gridVent  = document.getElementById('club-ventas-grid');
+            const gridPagos = document.getElementById('club-pagos-grid');
+            const secVent   = document.getElementById('seccion-mis-ventas');
+            const secPagos  = document.getElementById('seccion-pagos-pendientes');
             if (!gridInv || !gridVent) return;
-            gridInv.innerHTML = ""; gridVent.innerHTML = "";
+            gridInv.innerHTML = ""; gridVent.innerHTML = ""; gridPagos.innerHTML = "";
+
+            // ── Pagos pendientes de cobrar ──
+            try {
+                const snapPagos = await getDocs(query(collection(db, "pagos_pendientes"), where("vendedorId", "==", auth.currentUser.uid)));
+                if (miToken !== clubRenderToken) return;
+                if (!snapPagos.empty) {
+                    secPagos.style.display = "block";
+                    let totalPendiente = 0;
+                    const ids = [];
+                    snapPagos.forEach(d => { totalPendiente += d.data().cantidad || 0; ids.push(d.id); });
+                    const w = document.createElement('div');
+                    w.className = 'card-wrapper';
+                    w.style.cssText = 'background:rgba(0,255,170,0.05); border:1px solid rgba(0,255,170,0.3); border-radius:10px; padding:20px; display:flex; flex-direction:column; align-items:center; gap:12px; justify-content:center;';
+                    w.innerHTML = `
+                        <div style="font-size:2.5rem;">💰</div>
+                        <div style="font-weight:900; font-size:1.4rem; color:var(--primary); text-align:center;">🪙 ${totalPendiente.toLocaleString()}</div>
+                        <div style="font-size:0.8rem; color:rgba(255,255,255,0.6); text-align:center; text-transform:uppercase; letter-spacing:1px;">${ids.length} venta${ids.length > 1 ? 's' : ''} pendiente${ids.length > 1 ? 's' : ''}</div>
+                        <button class="btn-card-action" style="background:var(--primary); color:black; font-size:0.9rem;" onclick="cobrarPagosPendientesManual()">COBRAR TODO</button>`;
+                    gridPagos.appendChild(w);
+                } else {
+                    secPagos.style.display = "none";
+                }
+            } catch(e) { console.error(e); secPagos.style.display = "none"; }
+            // ── Subastas activas ──
             try {
                 const snap = await getDocs(query(collection(db, "mercado"), where("vendedorId", "==", auth.currentUser.uid)));
-                if (miToken !== clubRenderToken) return; // ya hay una llamada más nueva en curso, descartar esta
+                if (miToken !== clubRenderToken) return;
                 if (!snap.empty) {
                     secVent.style.display = "block";
                     let hayVentasVisibles = false;
