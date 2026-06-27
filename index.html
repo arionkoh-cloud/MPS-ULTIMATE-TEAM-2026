@@ -436,6 +436,21 @@
                 document.getElementById('auth-form').style.display = 'flex';
                 document.getElementById('p-container').style.display = 'none';
             }
+            
+            let ultimaCancion = -1;
+
+window.reproducirSiguienteCualquiera = () => {
+    let indice;
+
+    do {
+        indice = Math.floor(Math.random() * playlist.length);
+    } while (playlist.length > 1 && indice === ultimaCancion);
+
+    ultimaCancion = indice;
+
+    musicaFondo.src = playlist[indice];
+    musicaFondo.play().catch(e => console.log(e));
+};
         });
 
         // --- AUTH LÓGICA ---
