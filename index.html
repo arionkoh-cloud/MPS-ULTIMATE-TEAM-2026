@@ -432,11 +432,41 @@
 
         document.getElementById('logout-btn').onclick = async () => { await signOut(auth); location.reload(); };
 
+        // ── PAGOS PENDIENTES ─────────────────────────────────────
+        // Cuando el vendedor abre el juego, revisamos si alguien compró
+        // sus cartas mientras estaba offline y le acreditamos las monedas.
+        // Esto reemplaza el updateDoc al vendedor desde el cliente del comprador,
+        // que era explotable. Aquí cada usuario solo escribe en su propio doc (monedas
+        // que SUBE), pero viene de un pago verificado que él mismo no puede fabricar
+        // porque requiere que exista un documento en pagos_pendientes con su uid.
+        async function cobrarPagosPendientes(uid) {
+            try {
+                const snap = await getDocs(query(collection(db, "pagos_pendientes"), where("vendedorId", "==", uid)));
+                if (snap.empty) return;
+                let totalCobrado = 0;
+                const borrar = [];
+                snap.forEach(docSnap => {
+                    totalCobrado += docSnap.data().cantidad || 0;
+                    borrar.push(deleteDoc(doc(db, "pagos_pendientes", docSnap.id)));
+                });
+                // Leemos el valor actual de coins desde Firestore (no de gameData,
+                // que puede estar desactualizado) para evitar sobrescribir con un valor viejo.
+                const jugSnap = await getDoc(doc(db, "jugadores", uid));
+                const coinsActuales = jugSnap.data()?.coins || 0;
+                await updateDoc(doc(db, "jugadores", uid), { coins: coinsActuales + totalCobrado });
+                await Promise.all(borrar);
+                console.log(`[MPS] Cobrados 🪙 ${totalCobrado} de ventas pendientes.`);
+            } catch(e) { console.error("Error cobrando pagos pendientes", e); }
+        }
+
         // ── CARGA ────────────────────────────────────────────────
         async function startGameLoad(uid) {
             document.getElementById('auth-form').style.display = 'none';
             document.getElementById('p-container').style.display = 'block';
             const bar = document.getElementById('progress');
+
+            // Cobrar ventas pendientes antes de cargar el juego
+            await cobrarPagosPendientes(uid);
             try {
                 const res = await fetch(SHEET_URL);
                 if (res.ok) {
@@ -656,8 +686,24 @@
         window.ficharJugador = async (ofertaId, precio, vendedorId, jugadorId) => {
             if (gameData.coins < precio) return notif(`Necesitas 🪙 ${precio.toLocaleString()} y tienes 🪙 ${gameData.coins.toLocaleString()}.`, 'error');
             if (vendedorId === auth.currentUser.uid) return notif("No puedes comprar tu propia carta.", 'aviso');
-            try { await updateDoc(doc(db,"jugadores",auth.currentUser.uid),{coins:gameData.coins-precio,inventario:[...gameData.inventario,jugadorId]}); const vs=await getDoc(doc(db,"jugadores",vendedorId)); await updateDoc(doc(db,"jugadores",vendedorId),{coins:vs.data().coins+precio}); await deleteDoc(doc(db,"mercado",ofertaId)); }
-            catch { notif("Error en el fichaje.", 'error'); }
+            try {
+                // El comprador SOLO puede restar sus propias monedas y añadirse la carta.
+                // Nunca tocamos el documento del vendedor desde el cliente (evita exploits).
+                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), {
+                    coins: gameData.coins - precio,
+                    inventario: [...gameData.inventario, jugadorId]
+                });
+                // Guardamos el pago como un registro pendiente para el vendedor.
+                // El vendedor lo cobrará la próxima vez que inicie sesión.
+                await addDoc(collection(db, "pagos_pendientes"), {
+                    vendedorId,
+                    cantidad: precio,
+                    jugadorId,
+                    compradorNombre: gameData.username,
+                    fecha: Date.now()
+                });
+                await deleteDoc(doc(db, "mercado", ofertaId));
+            } catch { notif("Error en el fichaje.", 'error'); }
         };
 
         // ── SOBRES ───────────────────────────────────────────────
