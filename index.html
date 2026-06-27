@@ -98,54 +98,29 @@
         .pack { display: flex; flex-direction: column; align-items: center; gap: 10px; background: transparent; border-radius: 12px; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; border: 3px solid var(--primary); padding: 12px; }
         .pack:hover { transform: scale(1.05); box-shadow: 0 0 30px var(--primary); }
 
-        /* MODAL DETALLE SOBRE - PANTALLA DIVIDIDA */
         .pack-detail-content {
-            display: flex;
-            width: 80vw;
-            max-width: 900px;
-            height: 560px;
-            background: #0e0e1a;
-            border: 2px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 0 60px rgba(0,0,0,0.8);
+            display: flex; width: 80vw; max-width: 900px; height: 560px;
+            background: #0e0e1a; border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 16px; overflow: hidden; box-shadow: 0 0 60px rgba(0,0,0,0.8);
             animation: slideUp 0.3s var(--smooth-curve);
         }
-        .pack-detail-left {
-            flex: 1;
-            min-width: 0;
-        }
-        .pack-detail-left img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-        .pack-detail-right {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 50px 40px;
-            background: #0e0e1a;
-        }
-        .pack-detail-right .btn-comprar {
-            width: 100%;
-            padding: 14px;
-            font-size: 1rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: 0.2s;
-            letter-spacing: 1px;
-        }
+        .pack-detail-left { flex: 1; min-width: 0; }
+        .pack-detail-left img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .pack-detail-right { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 50px 40px; background: #0e0e1a; }
+        .pack-detail-right .btn-comprar { width: 100%; padding: 14px; font-size: 1rem; font-weight: bold; text-transform: uppercase; border: none; border-radius: 6px; cursor: pointer; transition: 0.2s; letter-spacing: 1px; }
         .pack-detail-right .btn-comprar:hover { filter: brightness(1.15); transform: translateY(-1px); }
 
         #reveal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, #1a1a2e 0%, #050508 100%); z-index: 3000; display: none; flex-direction: column; align-items: center; justify-content: center; }
         .walkout-animation { animation: packFlash 1.5s forwards, slideUp 0.8s var(--smooth-curve); }
         @keyframes packFlash { 0% { filter: brightness(1) blur(0px); } 50% { filter: brightness(5) blur(15px); } 100% { filter: brightness(1) blur(0px); } }
+
+        /* MODAL DE NOTIFICACION */
+        .notif-icon { font-size: 2.8rem; margin-bottom: 8px; }
+        #notif-modal .modal-content { width: 360px; }
+        #notif-title { font-size: 1.8rem; margin-bottom: 4px; }
+        #notif-text { margin: 14px 0 6px; font-size: 1.05rem; color: rgba(255,255,255,0.82); line-height: 1.5; font-style: normal; font-family: 'Arial Narrow', sans-serif; }
+        #notif-close-btn { margin-top: 18px; width: 100%; padding: 13px; font-size: 1rem; font-weight: bold; cursor: pointer; text-transform: uppercase; border-radius: 4px; border: none; letter-spacing: 1px; transition: 0.2s; }
+        #notif-close-btn:hover { filter: brightness(1.1); }
     </style>
 </head>
 <body>
@@ -277,6 +252,16 @@
         </div>
     </div>
 
+    <!-- MODAL DE NOTIFICACION -->
+    <div id="notif-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="notif-icon" id="notif-icon">⚠️</div>
+            <h2 class="italic-title" id="notif-title">AVISO</h2>
+            <p id="notif-text"></p>
+            <button id="notif-close-btn" onclick="cerrarNotif()">ENTENDIDO</button>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, onSnapshot, setDoc, updateDoc, collection, addDoc, deleteDoc, query, orderBy, getDoc, getDocs, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -295,15 +280,54 @@
         const db   = getFirestore(app);
         const auth = getAuth(app);
 
-        const SHEET_URL      = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTRZ3aXiCltsIuIyA9lWBNSF6svc6QAxIHuQ8nkqS7NnBNUK0NWAsc5tNn8hDbcUff-IHJzI2hsg4Lj/pub?output=csv";
+        const SHEET_URL       = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTRZ3aXiCltsIuIyA9lWBNSF6svc6QAxIHuQ8nkqS7NnBNUK0NWAsc5tNn8hDbcUff-IHJzI2hsg4Lj/pub?output=csv";
         const ROBLOX_FALLBACK = "https://tr.rbxcdn.com/38c9c0fcce0f3ae07e2ac9e5afe7e9b2/150/150/AvatarHeadshot/Png";
-        const PRECIOS_VENTA  = { bronce: 30, plata: 100, oro: 500, especial: 1000 };
+        const PRECIOS_VENTA   = { bronce: 30, plata: 100, oro: 500, especial: 1000 };
 
         let databaseJugadores = [];
         let gameData = { coins: 0, points: 0, inventario: [], username: "" };
         let jugadorSeleccionadoParaVenta = null;
         let accionPendiente = null;
-        let mercadoSuscrito = false; // FIX 5: suscribir mercado solo cuando se abre
+        let mercadoSuscrito = false;
+
+        // ── NOTIFICACION IN-GAME (reemplaza todos los alert) ────
+        function notif(mensaje, tipo = 'error') {
+            const modal    = document.getElementById('notif-modal');
+            const title    = document.getElementById('notif-title');
+            const text     = document.getElementById('notif-text');
+            const icon     = document.getElementById('notif-icon');
+            const btn      = document.getElementById('notif-close-btn');
+            const content  = modal.querySelector('.modal-content');
+
+            if (tipo === 'error') {
+                icon.textContent      = '⛔';
+                title.textContent     = 'ERROR';
+                title.style.color     = '#ff3232';
+                content.style.borderColor = '#ff3232';
+                btn.style.background  = '#ff3232';
+                btn.style.color       = 'white';
+            } else if (tipo === 'aviso') {
+                icon.textContent      = '⚠️';
+                title.textContent     = 'AVISO';
+                title.style.color     = '#f1c40f';
+                content.style.borderColor = '#f1c40f';
+                btn.style.background  = '#f1c40f';
+                btn.style.color       = 'black';
+            } else {
+                icon.textContent      = '✅';
+                title.textContent     = '¡LISTO!';
+                title.style.color     = 'var(--primary)';
+                content.style.borderColor = 'var(--primary)';
+                btn.style.background  = 'var(--primary)';
+                btn.style.color       = 'black';
+            }
+
+            text.textContent   = mensaje;
+            modal.style.display = 'flex';
+        }
+        window.cerrarNotif = () => {
+            document.getElementById('notif-modal').style.display = 'none';
+        };
 
         // ── MÚSICA ──────────────────────────────────────────────
         const playlist = [
@@ -339,12 +363,12 @@
         document.getElementById('register-btn').onclick = async () => {
             const nick = document.getElementById('auth-user').value.trim();
             const pass = document.getElementById('auth-pass').value;
-            if (!nick || pass.length < 6) return alert("Mín. 6 caracteres.");
+            if (!nick || pass.length < 6) return notif("El nombre de usuario no puede estar vacío y la contraseña debe tener mínimo 6 caracteres.", 'aviso');
             try {
                 await setPersistence(auth, browserLocalPersistence);
                 const cred = await createUserWithEmailAndPassword(auth, `${nick.toLowerCase()}@mps.com`, pass);
                 await setDoc(doc(db, "jugadores", cred.user.uid), { username: nick.toUpperCase(), coins: 5000, points: 0, inventario: [] });
-            } catch { alert("Error al registrar."); }
+            } catch { notif("No se pudo registrar. Es posible que ese nombre de usuario ya esté en uso.", 'error'); }
         };
 
         document.getElementById('login-btn').onclick = async () => {
@@ -353,7 +377,7 @@
             try {
                 await setPersistence(auth, browserLocalPersistence);
                 await signInWithEmailAndPassword(auth, `${nick.toLowerCase()}@mps.com`, pass);
-            } catch { alert("Datos incorrectos."); }
+            } catch { notif("Usuario o contraseña incorrectos. Revisa tus datos e inténtalo de nuevo.", 'error'); }
         };
 
         document.getElementById('logout-btn').onclick = async () => { await signOut(auth); location.reload(); };
@@ -364,7 +388,6 @@
             document.getElementById('p-container').style.display = 'block';
             const bar = document.getElementById('progress');
 
-            // FIX 4: parseo CSV robusto que maneja comas dentro de comillas
             try {
                 const res = await fetch(SHEET_URL);
                 if (res.ok) {
@@ -382,13 +405,11 @@
                                 foto:     ''
                             };
                         })
-                        .filter(j => j.id); // descartar filas vacías
+                        .filter(j => j.id);
                 }
             } catch { console.warn("Error cargando Sheets"); }
 
             bar.style.width = "50%";
-
-            // FIX 3: fotos en segundo plano, no bloquean la barra de progreso
             cargarFotosRoblox();
 
             onSnapshot(doc(db, "jugadores", uid), snap => {
@@ -403,7 +424,6 @@
             });
         }
 
-        // FIX 4: parser CSV que respeta campos entre comillas
         function parsearCSVFila(fila) {
             const resultado = [];
             let actual = '';
@@ -450,7 +470,6 @@
             }
         }
 
-        // FIX 1: helper para img con fallback inline (ROBLOX_FALLBACK como string literal)
         function imgTag(foto) {
             return `<img src="${foto}" onerror="this.onerror=null;this.src='${ROBLOX_FALLBACK}'">`;
         }
@@ -557,7 +576,6 @@
         window.abrirSeccion = (id) => {
             document.getElementById(id).style.display = "block";
             if (id === 'club-section') renderizarClub();
-            // FIX 5: suscribir mercado solo la primera vez que se abre
             if (id === 'mercado-section' && !mercadoSuscrito) {
                 mercadoSuscrito = true;
                 onSnapshot(query(collection(db, "mercado"), orderBy("fecha", "desc")), renderizarMercado);
@@ -580,11 +598,10 @@
             try {
                 await deleteDoc(doc(db, "mercado", docId));
                 await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { inventario: [...gameData.inventario, jugadorId] });
-                alert("Jugador retirado del mercado.");
-            } catch { alert("Error al retirar."); }
+                notif("Jugador retirado del mercado y devuelto a tu club.", 'ok');
+            } catch { notif("No se pudo retirar el jugador del mercado. Inténtalo de nuevo.", 'error'); }
         };
 
-        // FIX 2: solo una definición de descartarJugador (la del modal)
         window.descartarJugador = (id) => {
             const j = databaseJugadores.find(p => p.id === id);
             const valor = PRECIOS_VENTA[j.rareza] || 30;
@@ -611,13 +628,13 @@
                 if (!unicos.includes(id)) { unicos.push(id); }
                 else { const j = databaseJugadores.find(p => p.id === id); monedasGanadas += PRECIOS_VENTA[j.rareza] || 30; repetidosContador++; }
             });
-            if (repetidosContador === 0) return alert("No tienes jugadores repetidos.");
+            if (repetidosContador === 0) return notif("No tienes jugadores repetidos en tu club.", 'aviso');
             document.getElementById('confirm-text').innerText = `Vas a vender ${repetidosContador} jugadores repetidos por un total de 🪙 ${monedasGanadas.toLocaleString()}.`;
             document.getElementById('confirm-modal').style.display = "flex";
             accionPendiente = async () => {
                 await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { inventario: unicos, coins: gameData.coins + monedasGanadas });
                 cerrarConfirmacion();
-                alert(`Has recibido 🪙 ${monedasGanadas} por tus repetidos.`);
+                notif(`Has recibido 🪙 ${monedasGanadas.toLocaleString()} por vender tus jugadores repetidos.`, 'ok');
             };
         };
 
@@ -639,25 +656,25 @@
 
         document.getElementById('confirmar-venta-btn').onclick = async () => {
             const precio = parseInt(document.getElementById('input-precio-venta').value);
-            if (!precio || precio <= 0) return alert("Introduce un precio válido.");
+            if (!precio || precio <= 0) return notif("Introduce un precio válido antes de publicar la carta.", 'aviso');
             const nuevoInv = [...gameData.inventario];
             nuevoInv.splice(nuevoInv.indexOf(jugadorSeleccionadoParaVenta), 1);
             try {
                 cerrarModalVenta();
                 await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { inventario: nuevoInv });
                 await addDoc(collection(db, "mercado"), { jugadorId: jugadorSeleccionadoParaVenta, precio, vendedorId: auth.currentUser.uid, vendedorNombre: gameData.username, fecha: Date.now() });
-            } catch { alert("Error al publicar."); }
+            } catch { notif("No se pudo publicar la carta en el mercado. Inténtalo de nuevo.", 'error'); }
         };
 
         window.ficharJugador = async (ofertaId, precio, vendedorId, jugadorId) => {
-            if (gameData.coins < precio) return alert("Monedas insuficientes.");
-            if (vendedorId === auth.currentUser.uid) return alert("Tu propia carta.");
+            if (gameData.coins < precio) return notif(`No tienes suficientes monedas. Necesitas 🪙 ${precio.toLocaleString()} y tienes 🪙 ${gameData.coins.toLocaleString()}.`, 'error');
+            if (vendedorId === auth.currentUser.uid) return notif("No puedes comprar tu propia carta del mercado de fichajes.", 'aviso');
             try {
                 await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { coins: gameData.coins - precio, inventario: [...gameData.inventario, jugadorId] });
                 const vSnap = await getDoc(doc(db, "jugadores", vendedorId));
                 await updateDoc(doc(db, "jugadores", vendedorId), { coins: vSnap.data().coins + precio });
                 await deleteDoc(doc(db, "mercado", ofertaId));
-            } catch { alert("Error en el fichaje."); }
+            } catch { notif("Se produjo un error durante el fichaje. Inténtalo de nuevo.", 'error'); }
         };
 
         // ── SOBRES ───────────────────────────────────────────────
@@ -668,8 +685,8 @@
                 oro:    { coins: 5000, points: 100, rangos: [[75,80,90],[81,85,99],[86,90,99.8],[91,95,100]] }
             };
             const { coins: costoCoins, points: costoPoints, rangos } = configs[tipoPack];
-            if (metodoPago === 'coins'  && gameData.coins  < costoCoins)  return alert("Monedas insuficientes.");
-            if (metodoPago === 'points' && gameData.points < costoPoints) return alert("MPS Points insuficientes.");
+            if (metodoPago === 'coins'  && gameData.coins  < costoCoins)  return notif(`No tienes suficientes monedas. Necesitas 🪙 ${costoCoins.toLocaleString()} y tienes 🪙 ${gameData.coins.toLocaleString()}.`, 'error');
+            if (metodoPago === 'points' && gameData.points < costoPoints) return notif(`No tienes suficientes MPS Points. Necesitas 💎 ${costoPoints} y tienes 💎 ${gameData.points}.`, 'error');
 
             const azar = Math.random() * 100;
             let minGrl, maxGrl;
@@ -686,7 +703,7 @@
                 if (metodoPago === 'points') actualizacion.points = gameData.points - costoPoints;
                 await updateDoc(doc(db, "jugadores", auth.currentUser.uid), actualizacion);
                 mostrarAnimacionPack(elegido);
-            } catch (e) { console.error(e); alert("Error al procesar la apertura."); }
+            } catch (e) { console.error(e); notif("Se produjo un error al abrir el sobre. Inténtalo de nuevo.", 'error'); }
         };
 
         function mostrarAnimacionPack(jugador) {
@@ -745,11 +762,11 @@
 
         window.abrirModalPack = (tipo) => {
             const info = PACK_INFO[tipo];
-            document.getElementById('pack-detail-img').src            = info.img;
+            document.getElementById('pack-detail-img').src             = info.img;
             document.getElementById('pack-detail-img').style.objectPosition = 'center';
-            document.getElementById('pack-detail-nombre').textContent = info.nombre;
-            document.getElementById('pack-detail-nombre').style.color = info.color;
-            document.getElementById('pack-detail-rating').textContent = info.rating;
+            document.getElementById('pack-detail-nombre').textContent  = info.nombre;
+            document.getElementById('pack-detail-nombre').style.color  = info.color;
+            document.getElementById('pack-detail-rating').textContent  = info.rating;
 
             const btnsEl = document.getElementById('pack-detail-btns');
             btnsEl.innerHTML = info.btns.map(b =>
@@ -757,7 +774,6 @@
                     onclick="cerrarModalPack(); abrirPack('${tipo}','${b.metodo}')">${b.label}</button>`
             ).join('');
 
-            // Borde del modal acorde al tipo
             document.querySelector('.pack-detail-content').style.borderColor = info.color;
             document.getElementById('pack-detail-modal').style.display = 'flex';
         };
