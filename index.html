@@ -114,6 +114,22 @@
         .walkout-animation { animation: packFlash 1.5s forwards, slideUp 0.8s var(--smooth-curve); }
         @keyframes packFlash { 0% { filter: brightness(1) blur(0px); } 50% { filter: brightness(5) blur(15px); } 100% { filter: brightness(1) blur(0px); } }
 
+        /* BORDE DE ADVERTENCIA EN PANTALLA COMPLETA */
+        body.advertencia-elite::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            border: 6px solid #ff3232;
+            z-index: 9999;
+            pointer-events: none;
+            box-shadow: inset 0 0 60px rgba(255,50,50,0.35), 0 0 60px rgba(255,50,50,0.35);
+            animation: pulseBorde 1.2s ease-in-out infinite;
+        }
+        @keyframes pulseBorde {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.45; }
+        }
+
         /* MODAL DE NOTIFICACION */
         .notif-icon { font-size: 2.8rem; margin-bottom: 8px; }
         #notif-modal .modal-content { width: 360px; }
@@ -624,18 +640,86 @@
         window.venderRepetidos = () => {
             let monedasGanadas = 0, repetidosContador = 0;
             const unicos = [];
+            const eliteRepetidos = [];
+
             gameData.inventario.forEach(id => {
-                if (!unicos.includes(id)) { unicos.push(id); }
-                else { const j = databaseJugadores.find(p => p.id === id); monedasGanadas += PRECIOS_VENTA[j.rareza] || 30; repetidosContador++; }
+                if (!unicos.includes(id)) {
+                    unicos.push(id);
+                } else {
+                    const j = databaseJugadores.find(p => p.id === id);
+                    if (j) {
+                        monedasGanadas += PRECIOS_VENTA[j.rareza] || 30;
+                        repetidosContador++;
+                        if (j.grl >= 85) eliteRepetidos.push(j);
+                    }
+                }
             });
+
             if (repetidosContador === 0) return notif("No tienes jugadores repetidos en tu club.", 'aviso');
-            document.getElementById('confirm-text').innerText = `Vas a vender ${repetidosContador} jugadores repetidos por un total de 🪙 ${monedasGanadas.toLocaleString()}.`;
-            document.getElementById('confirm-modal').style.display = "flex";
-            accionPendiente = async () => {
-                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { inventario: unicos, coins: gameData.coins + monedasGanadas });
-                cerrarConfirmacion();
-                notif(`Has recibido 🪙 ${monedasGanadas.toLocaleString()} por vender tus jugadores repetidos.`, 'ok');
-            };
+
+            if (eliteRepetidos.length > 0) {
+                // Activar borde rojo pulsante en toda la pantalla
+                document.body.classList.add('advertencia-elite');
+
+                const listaElite = eliteRepetidos
+                    .sort((a, b) => b.grl - a.grl)
+                    .map(j => `• ${j.name} (${j.grl} GRL)`)
+                    .join('\n');
+
+                const modal   = document.getElementById('notif-modal');
+                const title   = document.getElementById('notif-title');
+                const text    = document.getElementById('notif-text');
+                const icon    = document.getElementById('notif-icon');
+                const btn     = document.getElementById('notif-close-btn');
+                const content = modal.querySelector('.modal-content');
+
+                icon.textContent          = '🚨';
+                title.textContent         = '¡ATENCIÓN!';
+                title.style.color         = '#ff3232';
+                content.style.borderColor = '#ff3232';
+                content.style.width       = '420px';
+                btn.style.background      = '#ff3232';
+                btn.style.color           = 'white';
+                btn.textContent           = 'ENTENDIDO, CONTINUAR';
+
+                text.style.whiteSpace     = 'pre-line';
+                text.textContent          =
+                    `Entre tus repetidos hay ${eliteRepetidos.length} jugador${eliteRepetidos.length > 1 ? 'es' : ''} de élite (+85 GRL) que vas a perder:\n\n${listaElite}\n\n¿Estás seguro de que quieres venderlos todos?`;
+
+                modal.style.display = 'flex';
+
+                // Al cerrar este aviso, abrir el confirm normal
+                window.cerrarNotif = () => {
+                    modal.style.display = 'none';
+                    document.body.classList.remove('advertencia-elite');
+                    content.style.width = '360px';
+                    text.style.whiteSpace = 'normal';
+                    // Restaurar cerrarNotif al comportamiento original
+                    window.cerrarNotif = () => {
+                        document.getElementById('notif-modal').style.display = 'none';
+                    };
+                    // Abrir confirmación normal
+                    document.getElementById('confirm-text').innerText =
+                        `Vas a vender ${repetidosContador} jugadores repetidos (incluidos ${eliteRepetidos.length} de élite) por un total de 🪙 ${monedasGanadas.toLocaleString()}.`;
+                    document.getElementById('confirm-modal').style.display = 'flex';
+                    accionPendiente = async () => {
+                        await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { inventario: unicos, coins: gameData.coins + monedasGanadas });
+                        cerrarConfirmacion();
+                        notif(`Has recibido 🪙 ${monedasGanadas.toLocaleString()} por vender tus jugadores repetidos.`, 'ok');
+                    };
+                };
+
+            } else {
+                // Sin élites, flujo normal directo
+                document.getElementById('confirm-text').innerText =
+                    `Vas a vender ${repetidosContador} jugadores repetidos por un total de 🪙 ${monedasGanadas.toLocaleString()}.`;
+                document.getElementById('confirm-modal').style.display = 'flex';
+                accionPendiente = async () => {
+                    await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { inventario: unicos, coins: gameData.coins + monedasGanadas });
+                    cerrarConfirmacion();
+                    notif(`Has recibido 🪙 ${monedasGanadas.toLocaleString()} por vender tus jugadores repetidos.`, 'ok');
+                };
+            }
         };
 
         window.venderEnMercado = (idJugador) => {
