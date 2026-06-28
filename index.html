@@ -658,9 +658,11 @@
         window.renderizarMercadoActual = () => { if (ultimoSnapshotMercado) renderizarMercado(ultimoSnapshotMercado); };
 
         // ── FICHAJE ──────────────────────────────────────────────
-        async function ficharJugador(btn, ofertaId, precio, vendedorId, jugadorId) {
-            // Validación de datos antes de bloquear
-            if (!ofertaId || !jugadorId || !vendedorId || !precio) {
+        async function ficharJugador(btn, ofertaId, _precioDOM, vendedorId, jugadorId) {
+            // ⚠️ SEGURIDAD: el precio que llega del DOM (_precioDOM) se IGNORA completamente.
+            // El precio real siempre se lee desde Firestore para evitar que alguien
+            // lo manipule desde la consola del navegador (ej: data-precio = "1").
+            if (!ofertaId || !jugadorId || !vendedorId) {
                 return notif("Error: datos de la oferta inválidos.", 'error');
             }
 
@@ -673,6 +675,28 @@
                 document.body.classList.remove('comprando-lock');
                 document.getElementById('compra-spinner').classList.remove('activo');
             };
+
+            let precio;
+            try {
+                // 🔒 Leer el precio REAL desde Firestore — no confiar nunca en el DOM
+                const ofertaSnap = await getDoc(doc(db, "mercado", ofertaId));
+                if (!ofertaSnap.exists()) {
+                    desbloquear();
+                    return notif("Esta oferta ya no está disponible.", 'aviso');
+                }
+                const ofertaReal = ofertaSnap.data();
+                precio = ofertaReal.precio;
+
+                // Doble verificación: jugador y vendedor coinciden con lo mostrado en pantalla
+                if (ofertaReal.jugadorId !== jugadorId || ofertaReal.vendedorId !== vendedorId) {
+                    desbloquear();
+                    return notif("Error: los datos de la oferta no coinciden.", 'error');
+                }
+            } catch(e) {
+                console.error("[fichar] Error leyendo oferta de Firestore:", e);
+                desbloquear();
+                return notif("No se pudo verificar la oferta. Intenta de nuevo.", 'error');
+            }
 
             if (gameData.coins < precio) {
                 desbloquear();
