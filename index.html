@@ -767,17 +767,6 @@ body.comprando-lock { cursor: wait !important; }
         return alert("No puedes comprar tu propia carta.");
     }
 
-    try {
-        const ofertaSnap = await getDoc(doc(db, "mercado", ofertaId));
-        if (!ofertaSnap.exists()) {
-            desbloquear();
-            return alert("Esta oferta ya no está disponible.");
-        }
-    } catch(e) {
-        desbloquear();
-        return alert("Error al verificar la oferta. Inténtalo de nuevo.");
-    }
-
     let paso = 0;
     try {
         await updateDoc(doc(db, "jugadores", auth.currentUser.uid), {
@@ -798,7 +787,6 @@ body.comprando-lock { cursor: wait !important; }
         desbloquear();
     }
 };
-
         // ── SOBRES ───────────────────────────────────────────────
         window.abrirPack = async (tipoPack, metodoPago) => {
             const configs = {
