@@ -748,8 +748,7 @@ body.comprando-lock { cursor: wait !important; }
             catch { notif("Error al publicar la carta.", 'error'); }
         };
 
-        window.ficharJugador = async (btn, ofertaId, precio, vendedorId, jugadorId) => {
-    // Lock global inmediato — bloquea TODA la página
+       window.ficharJugador = async (btn, ofertaId, precio, vendedorId, jugadorId) => {
     if (document.body.classList.contains('comprando-lock')) return;
     document.body.classList.add('comprando-lock');
     document.getElementById('compra-spinner').classList.add('activo');
@@ -761,22 +760,22 @@ body.comprando-lock { cursor: wait !important; }
 
     if (gameData.coins < precio) {
         desbloquear();
-        return notif(`Necesitas 🪙 ${precio.toLocaleString()} y tienes 🪙 ${gameData.coins.toLocaleString()}.`, 'error');
+        return alert(`Necesitas 🪙 ${precio.toLocaleString()} y tienes 🪙 ${gameData.coins.toLocaleString()}.`);
     }
     if (vendedorId === auth.currentUser.uid) {
         desbloquear();
-        return notif("No puedes comprar tu propia carta.", 'aviso');
+        return alert("No puedes comprar tu propia carta.");
     }
 
     try {
         const ofertaSnap = await getDoc(doc(db, "mercado", ofertaId));
         if (!ofertaSnap.exists()) {
             desbloquear();
-            return notif("Esta oferta ya no está disponible.", 'aviso');
+            return alert("Esta oferta ya no está disponible.");
         }
     } catch(e) {
         desbloquear();
-        return notif("Error al verificar la oferta. Inténtalo de nuevo.", 'error');
+        return alert("Error al verificar la oferta. Inténtalo de nuevo.");
     }
 
     let paso = 0;
@@ -792,12 +791,10 @@ body.comprando-lock { cursor: wait !important; }
         });
         paso = 2;
         await deleteDoc(doc(db, "mercado", ofertaId));
-        // Éxito: el onSnapshot quitará la carta del mercado solo
     } catch(e) {
         console.error(`[fichar] Error en paso ${paso}:`, e);
-        if (paso === 0) notif("Error en el fichaje. No se realizó ningún cambio.", 'error');
+        if (paso === 0) alert("Error en el fichaje. No se realizó ningún cambio.");
     } finally {
-        // Siempre desbloquea al terminar, sea éxito o error
         desbloquear();
     }
 };
