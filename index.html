@@ -280,11 +280,11 @@
     <div id="club-section" class="full-screen-overlay">
         <div class="section-header">
             <h1 class="italic-title">MI <span class="primary-text">CLUB</span></h1>
-            <div class="stats">
-                <span id="coins-display-club">🪙 --</span>
-                <span id="points-display-club">💎 --</span>
-            </div>
-            <div>
+            <div style="display:flex; align-items:center; gap:20px;">
+                <div class="stats">
+                    <span id="coins-display-club">🪙 --</span>
+                    <span id="points-display-club">💎 --</span>
+                </div>
                 <button class="btn-ui btn-duplicates" onclick="venderRepetidos()">Vender Repetidos</button>
                 <button class="btn-ui btn-back" onclick="cerrarSeccion('club-section')">VOLVER</button>
             </div>
@@ -317,11 +317,13 @@
     <div id="mercado-section" class="full-screen-overlay">
         <div class="section-header">
             <h1 class="italic-title">MERCADO DE <span class="primary-text">FICHAJES</span></h1>
-            <div class="stats">
-                <span id="coins-display-mercado">🪙 --</span>
-                <span id="points-display-mercado">💎 --</span>
+            <div style="display:flex; align-items:center; gap:20px;">
+                <div class="stats">
+                    <span id="coins-display-mercado">🪙 --</span>
+                    <span id="points-display-mercado">💎 --</span>
+                </div>
+                <button class="btn-ui btn-back" onclick="cerrarSeccion('mercado-section')">VOLVER</button>
             </div>
-            <button class="btn-ui btn-back" onclick="cerrarSeccion('mercado-section')">VOLVER</button>
         </div>
         <div class="filtros-bar">
             <input type="text" class="filtro-busqueda-nombre" id="mercado-filtro-nombre" placeholder="🔍 BUSCAR JUGADOR POR NOMBRE..." oninput="onFiltroNombreInput('mercado')">
@@ -352,11 +354,13 @@
     <div id="tienda-section" class="full-screen-overlay">
         <div class="section-header">
             <h1 class="italic-title">TIENDA DE <span class="primary-text">SOBRES</span></h1>
-            <div class="stats">
-                <span id="coins-display-tienda">🪙 --</span>
-                <span id="points-display-tienda">💎 --</span>
+            <div style="display:flex; align-items:center; gap:20px;">
+                <div class="stats">
+                    <span id="coins-display-tienda">🪙 --</span>
+                    <span id="points-display-tienda">💎 --</span>
+                </div>
+                <button class="btn-ui btn-back" onclick="cerrarSeccion('tienda-section')">VOLVER</button>
             </div>
-            <button class="btn-ui btn-back" onclick="cerrarSeccion('tienda-section')">VOLVER</button>
         </div>
         <div class="pack-container">
             <div class="pack" style="border-color:#cd7f32;" onclick="abrirModalPack('bronce')">
