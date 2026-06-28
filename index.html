@@ -158,7 +158,7 @@
 
     <div id="compra-spinner">
         <div class="spinner-grande"></div>
-        <p>PROCESANDO FICHAJE...</p>
+        <p id="compra-spinner-texto">PROCESANDO FICHAJE...</p>
     </div>
 
     <div id="loader">
@@ -266,6 +266,7 @@
             <input type="text" class="filtro-busqueda-nombre" id="bd-filtro-nombre" placeholder="🔍 BUSCAR JUGADOR POR NOMBRE..." oninput="onFiltroNombreInput('bd')">
             <div class="filtro-posiciones" id="bd-filtro-posiciones">
                 <button class="filtro-pos-btn activo" data-pos="todos" onclick="setFiltroPos('bd', 'todos')">TODOS</button>
+                <button class="filtro-pos-btn" data-pos="gk" onclick="setFiltroPos('bd', 'gk')">GK</button>
                 <button class="filtro-pos-btn" data-pos="cb" onclick="setFiltroPos('bd', 'cb')">CB</button>
                 <button class="filtro-pos-btn" data-pos="mc" onclick="setFiltroPos('bd', 'mc')">MC</button>
                 <button class="filtro-pos-btn" data-pos="st" onclick="setFiltroPos('bd', 'st')">ST</button>
@@ -279,6 +280,10 @@
     <div id="club-section" class="full-screen-overlay">
         <div class="section-header">
             <h1 class="italic-title">MI <span class="primary-text">CLUB</span></h1>
+            <div class="stats">
+                <span id="coins-display-club">🪙 --</span>
+                <span id="points-display-club">💎 --</span>
+            </div>
             <div>
                 <button class="btn-ui btn-duplicates" onclick="venderRepetidos()">Vender Repetidos</button>
                 <button class="btn-ui btn-back" onclick="cerrarSeccion('club-section')">VOLVER</button>
@@ -288,6 +293,7 @@
             <input type="text" class="filtro-busqueda-nombre" id="club-filtro-nombre" placeholder="🔍 BUSCAR JUGADOR POR NOMBRE..." oninput="onFiltroNombreInput('club')">
             <div class="filtro-posiciones" id="club-filtro-posiciones">
                 <button class="filtro-pos-btn activo" data-pos="todos" onclick="setFiltroPos('club', 'todos')">TODOS</button>
+                <button class="filtro-pos-btn" data-pos="gk" onclick="setFiltroPos('club', 'gk')">GK</button>
                 <button class="filtro-pos-btn" data-pos="cb" onclick="setFiltroPos('club', 'cb')">CB</button>
                 <button class="filtro-pos-btn" data-pos="mc" onclick="setFiltroPos('club', 'mc')">MC</button>
                 <button class="filtro-pos-btn" data-pos="st" onclick="setFiltroPos('club', 'st')">ST</button>
@@ -311,12 +317,17 @@
     <div id="mercado-section" class="full-screen-overlay">
         <div class="section-header">
             <h1 class="italic-title">MERCADO DE <span class="primary-text">FICHAJES</span></h1>
+            <div class="stats">
+                <span id="coins-display-mercado">🪙 --</span>
+                <span id="points-display-mercado">💎 --</span>
+            </div>
             <button class="btn-ui btn-back" onclick="cerrarSeccion('mercado-section')">VOLVER</button>
         </div>
         <div class="filtros-bar">
             <input type="text" class="filtro-busqueda-nombre" id="mercado-filtro-nombre" placeholder="🔍 BUSCAR JUGADOR POR NOMBRE..." oninput="onFiltroNombreInput('mercado')">
             <div class="filtro-posiciones" id="mercado-filtro-posiciones">
                 <button class="filtro-pos-btn activo" data-pos="todos" onclick="setFiltroPos('mercado', 'todos')">TODOS</button>
+                <button class="filtro-pos-btn" data-pos="gk" onclick="setFiltroPos('mercado', 'gk')">GK</button>
                 <button class="filtro-pos-btn" data-pos="cb" onclick="setFiltroPos('mercado', 'cb')">CB</button>
                 <button class="filtro-pos-btn" data-pos="mc" onclick="setFiltroPos('mercado', 'mc')">MC</button>
                 <button class="filtro-pos-btn" data-pos="st" onclick="setFiltroPos('mercado', 'st')">ST</button>
@@ -341,6 +352,10 @@
     <div id="tienda-section" class="full-screen-overlay">
         <div class="section-header">
             <h1 class="italic-title">TIENDA DE <span class="primary-text">SOBRES</span></h1>
+            <div class="stats">
+                <span id="coins-display-tienda">🪙 --</span>
+                <span id="points-display-tienda">💎 --</span>
+            </div>
             <button class="btn-ui btn-back" onclick="cerrarSeccion('tienda-section')">VOLVER</button>
         </div>
         <div class="pack-container">
@@ -619,8 +634,16 @@
         function imgTag(foto) { return `<img src="${foto}" onerror="this.onerror=null;this.src='${ROBLOX_FALLBACK}'">`; }
 
         function actualizarUI() {
-            document.getElementById('coins-display').innerText = `🪙 ${gameData.coins.toLocaleString('es-ES')}`;
-            document.getElementById('points-display').innerText = `💎 ${gameData.points.toLocaleString('es-ES')}`;
+            const coinsTxt = `🪙 ${gameData.coins.toLocaleString('es-ES')}`;
+            const pointsTxt = `💎 ${gameData.points.toLocaleString('es-ES')}`;
+            ['coins-display', 'coins-display-club', 'coins-display-mercado', 'coins-display-tienda'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = coinsTxt;
+            });
+            ['points-display', 'points-display-club', 'points-display-mercado', 'points-display-tienda'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerText = pointsTxt;
+            });
         }
 
         // ── CLUB ─────────────────────────────────────────────────
@@ -794,6 +817,7 @@
             // Lock global inmediato — bloquea toda la página
             if (document.body.classList.contains('comprando-lock')) return;
             document.body.classList.add('comprando-lock');
+            document.getElementById('compra-spinner-texto').innerText = 'PROCESANDO FICHAJE...';
             document.getElementById('compra-spinner').classList.add('activo');
 
             const desbloquear = () => {
@@ -870,8 +894,24 @@
 
         // ── ACCIONES CLUB ────────────────────────────────────────
         window.cancelarVenta = async (docId, jugadorId) => {
-            try { await deleteDoc(doc(db, "mercado", docId)); await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { inventario: [...gameData.inventario, jugadorId] }); notif("Jugador retirado del mercado.", 'ok'); }
+            // Lock global inmediato — evita que clics rápidos dupliquen al jugador
+            if (document.body.classList.contains('comprando-lock')) return;
+            document.body.classList.add('comprando-lock');
+            document.getElementById('compra-spinner-texto').innerText = 'RETIRANDO DEL MERCADO...';
+            document.getElementById('compra-spinner').classList.add('activo');
+
+            const desbloquear = () => {
+                document.body.classList.remove('comprando-lock');
+                document.getElementById('compra-spinner').classList.remove('activo');
+            };
+
+            try {
+                await deleteDoc(doc(db, "mercado", docId));
+                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { inventario: [...gameData.inventario, jugadorId] });
+                notif("Jugador retirado del mercado.", 'ok');
+            }
             catch { notif("No se pudo retirar el jugador.", 'error'); }
+            finally { desbloquear(); }
         };
 
         window.descartarJugador = (id) => {
