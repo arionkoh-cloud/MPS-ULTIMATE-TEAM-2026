@@ -138,9 +138,36 @@
         .filtro-limpiar-btn { background: transparent; border: 1px solid rgba(255,50,50,0.5); color: #ff3232; padding: 10px 16px; border-radius: 4px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.8rem; transition: 0.2s; }
         .filtro-limpiar-btn:hover { background: rgba(255,50,50,0.15); }
         .sin-resultados { color: rgba(255,255,255,0.5); font-size: 1.3rem; text-align: center; padding: 60px 0; font-style: italic; grid-column: 1 / -1; }
+   
+    /* LOCK GLOBAL DE COMPRA */
+body.comprando-lock * { pointer-events: none !important; cursor: wait !important; }
+body.comprando-lock { cursor: wait !important; }
+
+#compra-spinner {
+    display: none;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+    z-index: 9999; align-items: center; justify-content: center;
+    flex-direction: column; gap: 20px;
+}
+#compra-spinner.activo { display: flex; }
+#compra-spinner .spinner-grande {
+    width: 60px; height: 60px;
+    border: 5px solid rgba(0, 255, 170, 0.2);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+#compra-spinner p { color: var(--primary); font-size: 1.4rem; font-weight: bold; letter-spacing: 4px; text-transform: uppercase; }
+    
     </style>
 </head>
 <body>
+
+    <div id="compra-spinner">
+    <div class="spinner-grande"></div>
+    <p>PROCESANDO FICHAJE...</p>
+</div>
 
     <div id="loader">
         <div class="loader-left">
@@ -721,34 +748,59 @@
             catch { notif("Error al publicar la carta.", 'error'); }
         };
 
-        window.ficharJugador = async (ofertaId, precio, vendedorId, jugadorId) => {
-            if (gameData.coins < precio) return notif(`Necesitas 🪙 ${precio.toLocaleString()} y tienes 🪙 ${gameData.coins.toLocaleString()}.`, 'error');
-            if (vendedorId === auth.currentUser.uid) return notif("No puedes comprar tu propia carta.", 'aviso');
+        window.ficharJugador = async (btn, ofertaId, precio, vendedorId, jugadorId) => {
+    // Lock global inmediato — bloquea TODA la página
+    if (document.body.classList.contains('comprando-lock')) return;
+    document.body.classList.add('comprando-lock');
+    document.getElementById('compra-spinner').classList.add('activo');
 
-            let paso = 0;
-            try {
-                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), {
-                    coins: gameData.coins - precio,
-                    inventario: [...gameData.inventario, jugadorId]
-                });
-                paso = 1;
-                await addDoc(collection(db, "pagos_pendientes"), {
-                    vendedorId,
-                    cantidad: precio,
-                    jugadorId,
-                    compradorNombre: gameData.username,
-                    fecha: Date.now()
-                });
-                paso = 2;
-                await deleteDoc(doc(db, "mercado", ofertaId));
-                paso = 3;
-            } catch(e) {
-                console.error(`[fichar] Error en paso ${paso}:`, e);
-                // Si ya descontamos las monedas y añadimos la carta (paso >= 1),
-                // el fichaje fue exitoso aunque falle algo posterior.
-                if (paso === 0) notif("Error en el fichaje. No se realizó ningún cambio.", 'error');
-            }
-        };
+    const desbloquear = () => {
+        document.body.classList.remove('comprando-lock');
+        document.getElementById('compra-spinner').classList.remove('activo');
+    };
+
+    if (gameData.coins < precio) {
+        desbloquear();
+        return notif(`Necesitas 🪙 ${precio.toLocaleString()} y tienes 🪙 ${gameData.coins.toLocaleString()}.`, 'error');
+    }
+    if (vendedorId === auth.currentUser.uid) {
+        desbloquear();
+        return notif("No puedes comprar tu propia carta.", 'aviso');
+    }
+
+    try {
+        const ofertaSnap = await getDoc(doc(db, "mercado", ofertaId));
+        if (!ofertaSnap.exists()) {
+            desbloquear();
+            return notif("Esta oferta ya no está disponible.", 'aviso');
+        }
+    } catch(e) {
+        desbloquear();
+        return notif("Error al verificar la oferta. Inténtalo de nuevo.", 'error');
+    }
+
+    let paso = 0;
+    try {
+        await updateDoc(doc(db, "jugadores", auth.currentUser.uid), {
+            coins: gameData.coins - precio,
+            inventario: [...gameData.inventario, jugadorId]
+        });
+        paso = 1;
+        await addDoc(collection(db, "pagos_pendientes"), {
+            vendedorId, cantidad: precio, jugadorId,
+            compradorNombre: gameData.username, fecha: Date.now()
+        });
+        paso = 2;
+        await deleteDoc(doc(db, "mercado", ofertaId));
+        // Éxito: el onSnapshot quitará la carta del mercado solo
+    } catch(e) {
+        console.error(`[fichar] Error en paso ${paso}:`, e);
+        if (paso === 0) notif("Error en el fichaje. No se realizó ningún cambio.", 'error');
+    } finally {
+        // Siempre desbloquea al terminar, sea éxito o error
+        desbloquear();
+    }
+};
 
         // ── SOBRES ───────────────────────────────────────────────
         window.abrirPack = async (tipoPack, metodoPago) => {
