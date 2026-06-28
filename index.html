@@ -143,6 +143,15 @@
         #compra-spinner .spinner-grande { width: 60px; height: 60px; border: 5px solid rgba(0,255,170,0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
         #compra-spinner p { color: var(--primary); font-size: 1.4rem; font-weight: bold; letter-spacing: 4px; text-transform: uppercase; }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* SUBMENÚS DE NAVEGACIÓN — misma estética que .menu-btn del menú principal */
+        .nav-grid { display: flex; gap: 15px; height: calc(100vh - 250px); }
+        .nav-btn { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 40px; display: flex; flex-direction: column; justify-content: flex-end; transition: flex 0.6s var(--smooth-curve), background 0.4s ease; cursor: pointer; position: relative; overflow: hidden; }
+        .nav-btn:not(.nav-disabled):hover { flex: 3; background: rgba(255,255,255,0.08); border-color: var(--primary); }
+        .nav-btn.nav-disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+        .nav-btn h2 { font-size: 3.5rem; text-transform: uppercase; font-style: italic; line-height: 0.9; }
+        .nav-btn .nav-sub { font-size: 1.1rem; color: rgba(255,255,255,0.45); margin-top: 10px; text-transform: uppercase; letter-spacing: 2px; font-style: normal; }
+        #bd-contador { margin-bottom: 20px; color: rgba(255,255,255,0.4); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; }
     </style>
 </head>
 <body>
@@ -186,11 +195,85 @@
             </div>
         </header>
         <main class="main-menu">
-            <div class="menu-btn"><h2>DIVISION<br>RIVALS</h2></div>
-            <div class="menu-btn" onclick="abrirSeccion('club-section')"><h2>MI<br>CLUB</h2></div>
-            <div class="menu-btn" onclick="abrirSeccion('mercado-section')"><h2>MERCADO DE<br>FICHAJES</h2></div>
-            <div class="menu-btn" onclick="abrirSeccion('tienda-section')"><h2>TIENDA</h2></div>
+            <div class="menu-btn" onclick="abrirSeccion('jugar-nav-section')"><h2>JUGAR</h2></div>
+            <div class="menu-btn" onclick="abrirSeccion('club-nav-section')"><h2>CLUB</h2></div>
+            <div class="menu-btn" onclick="abrirSeccion('extra-nav-section')"><h2>EXTRA</h2></div>
         </main>
+    </div>
+
+    <div id="jugar-nav-section" class="full-screen-overlay">
+        <div class="section-header">
+            <h1 class="italic-title"><span class="primary-text">JUGAR</span></h1>
+            <button class="btn-ui btn-back" onclick="cerrarSeccion('jugar-nav-section')">REGRESAR</button>
+        </div>
+        <div class="nav-grid">
+            <div class="nav-btn nav-disabled">
+                <h2>PRÓXIMAMENTE</h2>
+            </div>
+            <div class="nav-btn nav-disabled">
+                <h2>PRÓXIMAMENTE</h2>
+            </div>
+            <div class="nav-btn nav-disabled">
+                <h2>PLANTILLA</h2>
+                <span class="nav-sub">En Desarrollo</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="club-nav-section" class="full-screen-overlay">
+        <div class="section-header">
+            <h1 class="italic-title"><span class="primary-text">CLUB</span></h1>
+            <button class="btn-ui btn-back" onclick="cerrarSeccion('club-nav-section')">REGRESAR</button>
+        </div>
+        <div class="nav-grid">
+            <div class="nav-btn" onclick="abrirSeccion('club-section')">
+                <h2>MI CLUB</h2>
+            </div>
+            <div class="nav-btn" onclick="abrirSeccion('mercado-section')">
+                <h2>MERCADO DE FICHAJES</h2>
+            </div>
+            <div class="nav-btn" onclick="abrirSeccion('tienda-section')">
+                <h2>TIENDA</h2>
+            </div>
+        </div>
+    </div>
+
+    <div id="extra-nav-section" class="full-screen-overlay">
+        <div class="section-header">
+            <h1 class="italic-title"><span class="primary-text">EXTRA</span></h1>
+            <button class="btn-ui btn-back" onclick="cerrarSeccion('extra-nav-section')">REGRESAR</button>
+        </div>
+        <div class="nav-grid">
+            <div class="nav-btn nav-disabled">
+                <h2>MÚSICA</h2>
+                <span class="nav-sub">Próximamente</span>
+            </div>
+            <div class="nav-btn" onclick="abrirSeccion('base-datos-section')">
+                <h2>BASE DE DATOS</h2>
+            </div>
+            <div class="nav-btn nav-disabled">
+                <h2>BORRAR DATOS</h2>
+            </div>
+        </div>
+    </div>
+
+    <div id="base-datos-section" class="full-screen-overlay">
+        <div class="section-header">
+            <h1 class="italic-title">BASE DE <span class="primary-text">DATOS</span></h1>
+            <button class="btn-ui btn-back" onclick="cerrarSeccion('base-datos-section')">VOLVER</button>
+        </div>
+        <div class="filtros-bar">
+            <input type="text" class="filtro-busqueda-nombre" id="bd-filtro-nombre" placeholder="🔍 BUSCAR JUGADOR POR NOMBRE..." oninput="onFiltroNombreInput('bd')">
+            <div class="filtro-posiciones" id="bd-filtro-posiciones">
+                <button class="filtro-pos-btn activo" data-pos="todos" onclick="setFiltroPos('bd', 'todos')">TODOS</button>
+                <button class="filtro-pos-btn" data-pos="cb" onclick="setFiltroPos('bd', 'cb')">CB</button>
+                <button class="filtro-pos-btn" data-pos="mc" onclick="setFiltroPos('bd', 'mc')">MC</button>
+                <button class="filtro-pos-btn" data-pos="st" onclick="setFiltroPos('bd', 'st')">ST</button>
+            </div>
+            <button class="filtro-limpiar-btn" onclick="limpiarFiltros('bd')">LIMPIAR FILTROS</button>
+        </div>
+        <p id="bd-contador"></p>
+        <div class="grid-container" id="bd-grid"></div>
     </div>
 
     <div id="club-section" class="full-screen-overlay">
@@ -336,7 +419,8 @@
         // ── FILTROS ──────────────────────────────────────────────
         const filtrosState = {
             club:    { pos: 'todos', nombre: '' },
-            mercado: { pos: 'todos', nombre: '' }
+            mercado: { pos: 'todos', nombre: '' },
+            bd:      { pos: 'todos', nombre: '' }
         };
 
         window.setFiltroPos = (seccion, pos) => {
@@ -345,6 +429,7 @@
                 btn.classList.toggle('activo', btn.dataset.pos === pos);
             });
             if (seccion === 'club') renderizarClub();
+            else if (seccion === 'bd') renderizarBaseDatos();
             else renderizarMercadoActual();
         };
 
@@ -356,6 +441,7 @@
                 btn.classList.toggle('activo', btn.dataset.pos === 'todos');
             });
             if (seccion === 'club') renderizarClub();
+            else if (seccion === 'bd') renderizarBaseDatos();
             else renderizarMercadoActual();
         };
 
@@ -373,6 +459,7 @@
             clearTimeout(debounceTimers[seccion]);
             debounceTimers[seccion] = setTimeout(() => {
                 if (seccion === 'club') renderizarClub();
+                else if (seccion === 'bd') renderizarBaseDatos();
                 else renderizarMercadoActual();
             }, 250);
         };
@@ -609,6 +696,44 @@
             }
         };
 
+        // ── BASE DE DATOS ─────────────────────────────────────────
+        window.renderizarBaseDatos = function() {
+            const grid     = document.getElementById('bd-grid');
+            const contador = document.getElementById('bd-contador');
+            if (!grid) return;
+            grid.innerHTML = "";
+
+            const jugadoresFiltrados = databaseJugadores
+                .filter(j => jugadorPasaFiltro(j, 'bd'))
+                .sort((a, b) => b.grl - a.grl);
+
+            if (contador) {
+                contador.textContent = jugadoresFiltrados.length
+                    ? `${jugadoresFiltrados.length} jugador${jugadoresFiltrados.length !== 1 ? 'es' : ''} en la base de datos`
+                    : '';
+            }
+
+            if (!jugadoresFiltrados.length) {
+                grid.innerHTML = `<div class="sin-resultados">No se encontraron jugadores con esos filtros.</div>`;
+                return;
+            }
+
+            jugadoresFiltrados.forEach(j => {
+                const w = document.createElement('div');
+                w.className = 'card-wrapper';
+                w.innerHTML = `
+                    <div class="card ${j.rareza}">
+                        <div class="ovr">${j.grl}</div>
+                        <div class="pos">${j.pos}</div>
+                        ${imgTag(j.foto)}
+                        <div class="name">${j.name}</div>
+                    </div>
+                    <div style="text-align:center; font-size:0.8rem; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:1px; margin-top:4px;">${j.rareza}</div>
+                `;
+                grid.appendChild(w);
+            });
+        };
+
         // ── MERCADO ──────────────────────────────────────────────
         // CORRECCIÓN PRINCIPAL: usamos data-* attributes en lugar de parámetros onclick
         // para evitar que los IDs de Firestore se corrompan al pasarlos como strings.
@@ -733,6 +858,7 @@
         window.abrirSeccion = (id) => {
             document.getElementById(id).style.display = "block";
             if (id === 'club-section') renderizarClub();
+            if (id === 'base-datos-section') renderizarBaseDatos();
             if (id === 'mercado-section' && !mercadoSuscrito) { mercadoSuscrito = true; onSnapshot(query(collection(db, "mercado"), orderBy("fecha", "desc")), renderizarMercado); }
         };
         window.cerrarSeccion = (id) => { document.getElementById(id).style.display = "none"; };
