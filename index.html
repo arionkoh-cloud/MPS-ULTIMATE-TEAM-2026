@@ -152,6 +152,93 @@
         .nav-btn h2 { font-size: 3.5rem; text-transform: uppercase; font-style: italic; line-height: 0.9; }
         .nav-btn .nav-sub { font-size: 1.1rem; color: rgba(255,255,255,0.45); margin-top: 10px; text-transform: uppercase; letter-spacing: 2px; font-style: normal; }
         #bd-contador { margin-bottom: 20px; color: rgba(255,255,255,0.4); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* ════════════════════════════════════════════════════════
+           PLANTILLA — CAMPO DE FÚTBOL ESTILO FIFA
+        ════════════════════════════════════════════════════════ */
+        #plantilla-section { flex-direction: column; overflow: hidden; padding: 30px 60px 0 !important; }
+        #plantilla-section .section-header { margin-bottom: 12px; padding-bottom: 12px; }
+        #plantilla-section .italic-title { font-size: 2.5rem; }
+        #plantilla-section .formacion-bar { margin-bottom: 10px; }
+        .media-badge { background: rgba(0,255,170,0.08); border: 1px solid rgba(0,255,170,0.35); padding: 9px 24px; border-radius: 30px; font-weight: 900; font-size: 1.05rem; color: var(--primary); letter-spacing: 1px; white-space: nowrap; }
+        .media-badge span { font-size: 1.3rem; margin-left: 6px; }
+
+        .formacion-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 22px; flex-wrap: wrap; }
+        .formacion-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.65); padding: 9px 20px; border-radius: 30px; cursor: pointer; font-weight: 900; letter-spacing: 1px; font-size: 0.9rem; transition: 0.25s; }
+        .formacion-btn:hover { border-color: var(--primary); color: white; }
+        .formacion-btn.activo { background: var(--primary); color: black; border-color: var(--primary); box-shadow: 0 0 18px rgba(0,255,170,0.45); }
+
+        .plantilla-wrapper { flex: 1; display: flex; flex-direction: column; gap: 16px; min-height: 0; }
+        .pitch-field { flex: 1; position: relative; border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; padding: 30px 8%; background: repeating-linear-gradient(180deg, #1d7233 0px, #1d7233 60px, #1a652c 60px, #1a652c 120px); box-shadow: inset 0 0 90px rgba(0,0,0,0.5), 0 15px 40px rgba(0,0,0,0.5); border: 3px solid rgba(255,255,255,0.07); min-height: 0; }
+        .pitch-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-90deg); font-size: 5.5rem; font-weight: 900; font-style: italic; color: rgba(255,255,255,0.045); letter-spacing: 6px; white-space: nowrap; z-index: 0; pointer-events: none; }
+        .pitch-field::before { content: ''; position: absolute; top: 50%; left: 50%; width: 180px; height: 180px; margin: -90px 0 0 -90px; border: 2px solid rgba(255,255,255,0.2); border-radius: 50%; z-index: 1; }
+        .pitch-field::after { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: rgba(255,255,255,0.2); z-index: 1; }
+        .pitch-box-gk { position: absolute; bottom: 0; left: 50%; width: 280px; height: 85px; margin-left: -140px; border: 2px solid rgba(255,255,255,0.2); border-bottom: none; border-radius: 8px 8px 0 0; z-index: 1; }
+
+        .pitch-row { display: flex; justify-content: center; align-items: flex-start; gap: 55px; position: relative; z-index: 2; }
+
+        @keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .pitch-slot { width: 120px; flex-shrink: 0; cursor: pointer; transition: transform 0.3s var(--smooth-curve); position: relative; }
+        .pitch-slot:hover { transform: translateY(-8px) scale(1.06); z-index: 6; }
+        .pitch-slot .card { width: 100%; box-shadow: 0 14px 28px rgba(0,0,0,0.55); animation: popIn 0.35s var(--smooth-curve); }
+        .pitch-slot .card .ovr { font-size: 1.25rem; top: 15%; left: 16%; }
+        .pitch-slot .card .pos { font-size: 0.62rem; top: 29%; left: 16%; }
+        .pitch-slot .card .name { font-size: 0.75rem; bottom: 14%; padding: 0 4px; }
+
+        .pitch-slot-empty { width: 100%; aspect-ratio: 2/3; border: 2px dashed rgba(255,255,255,0.4); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: rgba(0,0,0,0.18); color: rgba(255,255,255,0.55); transition: 0.25s; }
+        .pitch-slot:hover .pitch-slot-empty { border-color: var(--primary); color: var(--primary); background: rgba(0,255,170,0.1); box-shadow: 0 0 22px rgba(0,255,170,0.2); }
+        .pitch-slot-empty .plus-icon { font-size: 2.2rem; font-weight: 900; line-height: 1; }
+        .pitch-slot-empty .pos-label { font-size: 0.88rem; font-weight: 900; letter-spacing: 1px; }
+
+        .bench-wrapper { 
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            padding: 0 60px 16px;
+            transform: translateY(100%);
+            transition: transform 0.4s var(--smooth-curve);
+            background: linear-gradient(to bottom, transparent, rgba(5,5,8,0.97) 18%);
+            padding-top: 30px;
+        }
+        .bench-wrapper.visible { transform: translateY(0); }
+        .bench-tab {
+            position: fixed;
+            bottom: 0;
+            left: 32px;
+            z-index: 11;
+            background: rgba(20,20,35,0.95);
+            border: 1px solid rgba(0,255,170,0.35);
+            border-bottom: none;
+            border-radius: 12px 12px 0 0;
+            padding: 8px 20px 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 900;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.6);
+            transition: color 0.2s, border-color 0.2s, background 0.2s;
+            user-select: none;
+        }
+        .bench-tab:hover { color: white; border-color: rgba(0,255,170,0.7); }
+        .bench-tab.activo { color: var(--primary); border-color: var(--primary); background: rgba(0,255,170,0.08); }
+        .bench-tab .tab-arrow { font-size: 0.7rem; transition: transform 0.3s var(--smooth-curve); display: inline-block; }
+        .bench-tab.activo .tab-arrow { transform: rotate(180deg); }
+        .bench-label { font-size: 0.95rem; font-weight: 900; color: rgba(255,255,255,0.45); letter-spacing: 3px; margin-bottom: 10px; text-transform: uppercase; }
+        .bench-row { display: flex; justify-content: center; gap: 16px; padding: 16px 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; flex-wrap: wrap; }
+        .bench-slot { width: 78px; }
+        .bench-slot .card .ovr { font-size: 0.85rem; }
+        .bench-slot .card .pos { font-size: 0.42rem; }
+        .bench-slot .card .name { font-size: 0.52rem; }
+
+        .plantilla-selector-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.72); backdrop-filter: blur(6px); z-index: 2500; display: none; animation: fadeIn 0.35s var(--smooth-curve); }
+        .plantilla-selector-panel { position: absolute; top: 0; right: 0; width: 50%; height: 100%; background: #0e0e1a; border-left: 2px solid var(--primary); box-shadow: -25px 0 60px rgba(0,0,0,0.6); padding: 50px; overflow-y: auto; animation: slideInPanel 0.45s var(--smooth-curve); }
+        @keyframes slideInPanel { from { transform: translateX(100%); } to { transform: translateX(0); } }
     </style>
 </head>
 <body>
@@ -213,10 +300,44 @@
             <div class="nav-btn nav-disabled">
                 <h2>PRÓXIMAMENTE</h2>
             </div>
-            <div class="nav-btn nav-disabled">
+            <div class="nav-btn" onclick="abrirSeccion('plantilla-section')">
                 <h2>PLANTILLA</h2>
-                <span class="nav-sub">En Desarrollo</span>
             </div>
+        </div>
+    </div>
+
+    <div id="plantilla-section" class="full-screen-overlay">
+        <div class="section-header">
+            <h1 class="italic-title">MI <span class="primary-text">PLANTILLA</span></h1>
+            <div style="display:flex; align-items:center; gap:20px;">
+                <div class="media-badge">MEDIA <span id="plantilla-media">--</span></div>
+                <button class="btn-ui btn-back" onclick="cerrarSeccion('plantilla-section')">VOLVER</button>
+            </div>
+        </div>
+        <div class="formacion-bar" id="formacion-selector">
+            <span style="color:rgba(255,255,255,0.5); font-weight:900; text-transform:uppercase; letter-spacing:1px; font-size:0.85rem; margin-right:4px;">FORMACIÓN:</span>
+            <button class="formacion-btn" data-form="2-2-2" onclick="cambiarFormacion('2-2-2')">2-2-2</button>
+            <button class="formacion-btn" data-form="3-2-1" onclick="cambiarFormacion('3-2-1')">3-2-1</button>
+            <button class="formacion-btn" data-form="2-3-1" onclick="cambiarFormacion('2-3-1')">2-3-1</button>
+            <button class="formacion-btn" data-form="2-1-3" onclick="cambiarFormacion('2-1-3')">2-1-3</button>
+            <button class="formacion-btn" data-form="3-1-2" onclick="cambiarFormacion('3-1-2')">3-1-2</button>
+        </div>
+        <div class="plantilla-wrapper">
+            <div class="pitch-field" id="pitch-field">
+                <div class="pitch-watermark">MPS UT</div>
+                <div class="pitch-box-gk"></div>
+                <div class="pitch-row" id="row-st"></div>
+                <div class="pitch-row" id="row-mc"></div>
+                <div class="pitch-row" id="row-cb"></div>
+                <div class="pitch-row" id="row-gk"></div>
+            </div>
+            <div class="bench-wrapper" id="bench-wrapper">
+                <div class="bench-label">Sustitutos</div>
+                <div class="bench-row" id="bench-row"></div>
+            </div>
+            <button class="bench-tab" id="bench-tab" onclick="toggleBench()">
+                <span>⬆ SUPLENTES</span><span class="tab-arrow">▲</span>
+            </button>
         </div>
     </div>
 
@@ -414,6 +535,17 @@
         </div>
     </div>
 
+    <div id="plantilla-selector-overlay" class="plantilla-selector-overlay" onclick="cerrarSelectorPlantilla()">
+        <div id="plantilla-selector-panel" class="plantilla-selector-panel" onclick="event.stopPropagation()">
+            <div class="section-header" style="margin-bottom:20px;">
+                <h2 class="italic-title" id="selector-titulo" style="font-size:2.2rem;">ELEGIR JUGADOR</h2>
+                <button class="btn-ui btn-back" onclick="cerrarSelectorPlantilla()">CERRAR</button>
+            </div>
+            <button class="btn-ui" id="btn-quitar-jugador" style="background:#ff3232; color:white; width:100%; margin-bottom:25px; display:none;" onclick="quitarJugadorPlantilla()">QUITAR DEL ONCE</button>
+            <div class="grid-container" id="plantilla-selector-grid"></div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, onSnapshot, setDoc, updateDoc, collection, addDoc, deleteDoc, query, orderBy, getDoc, getDocs, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -542,7 +674,7 @@
             try {
                 await setPersistence(auth, browserLocalPersistence);
                 const cred = await createUserWithEmailAndPassword(auth, `${nick.toLowerCase()}@mps.com`, pass);
-                await setDoc(doc(db, "jugadores", cred.user.uid), { username: nick.toUpperCase(), coins: 5000, points: 0, inventario: [] });
+                await setDoc(doc(db, "jugadores", cred.user.uid), { username: nick.toUpperCase(), coins: 5000, points: 0, inventario: [], plantilla: getDefaultPlantilla(), plantillaMedia: 0 });
             } catch { notif("No se pudo registrar. Ese nombre puede estar en uso.", 'error'); }
         };
 
@@ -601,6 +733,7 @@
                     if (!gameData.inventario) gameData.inventario = [];
                     actualizarUI();
                     if (document.getElementById('club-section').style.display === "block") renderizarClub();
+                    if (document.getElementById('plantilla-section').style.display === "flex") renderizarPlantilla();
                     bar.style.width = "100%";
                     document.getElementById('continue-btn').classList.add('ready');
                 }
@@ -882,11 +1015,176 @@
             }
         }
 
+        // ── BENCH TOGGLE ─────────────────────────────────────────
+        window.toggleBench = () => {
+            const bench = document.getElementById('bench-wrapper');
+            const tab   = document.getElementById('bench-tab');
+            if (!bench) return;
+            const open = bench.classList.toggle('visible');
+            tab.classList.toggle('activo', open);
+        };
+
+        // ── PLANTILLA ─────────────────────────────────────────────
+        const FORMACIONES = {
+            '2-2-2': { cb: 2, mc: 2, st: 2 },
+            '3-2-1': { cb: 3, mc: 2, st: 1 },
+            '2-3-1': { cb: 2, mc: 3, st: 1 },
+            '2-1-3': { cb: 2, mc: 1, st: 3 },
+            '3-1-2': { cb: 3, mc: 1, st: 2 }
+        };
+        const LABELS_PLANTILLA = { gk: 'GK', cb: 'CB', mc: 'CM', st: 'ST' };
+        const POS_DB_MAP = { gk: 'gk', cb: 'cb', mc: 'cm', st: 'st' };
+        let selectorActual = null;
+
+        function getDefaultPlantilla() {
+            return { formacion: '2-2-2', gk: null, cb: [null, null, null], mc: [null, null, null], st: [null, null, null], subs: [null, null, null, null, null] };
+        }
+
+        // Normaliza la plantilla guardada (rellena arrays faltantes, valida formación) y la deja lista para usar.
+        function getPlantilla() {
+            if (!gameData.plantilla) gameData.plantilla = getDefaultPlantilla();
+            const p = gameData.plantilla;
+            const norm = (arr, len) => { const a = Array.isArray(arr) ? arr : []; return Array.from({ length: len }, (_, i) => a[i] ?? null); };
+            p.cb = norm(p.cb, 3);
+            p.mc = norm(p.mc, 3);
+            p.st = norm(p.st, 3);
+            p.subs = norm(p.subs, 5);
+            if (!p.gk) p.gk = null;
+            if (!p.formacion || !FORMACIONES[p.formacion]) p.formacion = '2-2-2';
+            return p;
+        }
+
+        function calcularMediaTitulares(p) {
+            const counts = FORMACIONES[p.formacion] || FORMACIONES['2-2-2'];
+            const ids = [p.gk, ...p.cb.slice(0, counts.cb), ...p.mc.slice(0, counts.mc), ...p.st.slice(0, counts.st)].filter(Boolean);
+            if (!ids.length) return 0;
+            const total = ids.reduce((s, id) => { const j = databaseJugadores.find(x => x.id === id); return s + (j ? j.grl : 0); }, 0);
+            return Math.round(total / ids.length);
+        }
+
+        function crearSlotElemento(cat, index, jugadorId, esSub) {
+            const wrap = document.createElement('div');
+            wrap.className = esSub ? 'pitch-slot bench-slot' : 'pitch-slot';
+            const j = jugadorId ? databaseJugadores.find(p => p.id === jugadorId) : null;
+            if (j) {
+                wrap.innerHTML = `<div class="card ${j.rareza}"><div class="ovr">${j.grl}</div><div class="pos">${j.pos}</div>${imgTag(j.foto)}<div class="name">${j.name}</div></div>`;
+            } else {
+                wrap.innerHTML = `<div class="pitch-slot-empty"><div class="plus-icon">+</div><div class="pos-label">${esSub ? 'SUB' : LABELS_PLANTILLA[cat]}</div></div>`;
+            }
+            wrap.onclick = () => abrirSelectorPlantilla(cat, index, esSub);
+            return wrap;
+        }
+
+        function renderPlantillaRow(rowId, cat, count, arr) {
+            const row = document.getElementById(rowId);
+            row.innerHTML = '';
+            for (let i = 0; i < count; i++) row.appendChild(crearSlotElemento(cat, i, arr[i], false));
+        }
+
+        function renderBancaPlantilla(subs) {
+            const bench = document.getElementById('bench-row');
+            bench.innerHTML = '';
+            subs.forEach((id, i) => bench.appendChild(crearSlotElemento('sub', i, id, true)));
+        }
+
+        window.renderizarPlantilla = function() {
+            const p = getPlantilla();
+            const counts = FORMACIONES[p.formacion];
+            document.querySelectorAll('#formacion-selector .formacion-btn').forEach(b => b.classList.toggle('activo', b.dataset.form === p.formacion));
+            renderPlantillaRow('row-st', 'st', counts.st, p.st);
+            renderPlantillaRow('row-mc', 'mc', counts.mc, p.mc);
+            renderPlantillaRow('row-cb', 'cb', counts.cb, p.cb);
+            renderPlantillaRow('row-gk', 'gk', 1, [p.gk]);
+            renderBancaPlantilla(p.subs);
+            document.getElementById('plantilla-media').textContent = calcularMediaTitulares(p) || '--';
+        };
+
+        async function guardarPlantilla(p) {
+            try { await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { plantilla: p, plantillaMedia: calcularMediaTitulares(p) }); }
+            catch (e) { console.error(e); notif("No se pudo guardar la plantilla.", 'error'); }
+        }
+
+        window.cambiarFormacion = (formacion) => {
+            const p = getPlantilla();
+            if (p.formacion === formacion) return;
+            p.formacion = formacion;
+            p.gk = null;
+            p.cb = [null, null, null];
+            p.mc = [null, null, null];
+            p.st = [null, null, null];
+            p.subs = [null, null, null, null, null];
+            renderizarPlantilla();
+            guardarPlantilla(p);
+        };
+
+        window.abrirSelectorPlantilla = (cat, index, esSub) => {
+            selectorActual = { cat, index, esSub };
+            const p = getPlantilla();
+            const idActual = esSub ? p.subs[index] : (cat === 'gk' ? p.gk : p[cat][index]);
+            const usados = new Set([p.gk, ...p.cb, ...p.mc, ...p.st, ...p.subs].filter(Boolean));
+            usados.delete(idActual);
+
+            const conteoPorId = {};
+            (gameData.inventario || []).forEach(id => { conteoPorId[id] = (conteoPorId[id] || 0) + 1; });
+
+            let candidatos = Object.keys(conteoPorId).map(id => databaseJugadores.find(j => j.id === id)).filter(Boolean);
+            if (!esSub) candidatos = candidatos.filter(j => (j.pos || '').trim().toLowerCase() === (POS_DB_MAP[cat] || cat));
+            candidatos = candidatos.filter(j => !usados.has(j.id)).sort((a, b) => b.grl - a.grl);
+
+            document.getElementById('selector-titulo').textContent = esSub ? 'ELEGIR SUSTITUTO' : `ELEGIR ${LABELS_PLANTILLA[cat]}`;
+            document.getElementById('btn-quitar-jugador').style.display = idActual ? 'block' : 'none';
+
+            const grid = document.getElementById('plantilla-selector-grid');
+            grid.innerHTML = '';
+            if (!candidatos.length) {
+                grid.innerHTML = `<div class="sin-resultados">No tienes jugadores disponibles para esta posición.</div>`;
+            } else {
+                candidatos.forEach(j => {
+                    const w = document.createElement('div');
+                    w.className = 'card-wrapper';
+                    w.style.cursor = 'pointer';
+                    const sel = j.id === idActual;
+                    w.innerHTML = `<div class="card ${j.rareza}" style="${sel ? 'outline:3px solid var(--primary); border-radius:6px;' : ''}"><div class="ovr">${j.grl}</div><div class="pos">${j.pos}</div>${imgTag(j.foto)}<div class="name">${j.name}</div></div>`;
+                    w.onclick = () => asignarJugadorPlantilla(j.id);
+                    grid.appendChild(w);
+                });
+            }
+
+            document.getElementById('plantilla-selector-overlay').style.display = 'block';
+        };
+
+        window.cerrarSelectorPlantilla = () => {
+            document.getElementById('plantilla-selector-overlay').style.display = 'none';
+            selectorActual = null;
+        };
+
+        window.asignarJugadorPlantilla = (id) => {
+            if (!selectorActual) return;
+            const p = getPlantilla();
+            const { cat, index, esSub } = selectorActual;
+            if (esSub) p.subs[index] = id; else if (cat === 'gk') p.gk = id; else p[cat][index] = id;
+            cerrarSelectorPlantilla();
+            renderizarPlantilla();
+            guardarPlantilla(p);
+        };
+
+        window.quitarJugadorPlantilla = () => {
+            if (!selectorActual) return;
+            const p = getPlantilla();
+            const { cat, index, esSub } = selectorActual;
+            if (esSub) p.subs[index] = null; else if (cat === 'gk') p.gk = null; else p[cat][index] = null;
+            cerrarSelectorPlantilla();
+            renderizarPlantilla();
+            guardarPlantilla(p);
+        };
+
         // ── NAVEGACIÓN ───────────────────────────────────────────
         window.abrirSeccion = (id) => {
-            document.getElementById(id).style.display = "block";
+            const el = document.getElementById(id);
+            el.style.display = (id === 'plantilla-section') ? "flex" : "block";
             if (id === 'club-section') renderizarClub();
             if (id === 'base-datos-section') renderizarBaseDatos();
+            if (id === 'plantilla-section') renderizarPlantilla();
             if (id === 'mercado-section' && !mercadoSuscrito) { mercadoSuscrito = true; onSnapshot(query(collection(db, "mercado"), orderBy("fecha", "desc")), renderizarMercado); }
         };
         window.cerrarSeccion = (id) => { document.getElementById(id).style.display = "none"; };
