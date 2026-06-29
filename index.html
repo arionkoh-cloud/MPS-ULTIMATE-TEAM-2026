@@ -83,6 +83,7 @@
         .card-venda { filter: saturate(0.5); }
         .badge-venta { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); background: #ff3232; color: white; padding: 5px 15px; font-weight: bold; font-size: 1.2rem; border: 2px solid white; z-index: 15; pointer-events: none; box-shadow: 0 0 15px rgba(255,50,50,0.5); }
         .badge-cantidad { position: absolute; top: 8px; right: 8px; background: var(--primary); color: black; font-weight: 900; font-size: 0.85rem; padding: 3px 9px; border-radius: 20px; z-index: 16; box-shadow: 0 0 10px rgba(0,255,170,0.5); }
+        .badge-plantilla { position: absolute; top: 8px; left: 8px; background: #0066ff; color: white; font-weight: 900; font-size: 0.7rem; padding: 3px 7px; border-radius: 20px; z-index: 16; box-shadow: 0 0 10px rgba(0,102,255,0.6); letter-spacing: 0.5px; white-space: nowrap; }
 
         .pack-container { display: flex; justify-content: center; align-items: center; gap: 40px; padding: 20px 30px; height: calc(100vh - 160px); }
         .pack { display: flex; flex-direction: column; align-items: center; gap: 10px; background: transparent; border-radius: 12px; cursor: pointer; transition: transform 0.3s, box-shadow 0.3s; border: 3px solid var(--primary); padding: 12px; }
@@ -842,12 +843,15 @@
                 if (!jugadoresFiltrados.length) {
                     gridInv.innerHTML = `<div class="sin-resultados">No se encontraron jugadores con esos filtros.</div>`;
                 } else {
+                    const p = getPlantilla ? getPlantilla() : null;
+                    const enPlantilla = p ? new Set([p.gk, ...p.cb, ...p.mc, ...p.st, ...p.subs].filter(Boolean)) : new Set();
                     jugadoresFiltrados.forEach(j => {
                         const val = PRECIOS_VENTA[j.rareza] || 30;
                         const cantidad = conteoPorId[j.id];
                         const badge = cantidad > 1 ? `<div class="badge-cantidad">x${cantidad}</div>` : '';
+                        const badgePlantilla = enPlantilla.has(j.id) ? `<div class="badge-plantilla">⚽ ONCE</div>` : '';
                         const w = document.createElement('div'); w.className = 'card-wrapper';
-                        w.innerHTML = `<div class="card ${j.rareza}">${badge}<div class="ovr">${j.grl}</div><div class="pos">${j.pos}</div>${imgTag(j.foto)}<div class="name">${j.name}</div></div><div class="card-actions-container"><button class="btn-card-action" style="background:white;color:black;" onclick="venderEnMercado('${j.id}')">VENDER MERCADO</button><button class="btn-card-action" onclick="descartarJugador('${j.id}')">DESCARTAR (🪙${val})</button></div>`;
+                        w.innerHTML = `<div class="card ${j.rareza}">${badge}${badgePlantilla}<div class="ovr">${j.grl}</div><div class="pos">${j.pos}</div>${imgTag(j.foto)}<div class="name">${j.name}</div></div><div class="card-actions-container"><button class="btn-card-action" style="background:white;color:black;" onclick="venderEnMercado('${j.id}')">VENDER MERCADO</button><button class="btn-card-action" onclick="descartarJugador('${j.id}')">DESCARTAR (🪙${val})</button></div>`;
                         gridInv.appendChild(w);
                     });
                 }
