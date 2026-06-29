@@ -229,6 +229,25 @@
         .bench-tab:hover { color: white; border-color: rgba(0,255,170,0.7); }
         .bench-tab.activo { color: var(--primary); border-color: var(--primary); background: rgba(0,255,170,0.08); }
         .bench-tab .tab-arrow { font-size: 0.7rem; transition: transform 0.3s var(--smooth-curve); display: inline-block; }
+        /* ── LEADERBOARD ── */
+        .lb-row { display:flex; align-items:center; gap:20px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:14px; padding:16px 22px; transition:background 0.2s; }
+        .lb-row:hover { background:rgba(255,255,255,0.07); }
+        .lb-rank { font-size:1.6rem; font-weight:900; font-style:italic; color:rgba(255,255,255,0.18); min-width:48px; text-align:center; }
+        .lb-rank.gold   { color:#ffd700; text-shadow:0 0 12px rgba(255,215,0,0.5); }
+        .lb-rank.silver { color:#c0c0c0; text-shadow:0 0 10px rgba(192,192,192,0.4); }
+        .lb-rank.bronze { color:#cd7f32; text-shadow:0 0 10px rgba(205,127,50,0.4); }
+        .lb-user { min-width:160px; font-weight:900; font-size:1.1rem; letter-spacing:1px; }
+        .lb-cards { display:flex; gap:6px; flex:1; flex-wrap:wrap; align-items:center; }
+        .lb-mini-card { width:44px; flex-shrink:0; position:relative; border-radius:5px; overflow:hidden; }
+        .lb-mini-card .card { width:100%; box-shadow:0 4px 10px rgba(0,0,0,0.5); }
+        .lb-mini-card .card .ovr  { font-size:0.42rem; top:13%; left:12%; }
+        .lb-mini-card .card .pos  { font-size:0.28rem; top:24%; left:12%; display:none; }
+        .lb-mini-card .card .name { font-size:0.28rem; bottom:10%; }
+        .lb-media { margin-left:auto; text-align:right; }
+        .lb-media .media-num { font-size:2rem; font-weight:900; color:var(--primary); line-height:1; }
+        .lb-media .media-lbl { font-size:0.65rem; color:rgba(255,255,255,0.4); letter-spacing:2px; text-transform:uppercase; }
+        .lb-loading { text-align:center; color:rgba(255,255,255,0.4); padding:60px; font-size:1.1rem; letter-spacing:2px; }
+        .lb-empty-slot { width:44px; height:66px; border:1px dashed rgba(255,255,255,0.12); border-radius:5px; background:rgba(0,0,0,0.2); flex-shrink:0; }
         .bench-tab.activo .tab-arrow { transform: rotate(180deg); }
         .bench-label { font-size: 0.95rem; font-weight: 900; color: rgba(255,255,255,0.45); letter-spacing: 3px; margin-bottom: 10px; text-transform: uppercase; }
         .bench-row { display: flex; justify-content: center; gap: 16px; padding: 16px 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; flex-wrap: wrap; }
@@ -373,10 +392,19 @@
             <div class="nav-btn" onclick="abrirSeccion('base-datos-section')">
                 <h2>BASE DE DATOS</h2>
             </div>
-            <div class="nav-btn nav-disabled">
-                <h2>BORRAR DATOS</h2>
+            <div class="nav-btn" onclick="abrirSeccion('leaderboard-section'); renderizarLeaderboard()">
+                <h2>LEADERBOARD</h2>
             </div>
         </div>
+    </div>
+
+    <!-- LEADERBOARD -->
+    <div id="leaderboard-section" class="full-screen-overlay">
+        <div class="section-header">
+            <h1 class="italic-title">LEADER<span class="primary-text">BOARD</span></h1>
+            <button class="btn-ui btn-back" onclick="cerrarSeccion('leaderboard-section')">VOLVER</button>
+        </div>
+        <div id="leaderboard-container" style="display:flex; flex-direction:column; gap:16px; max-width:1100px; margin:0 auto;"></div>
     </div>
 
     <div id="base-datos-section" class="full-screen-overlay">
@@ -1018,6 +1046,61 @@
                 desbloquear();
             }
         }
+
+        // ── LEADERBOARD ──────────────────────────────────────────
+        window.renderizarLeaderboard = async () => {
+            const cont = document.getElementById('leaderboard-container');
+            if (!cont) return;
+            cont.innerHTML = `<div class="lb-loading">CARGANDO CLASIFICACIÓN...</div>`;
+
+            try {
+                const snap = await getDocs(collection(db, "jugadores"));
+                const filas = [];
+                snap.forEach(d => {
+                    const data = d.data();
+                    if (!data.plantilla) return;
+                    const media = data.plantillaMedia || 0;
+                    if (media === 0) return;
+                    filas.push({ username: data.username || '???', plantilla: data.plantilla, media });
+                });
+
+                filas.sort((a, b) => b.media - a.media);
+
+                if (!filas.length) {
+                    cont.innerHTML = `<div class="lb-loading">Aún no hay jugadores con plantilla activa.</div>`;
+                    return;
+                }
+
+                cont.innerHTML = '';
+                filas.forEach((fila, idx) => {
+                    const p = fila.plantilla;
+                    const ids = [p.gk, ...(p.cb||[]), ...(p.mc||[]), ...(p.st||[])].filter(Boolean);
+                    const rankClass = idx === 0 ? 'gold' : idx === 1 ? 'silver' : idx === 2 ? 'bronze' : '';
+                    const rankLabel = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `#${idx + 1}`;
+
+                    const miniCards = ids.map(id => {
+                        const j = databaseJugadores.find(x => x.id === id);
+                        if (!j) return `<div class="lb-empty-slot"></div>`;
+                        return `<div class="lb-mini-card"><div class="card ${j.rareza}"><div class="ovr">${j.grl}</div><div class="pos">${j.pos}</div>${imgTag(j.foto)}<div class="name">${j.name}</div></div></div>`;
+                    });
+                    // Fill empty slots up to 7
+                    while (miniCards.length < 7) miniCards.push(`<div class="lb-empty-slot"></div>`);
+
+                    const row = document.createElement('div');
+                    row.className = 'lb-row';
+                    row.innerHTML = `
+                        <div class="lb-rank ${rankClass}">${rankLabel}</div>
+                        <div class="lb-user">${fila.username}</div>
+                        <div class="lb-cards">${miniCards.join('')}</div>
+                        <div class="lb-media"><div class="media-num">${fila.media}</div><div class="media-lbl">MEDIA</div></div>
+                    `;
+                    cont.appendChild(row);
+                });
+            } catch(e) {
+                console.error(e);
+                cont.innerHTML = `<div class="lb-loading">Error cargando la leaderboard.</div>`;
+            }
+        };
 
         // ── BENCH TOGGLE ─────────────────────────────────────────
         window.toggleBench = () => {
