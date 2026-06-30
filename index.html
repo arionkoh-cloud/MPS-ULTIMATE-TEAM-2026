@@ -1143,10 +1143,10 @@
 
         function calcularMediaTitulares(p) {
             const counts = FORMACIONES[p.formacion] || FORMACIONES['2-2-2'];
-            const ids = [p.gk, ...p.cb.slice(0, counts.cb), ...p.mc.slice(0, counts.mc), ...p.st.slice(0, counts.st)].filter(Boolean);
-            if (!ids.length) return 0;
-            const total = ids.reduce((s, id) => { const j = databaseJugadores.find(x => x.id === id); return s + (j ? j.grl : 0); }, 0);
-            return Math.round(total / ids.length);
+            const totalSlots = 1 + counts.cb + counts.mc + counts.st;
+            const ids = [p.gk, ...p.cb.slice(0, counts.cb), ...p.mc.slice(0, counts.mc), ...p.st.slice(0, counts.st)];
+            const total = ids.reduce((s, id) => { const j = id ? databaseJugadores.find(x => x.id === id) : null; return s + (j ? j.grl : 0); }, 0);
+            return Math.round(total / totalSlots);
         }
 
         function crearSlotElemento(cat, index, jugadorId, esSub) {
