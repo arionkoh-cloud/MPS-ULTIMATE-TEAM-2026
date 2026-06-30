@@ -493,7 +493,8 @@
         <div class="modal-content">
             <h2 class="italic-title" style="font-size:2rem;">PONER EN <span class="primary-text">VENTA</span></h2>
             <div id="modal-card-preview"></div>
-            <input type="number" id="input-precio-venta" placeholder="PRECIO MONEDAS">
+            <input type="number" id="input-precio-venta" placeholder="PRECIO MONEDAS" max="400000" min="1">
+            <div style="font-size:0.8rem; color:rgba(255,255,255,0.4); margin-top:6px; text-align:center;">Precio máximo permitido: 🪙 400,000</div>
             <div class="auth-buttons" style="margin-top:20px;">
                 <button class="btn-action" id="confirmar-venta-btn" style="background:var(--primary); color:black;">PUBLICAR</button>
                 <button class="btn-action" onclick="cerrarModalVenta()" style="background:#ff3232; color:white;">CANCELAR</button>
@@ -1356,9 +1357,12 @@
         };
         window.cerrarModalVenta = () => { document.getElementById('venta-modal').style.display = "none"; jugadorSeleccionadoParaVenta = null; };
 
+        const PRECIO_VENTA_MAXIMO = 400000;
+
         document.getElementById('confirmar-venta-btn').onclick = async () => {
             const precio = parseInt(document.getElementById('input-precio-venta').value);
             if (!precio || precio <= 0) return notif("Introduce un precio válido.", 'aviso');
+            if (precio > PRECIO_VENTA_MAXIMO) return notif(`El precio máximo permitido es 🪙 ${PRECIO_VENTA_MAXIMO.toLocaleString()}.`, 'aviso');
             const idVender = jugadorSeleccionadoParaVenta;
             if (!idVender) return notif("No hay jugador seleccionado.", 'error');
             const inv = [...gameData.inventario]; inv.splice(inv.indexOf(idVender), 1);
