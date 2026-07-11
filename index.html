@@ -578,19 +578,21 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, setDoc, updateDoc, collection, addDoc, deleteDoc, query, orderBy, getDoc, getDocs, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot, setDoc, updateDoc, collection, addDoc, deleteDoc, query, orderBy, getDoc, getDocs, where, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
 
-        const firebaseConfig = { apiKey: "AIzaSyAbqA2K0AJcIuN4JVUAI6VrKCiQF2xX0gQ", authDomain: "mps-ut-26.firebaseapp.com", projectId: "mps-ut-26", storageBucket: "mps-ut-26.firebasestorage.app", messagingSenderId: "524484879031", appId: "1:524484879031:web:ee60cdb79834f689646332" };
+        const firebaseConfig = {
+            apiKey: "AIzaSyBpuz6Tev66sfNew9rJAP9fGSdpmiWiES4",
+            authDomain: "mps-ut-27.firebaseapp.com",
+            projectId: "mps-ut-27",
+            storageBucket: "mps-ut-27.firebasestorage.app",
+            messagingSenderId: "691325725327",
+            appId: "1:691325725327:web:3112b25d4bc7d4d398defa",
+            measurementId: "G-X7EE8552E6"
+        };
         const app  = initializeApp(firebaseConfig);
         const db   = getFirestore(app);
         const auth = getAuth(app);
-        const functions = getFunctions(app);
-
-        const ficharJugadorFn   = httpsCallable(functions, 'ficharJugador');
-        const venderEnMercadoFn = httpsCallable(functions, 'venderEnMercado');
-        const cancelarVentaFn   = httpsCallable(functions, 'cancelarVenta');
 
         const SHEET_URL       = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTRZ3aXiCltsIuIyA9lWBNSF6svc6QAxIHuQ8nkqS7NnBNUK0NWAsc5tNn8hDbcUff-IHJzI2hsg4Lj/pub?output=csv";
         const ROBLOX_FALLBACK = "https://tr.rbxcdn.com/38c9c0fcce0f3ae07e2ac9e5afe7e9b2/150/150/AvatarHeadshot/Png";
@@ -981,11 +983,14 @@
 
         window.renderizarMercadoActual = () => { if (ultimoSnapshotMercado) renderizarMercado(ultimoSnapshotMercado); };
 
-        // ── FICHAJE (Cloud Function transaccional) ────────────────
+        // ── FICHAJE (transacción del lado cliente, sin Cloud Functions) ──
+        // runTransaction garantiza que leer la oferta + descontar coins +
+        // agregar la carta + crear el pago pendiente + borrar la oferta
+        // ocurra TODO junto o NADA — Firestore reintenta automáticamente
+        // si detecta que otro comprador tocó la misma oferta al mismo tiempo,
+        // y la propia transacción falla si la oferta ya no existe cuando
+        // se intenta confirmar. Esto es lo que evita la compra duplicada.
         async function ficharJugador(btn, ofertaId, _precioDOM, vendedorId, jugadorId) {
-            // Ya no se valida precio/vendedor/jugador aquí: la Cloud Function
-            // relee todo desde Firestore dentro de una transacción atómica,
-            // así que no puede manipularse desde la consola del navegador.
             if (!ofertaId) return notif("Error: datos de la oferta inválidos.", 'error');
 
             // Lock global inmediato — bloquea toda la página
@@ -999,8 +1004,56 @@
                 document.getElementById('compra-spinner').classList.remove('activo');
             };
 
+            const ofertaRef    = doc(db, "mercado", ofertaId);
+            const compradorRef = doc(db, "jugadores", auth.currentUser.uid);
+
             try {
-                await ficharJugadorFn({ ofertaId });
+                await runTransaction(db, async (tx) => {
+                    // ── TODAS LAS LECTURAS PRIMERO (obligatorio en runTransaction) ──
+                    const ofertaSnap = await tx.get(ofertaRef);
+                    if (!ofertaSnap.exists()) {
+                        throw new Error("Esta oferta ya no está disponible.");
+                    }
+                    const oferta = ofertaSnap.data();
+                    const { vendedorId: vendedorReal, jugadorId: jugadorReal, precio, vendedorNombre } = oferta;
+
+                    if (vendedorReal === auth.currentUser.uid) {
+                        throw new Error("No puedes comprar tu propia carta.");
+                    }
+
+                    const compradorSnap = await tx.get(compradorRef);
+                    if (!compradorSnap.exists()) {
+                        throw new Error("No se encontró tu perfil de jugador.");
+                    }
+                    const comprador = compradorSnap.data();
+                    const coinsActuales = comprador.coins || 0;
+                    const inventarioActual = comprador.inventario || [];
+
+                    if (coinsActuales < precio) {
+                        throw new Error(`Necesitas 🪙 ${precio.toLocaleString('es-ES')} y tienes 🪙 ${coinsActuales.toLocaleString('es-ES')}.`);
+                    }
+
+                    // ── ESCRITURAS ──────────────────────────────────────
+                    tx.update(compradorRef, {
+                        coins: coinsActuales - precio,
+                        inventario: [...inventarioActual, jugadorReal]
+                    });
+
+                    const pagoRef = doc(collection(db, "pagos_pendientes"));
+                    tx.set(pagoRef, {
+                        vendedorId: vendedorReal,
+                        cantidad: precio,
+                        jugadorId: jugadorReal,
+                        compradorNombre: comprador.username || gameData.username,
+                        fecha: Date.now()
+                    });
+
+                    // Esto es lo que arregla el bug original: la oferta se
+                    // borra DENTRO de la misma transacción que cobra y
+                    // entrega la carta, así que nunca puede quedar "viva"
+                    // mientras el comprador ya recibió lo que compró.
+                    tx.delete(ofertaRef);
+                });
                 // Éxito — el onSnapshot de "jugadores" y de "mercado" actualizan la UI solos
             } catch (e) {
                 console.error("[fichar] Error:", e);
@@ -1262,8 +1315,24 @@
                 document.getElementById('compra-spinner').classList.remove('activo');
             };
 
+            const ofertaRef  = doc(db, "mercado", docId);
+            const vendedorRef = doc(db, "jugadores", auth.currentUser.uid);
+
             try {
-                await cancelarVentaFn({ ofertaId: docId });
+                await runTransaction(db, async (tx) => {
+                    const ofertaSnap = await tx.get(ofertaRef);
+                    if (!ofertaSnap.exists()) throw new Error("Esta oferta ya no existe.");
+                    const oferta = ofertaSnap.data();
+                    if (oferta.vendedorId !== auth.currentUser.uid) throw new Error("Esta oferta no te pertenece.");
+
+                    const vendedorSnap = await tx.get(vendedorRef);
+                    if (!vendedorSnap.exists()) throw new Error("No se encontró tu perfil de jugador.");
+                    const vendedor = vendedorSnap.data();
+                    const inventarioActual = vendedor.inventario || [];
+
+                    tx.update(vendedorRef, { inventario: [...inventarioActual, oferta.jugadorId] });
+                    tx.delete(ofertaRef);
+                });
                 notif("Jugador retirado del mercado.", 'ok');
             }
             catch (e) {
@@ -1329,9 +1398,33 @@
             if (precio > PRECIO_VENTA_MAXIMO) return notif(`El precio máximo permitido es 🪙 ${PRECIO_VENTA_MAXIMO.toLocaleString()}.`, 'aviso');
             const idVender = jugadorSeleccionadoParaVenta;
             if (!idVender) return notif("No hay jugador seleccionado.", 'error');
+
+            const vendedorRef = doc(db, "jugadores", auth.currentUser.uid);
+
             try {
                 cerrarModalVenta();
-                await venderEnMercadoFn({ jugadorId: idVender, precio });
+                await runTransaction(db, async (tx) => {
+                    const vendedorSnap = await tx.get(vendedorRef);
+                    if (!vendedorSnap.exists()) throw new Error("No se encontró tu perfil de jugador.");
+                    const vendedor = vendedorSnap.data();
+                    const inventario = vendedor.inventario || [];
+                    const idx = inventario.indexOf(idVender);
+                    if (idx === -1) throw new Error("No tienes esa carta en tu inventario.");
+
+                    const nuevoInventario = [...inventario];
+                    nuevoInventario.splice(idx, 1); // quita solo UNA copia
+
+                    tx.update(vendedorRef, { inventario: nuevoInventario });
+
+                    const ofertaRef = doc(collection(db, "mercado"));
+                    tx.set(ofertaRef, {
+                        jugadorId: idVender,
+                        precio,
+                        vendedorId: auth.currentUser.uid,
+                        vendedorNombre: vendedor.username || gameData.username,
+                        fecha: Date.now()
+                    });
+                });
             } catch (e) {
                 console.error("[venderEnMercado] Error:", e);
                 notif(e.message || "Error al publicar la carta.", 'error');
