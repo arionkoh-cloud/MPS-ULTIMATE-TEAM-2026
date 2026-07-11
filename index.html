@@ -1347,7 +1347,24 @@
             const valor = PRECIOS_VENTA[j.rareza] || 30;
             document.getElementById('confirm-text').innerText = `Vas a descartar a ${j.name} por 🪙 ${valor}. Esta acción no se puede deshacer.`;
             document.getElementById('confirm-modal').style.display = "flex";
-            accionPendiente = async () => { const inv = [...gameData.inventario]; inv.splice(inv.indexOf(id), 1); await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { inventario: inv, coins: gameData.coins + valor }); cerrarConfirmacion(); };
+            accionPendiente = async () => {
+                if (document.body.classList.contains('comprando-lock')) return;
+                document.body.classList.add('comprando-lock');
+                document.getElementById('compra-spinner-texto').innerText = 'DESCARTANDO JUGADOR...';
+                document.getElementById('compra-spinner').classList.add('activo');
+                try {
+                    const inv = [...gameData.inventario];
+                    inv.splice(inv.indexOf(id), 1);
+                    await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { inventario: inv, coins: gameData.coins + valor });
+                    cerrarConfirmacion();
+                } catch (e) {
+                    console.error("[descartarJugador] Error:", e);
+                    notif("No se pudo descartar el jugador.", 'error');
+                } finally {
+                    document.body.classList.remove('comprando-lock');
+                    document.getElementById('compra-spinner').classList.remove('activo');
+                }
+            };
         };
 
         window.cerrarConfirmacion = () => { document.getElementById('confirm-modal').style.display = "none"; accionPendiente = null; };
@@ -1399,6 +1416,12 @@
             const idVender = jugadorSeleccionadoParaVenta;
             if (!idVender) return notif("No hay jugador seleccionado.", 'error');
 
+            // Lock global inmediato — evita que clics rápidos publiquen la misma carta 2 veces
+            if (document.body.classList.contains('comprando-lock')) return;
+            document.body.classList.add('comprando-lock');
+            document.getElementById('compra-spinner-texto').innerText = 'PUBLICANDO OFERTA...';
+            document.getElementById('compra-spinner').classList.add('activo');
+
             const vendedorRef = doc(db, "jugadores", auth.currentUser.uid);
 
             try {
@@ -1428,6 +1451,9 @@
             } catch (e) {
                 console.error("[venderEnMercado] Error:", e);
                 notif(e.message || "Error al publicar la carta.", 'error');
+            } finally {
+                document.body.classList.remove('comprando-lock');
+                document.getElementById('compra-spinner').classList.remove('activo');
             }
         };
 
