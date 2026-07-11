@@ -726,9 +726,21 @@
         document.getElementById('logout-btn').onclick = async () => { await signOut(auth); location.reload(); };
 
         window.cobrarPagosPendientesManual = async () => {
-            await cobrarPagosPendientes(auth.currentUser.uid);
-            renderizarClub();
-            notif("¡Monedas cobradas y añadidas a tu cuenta!", 'ok');
+            if (document.body.classList.contains('comprando-lock')) return;
+            document.body.classList.add('comprando-lock');
+            document.getElementById('compra-spinner-texto').innerText = 'COBRANDO VENTAS...';
+            document.getElementById('compra-spinner').classList.add('activo');
+            try {
+                await cobrarPagosPendientes(auth.currentUser.uid);
+                renderizarClub();
+                notif("¡Monedas cobradas y añadidas a tu cuenta!", 'ok');
+            } catch (e) {
+                console.error("[cobrarPagosPendientesManual] Error:", e);
+                notif("No se pudieron cobrar las ventas pendientes.", 'error');
+            } finally {
+                document.body.classList.remove('comprando-lock');
+                document.getElementById('compra-spinner').classList.remove('activo');
+            }
         };
 
         // ── PAGOS PENDIENTES ─────────────────────────────────────
@@ -1389,12 +1401,44 @@
                     window.cerrarNotif = () => { document.getElementById('notif-modal').style.display='none'; };
                     document.getElementById('confirm-text').innerText=`Vas a vender ${repetidosContador} repetidos (${eliteRepetidos.length} de élite) por 🪙 ${monedasGanadas.toLocaleString()}.`;
                     document.getElementById('confirm-modal').style.display='flex';
-                    accionPendiente = async () => { await updateDoc(doc(db,"jugadores",auth.currentUser.uid),{inventario:unicos,coins:gameData.coins+monedasGanadas}); cerrarConfirmacion(); notif(`Has recibido 🪙 ${monedasGanadas.toLocaleString()} por tus repetidos.`,'ok'); };
+                    accionPendiente = async () => {
+                        if (document.body.classList.contains('comprando-lock')) return;
+                        document.body.classList.add('comprando-lock');
+                        document.getElementById('compra-spinner-texto').innerText = 'VENDIENDO REPETIDOS...';
+                        document.getElementById('compra-spinner').classList.add('activo');
+                        try {
+                            await updateDoc(doc(db,"jugadores",auth.currentUser.uid),{inventario:unicos,coins:gameData.coins+monedasGanadas});
+                            cerrarConfirmacion();
+                            notif(`Has recibido 🪙 ${monedasGanadas.toLocaleString()} por tus repetidos.`,'ok');
+                        } catch (e) {
+                            console.error("[venderRepetidos] Error:", e);
+                            notif("No se pudieron vender los repetidos.", 'error');
+                        } finally {
+                            document.body.classList.remove('comprando-lock');
+                            document.getElementById('compra-spinner').classList.remove('activo');
+                        }
+                    };
                 };
             } else {
                 document.getElementById('confirm-text').innerText=`Vas a vender ${repetidosContador} repetidos por 🪙 ${monedasGanadas.toLocaleString()}.`;
                 document.getElementById('confirm-modal').style.display='flex';
-                accionPendiente = async () => { await updateDoc(doc(db,"jugadores",auth.currentUser.uid),{inventario:unicos,coins:gameData.coins+monedasGanadas}); cerrarConfirmacion(); notif(`Has recibido 🪙 ${monedasGanadas.toLocaleString()} por tus repetidos.`,'ok'); };
+                accionPendiente = async () => {
+                    if (document.body.classList.contains('comprando-lock')) return;
+                    document.body.classList.add('comprando-lock');
+                    document.getElementById('compra-spinner-texto').innerText = 'VENDIENDO REPETIDOS...';
+                    document.getElementById('compra-spinner').classList.add('activo');
+                    try {
+                        await updateDoc(doc(db,"jugadores",auth.currentUser.uid),{inventario:unicos,coins:gameData.coins+monedasGanadas});
+                        cerrarConfirmacion();
+                        notif(`Has recibido 🪙 ${monedasGanadas.toLocaleString()} por tus repetidos.`,'ok');
+                    } catch (e) {
+                        console.error("[venderRepetidos] Error:", e);
+                        notif("No se pudieron vender los repetidos.", 'error');
+                    } finally {
+                        document.body.classList.remove('comprando-lock');
+                        document.getElementById('compra-spinner').classList.remove('activo');
+                    }
+                };
             }
         };
 
@@ -1467,6 +1511,14 @@
             const { coins: cc, points: cp, rangos } = configs[tipoPack];
             if (metodoPago === 'coins'  && gameData.coins  < cc) return notif(`Necesitas 🪙 ${cc.toLocaleString()} y tienes 🪙 ${gameData.coins.toLocaleString()}.`, 'error');
             if (metodoPago === 'points' && gameData.points < cp) return notif(`Necesitas 💎 ${cp} y tienes 💎 ${gameData.points}.`, 'error');
+
+            // Lock global inmediato — evita abrir 2 sobres con un doble clic
+            // antes de que gameData.coins/points se actualice desde el snapshot
+            if (document.body.classList.contains('comprando-lock')) return;
+            document.body.classList.add('comprando-lock');
+            document.getElementById('compra-spinner-texto').innerText = 'ABRIENDO SOBRE...';
+            document.getElementById('compra-spinner').classList.add('activo');
+
             const azar = Math.random() * 100;
             let minGrl, maxGrl;
             for (const [min,max,prob] of rangos) { if (azar <= prob) { minGrl=min; maxGrl=max; break; } }
@@ -1478,8 +1530,15 @@
                 if (metodoPago==='points') upd.points = gameData.points - cp;
                 await updateDoc(doc(db,"jugadores",auth.currentUser.uid), upd);
                 mostrarAnimacionPack(elegido);
-            } catch(e) { console.error(e); notif("Error al abrir el sobre.", 'error'); }
+            } catch(e) {
+                console.error(e);
+                notif("Error al abrir el sobre.", 'error');
+            } finally {
+                document.body.classList.remove('comprando-lock');
+                document.getElementById('compra-spinner').classList.remove('activo');
+            }
         };
+
 
         function mostrarAnimacionPack(jugador) {
             const overlay   = document.getElementById('reveal-overlay');
