@@ -438,8 +438,11 @@
             <div class="devtools-row">
                 <input type="text" id="ol-nombre-sala" placeholder="Nombre de la sala" maxlength="30" style="flex:1; min-width:200px;">
                 <input type="password" id="ol-password-sala" placeholder="Contraseña (opcional)" maxlength="20" style="flex:1; min-width:150px;">
-                <input type="number" id="ol-apuesta-sala" placeholder="🪙 Apuesta (opcional)" min="0" step="1" style="flex:1; min-width:150px;">
+                <input type="number" id="ol-apuesta-sala" placeholder="🪙 Apuestas desactivadas temporalmente" min="0" step="1" disabled style="flex:1; min-width:150px; opacity:0.5; cursor:not-allowed;">
                 <button class="btn-ui" onclick="crearSalaOnline()">Crear sala</button>
+            </div>
+            <div class="devtools-row">
+                <span style="font-size:0.85rem; color:#f1c40f;">⚠️ Las apuestas están desactivadas temporalmente por mantenimiento.</span>
             </div>
         </div>
 
@@ -2152,10 +2155,14 @@
 
         const SALA_ONLINE_TTL_MS = 10 * 60 * 1000; // 10 minutos
 
+        // ⚠️ APUESTAS DESACTIVADAS TEMPORALMENTE (mantenimiento). Se ignora
+        // cualquier valor del input de apuesta y toda sala se crea sin apuesta.
+        const APUESTAS_DESACTIVADAS = true;
+
         window.crearSalaOnline = async () => {
             const nombreSala = document.getElementById('ol-nombre-sala').value.trim();
             const password = document.getElementById('ol-password-sala').value.trim();
-            const apuestaRaw = document.getElementById('ol-apuesta-sala').value.trim();
+            const apuestaRaw = APUESTAS_DESACTIVADAS ? '' : document.getElementById('ol-apuesta-sala').value.trim();
             const apuestaMonto = apuestaRaw ? Math.floor(Number(apuestaRaw)) : 0;
             if (nombreSala.length < 3 || nombreSala.length > 30) return notif("El nombre de la sala debe tener entre 3 y 30 caracteres.", 'aviso');
             if (!gameData.plantilla) return notif("Necesitas armar tu plantilla antes de crear una sala.", 'aviso');
