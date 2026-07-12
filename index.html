@@ -1130,7 +1130,7 @@
         document.addEventListener('click', () => { if (!musicaIniciada) { window.reproducirSiguienteCualquiera(); musicaIniciada = true; } }, { once: true });
 
         // ── AUTH ─────────────────────────────────────────────────
-        const ADMIN_UID = 'VagrR5bfo5PUO2IKv0yaFdbhWvG3';
+        const ADMIN_UID = 'jJ46a6zShpSPex89drAHf5JTGVY2';
         onAuthStateChanged(auth, user => {
             if (user) {
                 startGameLoad(user.uid);
@@ -2778,7 +2778,8 @@
                 cb: clubData.titulares.cb,
                 mc: clubData.titulares.mc,
                 st: clubData.titulares.st,
-                subs: clubData.suplentes || []
+                subs: clubData.suplentes || [],
+                division: clubData.division || divisionActualRival
             };
         }
 
@@ -3508,6 +3509,16 @@
             renderPanelPausaPartido();
         };
 
+        // ── RECOMPENSAS DE PARTIDO RÁPIDO POR DIVISIÓN DEL RIVAL ──────
+        const RECOMPENSAS_POR_DIVISION = {
+            division1: { victoria: 350, empate: 100, derrota: 50 },
+            division2: { victoria: 300, empate: 90,  derrota: 40 },
+            division3: { victoria: 250, empate: 80,  derrota: 30 },
+            division4: { victoria: 200, empate: 70,  derrota: 20 },
+            division5: { victoria: 150, empate: 50,  derrota: 10 },
+            division6: { victoria: 100, empate: 30,  derrota: 0 }
+        };
+
         // ── FIN DE PARTIDO Y RECOMPENSAS ─────────────────────────────
         function finalizarPartido() {
             matchState.fase = 'finalizado';
@@ -3516,10 +3527,11 @@
             agregarEvento(matchState, `🏁 Final del partido: ${matchState.marcador.local} - ${matchState.marcador.visitante}`, true);
 
             const { local, visitante } = matchState.marcador;
+            const tabla = RECOMPENSAS_POR_DIVISION[matchState.visitante.division] || RECOMPENSAS_POR_DIVISION.division1;
             let resultado, recompensa;
-            if (local > visitante) { resultado = 'VICTORIA'; recompensa = 300; }
-            else if (local < visitante) { resultado = 'DERROTA'; recompensa = 50; }
-            else { resultado = 'EMPATE'; recompensa = 120; } // sistema preparado para empates
+            if (local > visitante) { resultado = 'VICTORIA'; recompensa = tabla.victoria; }
+            else if (local < visitante) { resultado = 'DERROTA'; recompensa = tabla.derrota; }
+            else { resultado = 'EMPATE'; recompensa = tabla.empate; }
 
             setTimeout(() => mostrarResultadoPartido(resultado, recompensa), 1200);
         }
@@ -3535,8 +3547,17 @@
             goles.innerHTML = matchState.goleadores.length
                 ? matchState.goleadores.map(g => `<div class="gol-linea">⚽ ${g.minuto}' — ${g.nombre}${g.asistente ? ` <span style="color:rgba(255,255,255,0.5); font-size:0.85em;">(asist. ${g.asistente})</span>` : ''} (${g.esLocal ? matchState.local.nombre : matchState.visitante.nombre})</div>`).join('')
                 : '<div class="gol-linea">Sin goles en el partido.</div>';
-            document.getElementById('btn-reclamar-recompensa').textContent = `RECLAMAR 🪙 ${recompensa.toLocaleString('es-ES')}`;
-            recompensaPendiente = recompensa;
+            const btnReclamar = document.getElementById('btn-reclamar-recompensa');
+            // Los partidos online (recompensa === null) no reparten monedas por resultado —
+            // la única forma de ganar monedas ahí es a través de las apuestas.
+            if (recompensa === null || recompensa === undefined) {
+                btnReclamar.style.display = 'none';
+                recompensaPendiente = 0;
+            } else {
+                btnReclamar.style.display = '';
+                btnReclamar.textContent = `RECLAMAR 🪙 ${recompensa.toLocaleString('es-ES')}`;
+                recompensaPendiente = recompensa;
+            }
 
             const apuestaDiv = document.getElementById('resultado-apuesta');
             if (apuestaDiv) {
@@ -3637,7 +3658,7 @@
         }
 
         const ONLINE_PING_MS = 2000;          // cada cliente escribe su ping cada 2s reales
-        const ONLINE_PING_TIMEOUT_MS = 9000;   // margen ampliado: tolera jitter de red y el último tick del partido sin declarar abandono de forma prematura
+        const ONLINE_PING_TIMEOUT_MS = 5000;   // margen máximo de 5s antes de considerar al rival desconectado
         const ONLINE_BATCH_MS = 1500;          // el host vuelca su batch a Firestore cada ~1.5s reales
         const ONLINE_PAUSA_MAX_MS = 30000;     // 30s reales por pausa (ver diseño, sección 4)
         const ONLINE_PAUSAS_INICIALES = 2;
@@ -4344,11 +4365,10 @@
                 motivoFin: 'normal'
             }).catch(e => console.error(e));
 
-            const recompensa = ganador === 'host' ? 300 : (ganador === 'guest' ? 50 : 120);
             const resultado = ganador === 'host' ? 'VICTORIA' : (ganador === 'guest' ? 'DERROTA' : 'EMPATE');
             const apuestaMonto = (ultimaSalaSnapshot && ultimaSalaSnapshot.apuestaMonto) || 0;
             liquidarApuestaPropia({ apuestaMonto, ganador, motivoFin: 'normal', apuestaHostPagada: true, apuestaGuestPagada: true }, 'host').catch(e => console.error(e));
-            setTimeout(() => { mostrarResultadoPartido(resultado, recompensa, apuestaMonto > 0 ? { monto: apuestaMonto, gane: ganador === 'host' } : null); detenerSesionOnline(); }, 1200);
+            setTimeout(() => { mostrarResultadoPartido(resultado, null, apuestaMonto > 0 ? { monto: apuestaMonto, gane: ganador === 'host' } : null); detenerSesionOnline(); }, 1200);
         }
 
         // ── LADO GUEST: solo observa + manda intenciones ──────────────
@@ -4528,12 +4548,12 @@
                 return;
             }
 
-            let resultado, recompensa;
-            if (sala.ganador === 'guest') { resultado = 'VICTORIA'; recompensa = 300; }
-            else if (sala.ganador === 'host') { resultado = 'DERROTA'; recompensa = 50; }
-            else { resultado = 'EMPATE'; recompensa = 120; }
+            let resultado;
+            if (sala.ganador === 'guest') { resultado = 'VICTORIA'; }
+            else if (sala.ganador === 'host') { resultado = 'DERROTA'; }
+            else { resultado = 'EMPATE'; }
             liquidarApuestaPropia({ apuestaMonto, ganador: sala.ganador, motivoFin: 'normal' }, 'guest').catch(e => console.error(e));
-            setTimeout(() => { mostrarResultadoPartido(resultado, recompensa, apuestaMonto > 0 ? { monto: apuestaMonto, gane: sala.ganador === 'guest' } : null); detenerSesionOnline(); }, 1200);
+            setTimeout(() => { mostrarResultadoPartido(resultado, null, apuestaMonto > 0 ? { monto: apuestaMonto, gane: sala.ganador === 'guest' } : null); detenerSesionOnline(); }, 1200);
         }
 
         // ── PAUSAS Y CAMBIOS EN VIVO ──────────────────────────────────
