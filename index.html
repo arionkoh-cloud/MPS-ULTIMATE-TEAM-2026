@@ -1029,6 +1029,11 @@
         const SHEET_URL       = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTRZ3aXiCltsIuIyA9lWBNSF6svc6QAxIHuQ8nkqS7NnBNUK0NWAsc5tNn8hDbcUff-IHJzI2hsg4Lj/pub?output=csv";
         const ROBLOX_FALLBACK = "https://tr.rbxcdn.com/38c9c0fcce0f3ae07e2ac9e5afe7e9b2/150/150/AvatarHeadshot/Png";
         const PRECIOS_VENTA   = { bronce: 30, plata: 100, oro: 500, especial: 1000 };
+        // Las reglas de Firestore limitan cada escritura de "coins" a un aumento
+        // máximo de +6000 (anti-trampa). Cualquier operación que pueda sumar más
+        // que eso de una sola vez (vender varios repetidos, cobrar varias ventas
+        // pendientes, etc.) debe repartir el pago en varias escrituras seguras.
+        const LIMITE_SEGURO_POR_ESCRITURA = 5000;
 
         let databaseJugadores = [];
         Object.defineProperty(window, 'databaseJugadores', { get: () => databaseJugadores, configurable: true });
@@ -1310,8 +1315,18 @@
                 const borrar = [];
                 snap.forEach(docSnap => { totalCobrado += docSnap.data().cantidad || 0; borrar.push(deleteDoc(doc(db, "pagos_pendientes", docSnap.id))); });
                 const jugSnap = await getDoc(doc(db, "jugadores", uid));
-                const coinsActuales = jugSnap.data()?.coins || 0;
-                await updateDoc(doc(db, "jugadores", uid), { coins: coinsActuales + totalCobrado });
+                let coinsActuales = jugSnap.data()?.coins || 0;
+                // Las reglas de Firestore limitan cada escritura de "coins" a +6000
+                // como máximo. Si hay varias ventas pendientes (o una muy grande),
+                // el total puede superar ese límite, así que se cobra en varios
+                // lotes seguros en vez de una sola escritura que se rechazaría.
+                let restante = totalCobrado;
+                while (restante > 0) {
+                    const monto = Math.min(restante, LIMITE_SEGURO_POR_ESCRITURA);
+                    coinsActuales += monto;
+                    await updateDoc(doc(db, "jugadores", uid), { coins: coinsActuales });
+                    restante -= monto;
+                }
                 await Promise.all(borrar);
                 console.log(`[MPS] Cobrados 🪙 ${totalCobrado} de ventas pendientes.`);
             } catch(e) { console.error("Error cobrando pagos pendientes", e); }
@@ -2470,6 +2485,22 @@
         window.cerrarConfirmacion = () => { document.getElementById('confirm-modal').style.display = "none"; accionPendiente = null; };
         document.getElementById('btn-confirm-yes').onclick = () => { if (accionPendiente) accionPendiente(); };
 
+        async function pagarVentaRepetidosEnLotes(unicos, monedasGanadas) {
+            // El inventario final (unicos) se escribe una sola vez en el primer
+            // lote; los siguientes lotes solo van sumando monedas.
+            let restante = monedasGanadas;
+            let primerLote = true;
+            let coinsActual = gameData.coins;
+            while (restante > 0) {
+                const monto = Math.min(restante, LIMITE_SEGURO_POR_ESCRITURA);
+                coinsActual += monto;
+                const payload = { coins: coinsActual };
+                if (primerLote) { payload.inventario = unicos; primerLote = false; }
+                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), payload);
+                restante -= monto;
+            }
+        }
+
         window.venderRepetidos = () => {
             let monedasGanadas = 0, repetidosContador = 0;
             const unicos = [], eliteRepetidos = [];
@@ -2495,7 +2526,7 @@
                         document.getElementById('compra-spinner-texto').innerText = 'VENDIENDO REPETIDOS...';
                         document.getElementById('compra-spinner').classList.add('activo');
                         try {
-                            await updateDoc(doc(db,"jugadores",auth.currentUser.uid),{inventario:unicos,coins:gameData.coins+monedasGanadas});
+                            await pagarVentaRepetidosEnLotes(unicos, monedasGanadas);
                             cerrarConfirmacion();
                             notif(`Has recibido 🪙 ${monedasGanadas.toLocaleString()} por tus repetidos.`,'ok');
                         } catch (e) {
@@ -2516,7 +2547,7 @@
                     document.getElementById('compra-spinner-texto').innerText = 'VENDIENDO REPETIDOS...';
                     document.getElementById('compra-spinner').classList.add('activo');
                     try {
-                        await updateDoc(doc(db,"jugadores",auth.currentUser.uid),{inventario:unicos,coins:gameData.coins+monedasGanadas});
+                        await pagarVentaRepetidosEnLotes(unicos, monedasGanadas);
                         cerrarConfirmacion();
                         notif(`Has recibido 🪙 ${monedasGanadas.toLocaleString()} por tus repetidos.`,'ok');
                     } catch (e) {
