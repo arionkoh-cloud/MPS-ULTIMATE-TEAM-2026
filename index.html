@@ -142,6 +142,7 @@
         #compra-spinner { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; gap: 20px; }
         #compra-spinner.activo { display: flex; }
         #compra-spinner .spinner-grande { width: 60px; height: 60px; border: 5px solid rgba(0,255,170,0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        .spinner-standalone { width: 40px; height: 40px; border: 4px solid rgba(0,255,170,0.2); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 20px auto; }
         #compra-spinner p { color: var(--primary); font-size: 1.4rem; font-weight: bold; letter-spacing: 4px; text-transform: uppercase; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -152,6 +153,8 @@
         .nav-btn.nav-disabled { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
         .nav-btn h2 { font-size: 3.5rem; text-transform: uppercase; font-style: italic; line-height: 0.9; }
         .nav-btn .nav-sub { font-size: 1.1rem; color: rgba(255,255,255,0.45); margin-top: 10px; text-transform: uppercase; letter-spacing: 2px; font-style: normal; }
+        .user-club-sub { font-size: 0.7rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 400; margin-top: 2px; }
+        .lb-user-club { font-size: 0.75rem; color: rgba(255,255,255,0.4); font-weight: 400; letter-spacing: 1px; margin-top: 3px; text-transform: uppercase; }
         #bd-contador { margin-bottom: 20px; color: rgba(255,255,255,0.4); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; }
 
         /* ════════════════════════════════════════════════════════
@@ -259,6 +262,100 @@
         .plantilla-selector-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.72); backdrop-filter: blur(6px); z-index: 2500; display: none; animation: fadeIn 0.35s var(--smooth-curve); }
         .plantilla-selector-panel { position: absolute; top: 0; right: 0; width: 50%; height: 100%; background: #0e0e1a; border-left: 2px solid var(--primary); box-shadow: -25px 0 60px rgba(0,0,0,0.6); padding: 50px; overflow-y: auto; animation: slideInPanel 0.45s var(--smooth-curve); }
         @keyframes slideInPanel { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+        /* ════════════════════════════════════════════════════════
+           PARTIDO RÁPIDO
+        ════════════════════════════════════════════════════════ */
+        .rivales-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; margin-top: 10px; }
+        .rival-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; padding: 26px; cursor: pointer; transition: 0.25s; }
+        .rival-card:hover { border-color: var(--primary); background: rgba(255,255,255,0.08); transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.4); }
+        .rival-card h3 { font-size: 1.6rem; font-style: italic; text-transform: uppercase; margin-bottom: 14px; }
+        .rival-meta { display: flex; justify-content: space-between; align-items: center; color: rgba(255,255,255,0.5); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+        .rival-meta .rival-media { color: var(--primary); font-weight: 900; font-size: 1.5rem; letter-spacing: 0; }
+
+        .preview-vs { display: flex; align-items: flex-start; gap: 30px; max-width: 1100px; margin: 0 auto; }
+        .preview-equipo { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 30px; min-height: 0; }
+        .preview-vs-label { font-size: 2.2rem; font-weight: 900; font-style: italic; color: var(--primary); padding-top: 60px; }
+        .preview-meta { color: rgba(255,255,255,0.5); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-bottom: 18px; }
+        .preview-linea { margin-bottom: 16px; }
+        .preview-linea-titulo { font-size: 0.75rem; color: var(--primary); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; border-bottom: 1px solid rgba(0,255,170,0.2); padding-bottom: 4px; }
+        .preview-jugador { display: flex; justify-content: space-between; padding: 4px 2px; font-size: 0.95rem; color: rgba(255,255,255,0.85); }
+        .preview-jugador-grl { font-weight: 900; color: var(--primary); }
+
+        .match-hud { position: sticky; top: 0; background: #0a0a14; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 20px 30px; margin-bottom: 25px; z-index: 5; }
+        .match-scoreboard { display: flex; align-items: center; justify-content: center; gap: 30px; }
+        .match-team-name { font-size: 1.3rem; font-style: italic; text-transform: uppercase; font-weight: 900; flex: 1; text-align: center; }
+        .match-score { font-size: 2.8rem; font-weight: 900; color: var(--primary); letter-spacing: 2px; min-width: 160px; text-align: center; }
+        .match-clock { display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 12px; font-weight: 900; letter-spacing: 2px; }
+        #hud-minuto { font-size: 1.4rem; color: var(--primary); }
+        #hud-fase { color: rgba(255,255,255,0.5); font-size: 0.85rem; }
+        #btn-pausa, #btn-abandonar { background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.2); }
+        #btn-pausa:hover, #btn-abandonar:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-velocidad { background: rgba(255,255,255,0.08); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 14px; font-weight: 900; }
+        .btn-velocidad:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-velocidad.activo { background: var(--primary); color: black; border-color: var(--primary); }
+        .devtools-panel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .devtools-panel h3 { margin: 0 0 14px 0; font-size: 1rem; letter-spacing: 1px; color: #f1c40f; text-transform: uppercase; }
+        .devtools-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+        .devtools-row input[type="text"], .devtools-row input[type="number"] { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: white; padding: 9px 12px; border-radius: 8px; font-size: 0.9rem; }
+        .devtools-row input[type="number"] { width: 110px; }
+        .devtools-list { max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+        .devtools-jugador-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 8px 12px; font-size: 0.85rem; }
+        .devtools-jugador-item button { font-size: 0.75rem; padding: 5px 10px; }
+
+        .match-body { max-width: 800px; margin: 0 auto; }
+        .match-commentary { display: flex; flex-direction: column; gap: 8px; max-height: 55vh; overflow-y: auto; }
+        .commentary-line { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 10px 16px; font-size: 0.95rem; color: rgba(255,255,255,0.8); animation: fadeIn 0.3s var(--smooth-curve); }
+        .commentary-line.destacado { border-color: var(--primary); background: rgba(0,255,170,0.08); color: white; font-weight: bold; }
+        .commentary-line.visitante { border-color: rgba(255,80,80,0.35); background: rgba(255,60,60,0.07); }
+        .commentary-min { color: var(--primary); font-weight: 900; margin-right: 10px; }
+
+        .match-pause-panel { max-width: 1100px; margin: 25px auto 0; background: rgba(0,0,0,0.3); border: 1px solid rgba(0,255,170,0.25); border-radius: 16px; padding: 30px; }
+        .descanso-panel { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); width: 360px; text-align: center; background: rgba(10,15,12,0.96); border: 1px solid rgba(0,255,170,0.3); border-radius: 16px; padding: 20px; z-index: 60; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+        @media (max-width: 720px) {
+            .descanso-panel { width: calc(100% - 32px); top: 80px; }
+        }
+
+        .alineaciones-panel { position: absolute; top: 90px; right: 20px; width: 340px; max-height: calc(100% - 110px); overflow-y: auto; background: rgba(10,15,12,0.94); border: 1px solid rgba(0,255,170,0.25); border-radius: 16px; padding: 18px; z-index: 50; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+        .alineaciones-panel .section-header { display: flex; justify-content: space-between; align-items: center; }
+        .alineaciones-mitad { margin-bottom: 14px; }
+        .alineaciones-mitad-titulo { display: flex; justify-content: space-between; align-items: baseline; font-weight: 900; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.75); margin-bottom: 8px; }
+        .alineaciones-formacion { color: var(--primary); font-size: 0.75rem; font-weight: 700; }
+        .mini-pitch-field { background: repeating-linear-gradient(180deg, #1d7233 0px, #1d7233 22px, #1a652c 22px, #1a652c 44px); border-radius: 10px; padding: 10px 6px; display: flex; flex-direction: column; gap: 8px; border: 1px solid rgba(255,255,255,0.08); }
+        .mini-pitch-row { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
+        .mini-pitch-slot { width: 46px; text-align: center; font-size: 0.6rem; color: white; }
+        .mini-pitch-slot .mini-ovr { background: rgba(0,0,0,0.55); border-radius: 5px 5px 0 0; font-weight: 900; padding: 1px 0; font-size: 0.65rem; }
+        .mini-pitch-slot .mini-nombre { background: rgba(0,0,0,0.4); border-radius: 0 0 5px 5px; padding: 1px 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mini-pitch-slot-empty { width: 46px; height: 30px; border: 1px dashed rgba(255,255,255,0.3); border-radius: 5px; }
+        @media (max-width: 720px) {
+            .alineaciones-panel { position: fixed; top: auto; bottom: 0; left: 0; right: 0; width: auto; max-height: 60vh; border-radius: 16px 16px 0 0; }
+        }
+
+        .match-pitch-wrapper { position: relative; height: 560px; display: flex; flex-direction: column; }
+        .match-pitch-wrapper .pitch-field { flex: 1; padding: 20px 6%; }
+        .match-pitch-wrapper .pitch-slot { width: 95px; }
+        .match-pitch-wrapper .pitch-row { gap: 30px; }
+
+        .pause-tabs { display: flex; gap: 10px; margin-bottom: 22px; }
+        .pause-tab-btn { flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 12px; color: rgba(255,255,255,0.55); font-weight: 900; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; cursor: pointer; transition: 0.25s; }
+        .pause-tab-btn.activo { background: rgba(0,255,170,0.1); border-color: var(--primary); color: var(--primary); }
+        .pause-tab-content { display: none; }
+        .pause-tab-content.activo { display: block; }
+
+        .stat-row { display: grid; grid-template-columns: 80px 1fr 150px 1fr 80px; align-items: center; gap: 14px; margin-bottom: 14px; }
+        .stat-value { font-size: 1rem; font-weight: 900; text-align: center; }
+        .stat-value.local { color: var(--primary); text-align: right; }
+        .stat-value.visitante { color: #ffffff; text-align: left; }
+        .stat-label { text-align: center; font-size: 0.72rem; color: rgba(255,255,255,0.45); text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+        .stat-bar-wrap { height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; display: flex; }
+        .stat-bar-local { background: var(--primary); height: 100%; }
+        .stat-bar-visitante { background: rgba(255,255,255,0.35); height: 100%; }
+        .stats-teams-header { display: flex; justify-content: space-between; margin-bottom: 22px; font-size: 1.1rem; font-weight: 900; font-style: italic; text-transform: uppercase; }
+        .stats-teams-header .local { color: var(--primary); }
+
+        .resultado-content { max-width: 600px; margin: 12vh auto 0; text-align: center; }
+        .resultado-marcador { font-size: 3.5rem; font-weight: 900; color: white; margin: 20px 0; }
+        .gol-linea { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 10px 16px; margin-bottom: 8px; text-align: left; }
     </style>
 </head>
 <body>
@@ -275,6 +372,8 @@
             <div id="auth-form">
                 <input type="text" id="auth-user" placeholder="USUARIO">
                 <input type="password" id="auth-pass" placeholder="CONTRASEÑA">
+                <input type="text" id="auth-club" placeholder="NOMBRE DE TU CLUB (3-20 caracteres)" maxlength="20">
+                <div id="auth-club-aviso" style="font-size:0.85rem; color:rgba(255,255,255,0.45); text-align:center; line-height:1.4;">⚠️ Solo podrás cambiar el nombre de tu club cada 7 días.</div>
                 <div class="auth-buttons">
                     <button class="btn-action" id="login-btn">ENTRAR</button>
                     <button class="btn-action" id="register-btn">REGISTRAR</button>
@@ -314,14 +413,118 @@
             <button class="btn-ui btn-back" onclick="cerrarSeccion('jugar-nav-section')">REGRESAR</button>
         </div>
         <div class="nav-grid">
-            <div class="nav-btn nav-disabled">
-                <h2>PRÓXIMAMENTE</h2>
+            <div class="nav-btn" onclick="cerrarSeccion('jugar-nav-section'); abrirSeccion('online-lobby-section'); iniciarLobbyOnline()">
+                <h2>PARTIDO ONLINE</h2>
+                <span class="nav-sub">Contra otros jugadores</span>
             </div>
-            <div class="nav-btn nav-disabled">
-                <h2>PRÓXIMAMENTE</h2>
+            <div class="nav-btn" onclick="abrirSeccion('partido-rapido-section'); iniciarPartidoRapido()">
+                <h2>PARTIDO RÁPIDO</h2>
             </div>
             <div class="nav-btn" onclick="abrirSeccion('plantilla-section')">
                 <h2>PLANTILLA</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════ ONLINE 1V1 — LOBBY DE SALAS ════════════ -->
+    <div id="online-lobby-section" class="full-screen-overlay">
+        <div class="section-header">
+            <h1 class="italic-title">PARTIDO <span class="primary-text">ONLINE</span></h1>
+            <button class="btn-ui btn-back" onclick="cerrarSeccion('online-lobby-section'); salirDelLobbyOnline()">REGRESAR</button>
+        </div>
+
+        <div class="devtools-panel">
+            <h3>🎮 Crear sala</h3>
+            <div class="devtools-row">
+                <input type="text" id="ol-nombre-sala" placeholder="Nombre de la sala" maxlength="30" style="flex:1; min-width:200px;">
+                <input type="password" id="ol-password-sala" placeholder="Contraseña (opcional)" maxlength="20" style="flex:1; min-width:150px;">
+                <input type="number" id="ol-apuesta-sala" placeholder="🪙 Apuesta (opcional)" min="0" step="1" style="flex:1; min-width:150px;">
+                <button class="btn-ui" onclick="crearSalaOnline()">Crear sala</button>
+            </div>
+        </div>
+
+        <div class="devtools-panel">
+            <h3>📋 Salas disponibles</h3>
+            <div class="devtools-list" id="ol-lista-salas">
+                <div class="sin-resultados">Buscando salas...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sala de espera: se muestra tras crear una sala, hasta que alguien se una -->
+    <div id="online-espera-section" class="full-screen-overlay">
+        <div class="section-header">
+            <h1 class="italic-title">ESPERANDO <span class="primary-text">RIVAL</span></h1>
+            <button class="btn-ui btn-back" onclick="cancelarSalaPropia()">CANCELAR SALA</button>
+        </div>
+        <div class="devtools-panel" style="text-align:center;">
+            <h3 id="oe-nombre-sala">—</h3>
+            <div class="devtools-row" style="justify-content:center;">
+                <span class="spinner-standalone"></span>
+            </div>
+            <p style="color:rgba(255,255,255,0.5);">Tu sala está publicada. En cuanto alguien se una, el partido arrancará automáticamente.</p>
+            <p id="oe-countdown" style="color:rgba(255,255,255,0.6); font-size:0.9rem; font-weight:700;"></p>
+            <p id="oe-password-hint" style="color:rgba(255,180,0,0.7); font-size:0.85rem;"></p>
+        </div>
+    </div>
+
+    <!-- Pantalla de descanso (medio tiempo): countdown de 20s + botón LISTO para cada jugador.
+         Se muestra flotando ARRIBA del panel de pausa (que ya tiene cambios/sustituciones),
+         para que el jugador pueda seguir ajustando su alineación mientras espera. -->
+    <div id="online-descanso-panel" class="descanso-panel" style="display:none;">
+        <h1 class="italic-title" style="font-size:1.6rem; margin-bottom:6px;">DESCANSO <span class="primary-text">MEDIO TIEMPO</span></h1>
+        <p style="color:rgba(255,255,255,0.5); margin-bottom:10px;">Marcador: <span id="desc-marcador">0 - 0</span></p>
+        <div id="desc-countdown" style="font-size:2.4rem; font-weight:900; color:var(--primary); margin:6px 0;">20</div>
+        <div class="ol-listos-estado" style="display:flex; justify-content:space-between; gap:20px; margin-bottom:14px;">
+            <span id="desc-estado-local" style="font-weight:700; color:rgba(255,255,255,0.5); font-size:0.85rem;">Esperando...</span>
+            <span id="desc-estado-rival" style="font-weight:700; color:rgba(255,255,255,0.5); font-size:0.85rem;">Esperando...</span>
+        </div>
+        <button class="btn-ui" id="desc-btn-listo" style="background:var(--primary); color:black; font-size:1.05rem; padding:12px 34px;" onclick="confirmarListoDescanso()">✅ LISTO 2DO TIEMPO</button>
+    </div>
+
+    <!-- Pantalla de "listos": puente entre la sala de espera y el partido en vivo -->
+    <div id="online-listos-section" class="full-screen-overlay">
+        <div class="section-header">
+            <h1 class="italic-title">¿LISTOS PARA <span class="primary-text">JUGAR</span>?</h1>
+        </div>
+        <div class="devtools-panel" style="text-align:center; max-width:600px; margin:0 auto;">
+            <div class="ol-listos-nombres" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+                <h3 id="ol-listos-nombre-local" style="margin:0;">—</h3>
+                <span style="color:rgba(255,255,255,0.4); font-weight:900;">VS</span>
+                <h3 id="ol-listos-nombre-rival" style="margin:0;">—</h3>
+            </div>
+            <div id="ol-listos-countdown" style="font-size:3rem; font-weight:900; color:var(--primary); margin:10px 0;">15</div>
+            <p id="ol-listos-apuesta-aviso" style="display:none; color:var(--primary); font-weight:700; font-size:0.9rem; margin-bottom:10px;"></p>
+            <div class="ol-listos-estado" style="display:flex; justify-content:space-between; margin-bottom:22px;">
+                <span id="ol-listos-estado-local" style="font-weight:700; color:rgba(255,255,255,0.5);">Esperando...</span>
+                <span id="ol-listos-estado-rival" style="font-weight:700; color:rgba(255,255,255,0.5);">Esperando...</span>
+            </div>
+            <button class="btn-ui" id="ol-btn-listo" style="background:var(--primary); color:black; font-size:1.2rem; padding:16px 50px;" onclick="confirmarListoOnline()">✅ LISTO</button>
+        </div>
+    </div>
+
+    <!-- Modal: pedir contraseña para unirse a una sala privada -->
+    <div id="online-password-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>🔒 Sala privada</h2>
+            <p>Esta sala requiere contraseña.</p>
+            <input type="password" id="ol-password-intento" placeholder="Contraseña" style="width:100%; margin:12px 0; padding:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(0,255,170,0.3); color:white; border-radius:4px;">
+            <div class="auth-buttons">
+                <button class="btn-action" onclick="cerrarModalPasswordOnline()">CANCELAR</button>
+                <button class="btn-action" id="ol-confirmar-password-btn">UNIRSE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: confirmar que se quiere jugar apostando el monto fijado por el host -->
+    <div id="online-apuesta-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>🪙 Sala con apuesta</h2>
+            <p>El host propone una apuesta de <strong id="oa-monto-texto">0</strong> monedas.</p>
+            <p style="color:rgba(255,255,255,0.6); font-size:0.9rem;">Si aceptas, se te descontará este monto de tus monedas al confirmar "LISTO". Si ganas el partido, te llevas el pozo completo (tu apuesta + la del rival). Si pierdes, no se te devuelve. En caso de empate o desconexión, recuperas tu apuesta.</p>
+            <div class="auth-buttons">
+                <button class="btn-action" onclick="cerrarModalApuestaOnline()">CANCELAR</button>
+                <button class="btn-action" id="oa-confirmar-btn">ACEPTAR Y JUGAR</button>
             </div>
         </div>
     </div>
@@ -361,6 +564,183 @@
         </div>
     </div>
 
+    <!-- TESTEO: sección completa "Crear Club" (herramienta de desarrollo) — quitar antes de publicar -->
+    <div id="crear-club-section" class="full-screen-overlay">
+        <div class="section-header">
+            <h1 class="italic-title">CREAR <span class="primary-text">CLUB</span></h1>
+            <div style="display:flex; align-items:center; gap:20px;">
+                <div class="media-badge">MEDIA <span id="cc-media">--</span></div>
+                <button class="btn-ui btn-back" onclick="cerrarSeccion('crear-club-section')">VOLVER</button>
+            </div>
+        </div>
+        <div class="formacion-bar" style="flex-wrap:wrap; gap:15px 25px;">
+            <span style="color:rgba(255,255,255,0.5); font-weight:900; text-transform:uppercase; letter-spacing:1px; font-size:0.85rem;">NOMBRE:</span>
+            <input type="text" id="cc-nombre" placeholder="Nombre del club" style="background:rgba(255,255,255,0.05); border:1px solid rgba(0,255,170,0.3); padding:8px 14px; color:white; border-radius:4px; outline:none; font-size:1rem; min-width:220px;">
+            <span style="color:rgba(255,255,255,0.5); font-weight:900; text-transform:uppercase; letter-spacing:1px; font-size:0.85rem; margin-left:10px;">DIVISIÓN:</span>
+            <select id="cc-division" style="background:rgba(255,255,255,0.05); border:1px solid rgba(0,255,170,0.3); padding:8px 14px; color:white; border-radius:4px; outline:none; font-size:0.95rem; text-transform:uppercase;"></select>
+        </div>
+        <div class="formacion-bar" id="cc-formacion-selector">
+            <span style="color:rgba(255,255,255,0.5); font-weight:900; text-transform:uppercase; letter-spacing:1px; font-size:0.85rem; margin-right:4px;">FORMACIÓN:</span>
+            <button class="formacion-btn" data-form="2-2-2" onclick="ccCambiarFormacion('2-2-2')">2-2-2</button>
+            <button class="formacion-btn" data-form="3-2-1" onclick="ccCambiarFormacion('3-2-1')">3-2-1</button>
+            <button class="formacion-btn" data-form="2-3-1" onclick="ccCambiarFormacion('2-3-1')">2-3-1</button>
+            <button class="formacion-btn" data-form="2-1-3" onclick="ccCambiarFormacion('2-1-3')">2-1-3</button>
+            <button class="formacion-btn" data-form="3-1-2" onclick="ccCambiarFormacion('3-1-2')">3-1-2</button>
+        </div>
+        <div class="plantilla-wrapper">
+            <div class="pitch-field" id="cc-pitch-field">
+                <div class="pitch-watermark">MPS UT</div>
+                <div class="pitch-box-gk"></div>
+                <div class="pitch-row" id="cc-row-st"></div>
+                <div class="pitch-row" id="cc-row-mc"></div>
+                <div class="pitch-row" id="cc-row-cb"></div>
+                <div class="pitch-row" id="cc-row-gk"></div>
+            </div>
+            <div class="bench-wrapper" id="cc-bench-wrapper">
+                <div class="bench-label">Suplentes (5)</div>
+                <div class="bench-row" id="cc-bench-row"></div>
+            </div>
+            <button class="bench-tab" id="cc-bench-tab" onclick="toggleClubBench()">
+                <span>⬆ SUPLENTES</span><span class="tab-arrow">▲</span>
+            </button>
+        </div>
+        <div style="text-align:center; margin:25px 0 10px;">
+            <button class="btn-ui" style="background:var(--primary); color:black; font-size:1.2rem; padding:16px 50px;" onclick="ccGuardarClub()">GUARDAR CLUB EN LA BASE DE DATOS</button>
+        </div>
+    </div>
+
+    <!-- ════════════ PARTIDO RÁPIDO ════════════ -->
+    <div id="partido-rapido-section" class="full-screen-overlay">
+        <div class="section-header">
+            <h1 class="italic-title">PARTIDO <span class="primary-text">RÁPIDO</span></h1>
+            <button class="btn-ui btn-back" onclick="cerrarSeccion('partido-rapido-section')">VOLVER</button>
+        </div>
+        <div class="formacion-bar" id="division-selector">
+            <span style="color:rgba(255,255,255,0.5); font-weight:900; text-transform:uppercase; letter-spacing:1px; font-size:0.85rem; margin-right:4px;">DIVISIÓN:</span>
+        </div>
+        <div id="rivales-grid" class="rivales-grid"></div>
+    </div>
+
+    <div id="preview-partido-section" class="full-screen-overlay">
+        <div class="section-header">
+            <h1 class="italic-title">VISTA <span class="primary-text">PREVIA</span></h1>
+            <button class="btn-ui btn-back" onclick="cerrarSeccion('preview-partido-section')">VOLVER</button>
+        </div>
+        <div class="preview-vs">
+            <div class="preview-equipo" id="preview-local"></div>
+            <div class="preview-vs-label">VS</div>
+            <div class="preview-equipo" id="preview-visitante"></div>
+        </div>
+        <div style="text-align:center; margin-top:40px;">
+            <button class="btn-ui" style="background:var(--primary); color:black; font-size:1.3rem; padding:18px 60px;" onclick="iniciarPartido()">INICIAR PARTIDO</button>
+        </div>
+    </div>
+
+    <div id="partido-en-vivo-section" class="full-screen-overlay">
+        <div class="match-hud">
+            <div class="match-scoreboard">
+                <div class="match-team-name" id="hud-nombre-local">LOCAL</div>
+                <div class="match-score" id="hud-marcador">0 - 0</div>
+                <div class="match-team-name" id="hud-nombre-visitante">VISITANTE</div>
+            </div>
+            <div class="match-clock">
+                <span id="hud-minuto">0'</span>
+                <span id="hud-fase">1ER TIEMPO</span>
+                <span id="hud-pausa-restante" style="display:none; color:#ffb400; font-weight:900;"></span>
+                <button class="btn-ui" id="btn-alineaciones" onclick="toggleAlineacionesEnVivo()">👥 ALINEACIONES</button>
+                <button class="btn-ui" id="btn-pausa" onclick="togglePausaPartido()">⏸ PAUSAR</button>
+                <button class="btn-ui" id="btn-abandonar" onclick="abandonarPartido()">SALIR</button>
+            </div>
+        </div>
+        <div class="match-body">
+            <div class="match-commentary" id="match-commentary"></div>
+        </div>
+
+        <!-- Panel de alineaciones activas: cancha propia y del rival, visible durante todo el partido -->
+        <div class="alineaciones-panel" id="alineaciones-panel" style="display:none;">
+            <div class="section-header" style="margin-bottom:14px;">
+                <h2 class="italic-title" style="font-size:1.8rem;">ALINEACIONES <span class="primary-text">EN CANCHA</span></h2>
+                <button class="btn-ui" onclick="toggleAlineacionesEnVivo()">CERRAR</button>
+            </div>
+            <div class="alineaciones-mitad">
+                <div class="alineaciones-mitad-titulo"><span id="al-nombre-local">LOCAL</span> <span class="alineaciones-formacion" id="al-formacion-local"></span></div>
+                <div class="mini-pitch-field" id="al-pitch-local">
+                    <div class="mini-pitch-row" id="al-row-local-st"></div>
+                    <div class="mini-pitch-row" id="al-row-local-mc"></div>
+                    <div class="mini-pitch-row" id="al-row-local-cb"></div>
+                    <div class="mini-pitch-row" id="al-row-local-gk"></div>
+                </div>
+            </div>
+            <div class="alineaciones-mitad">
+                <div class="alineaciones-mitad-titulo"><span id="al-nombre-visitante">VISITANTE</span> <span class="alineaciones-formacion" id="al-formacion-visitante"></span></div>
+                <div class="mini-pitch-field" id="al-pitch-visitante">
+                    <div class="mini-pitch-row" id="al-row-visitante-gk"></div>
+                    <div class="mini-pitch-row" id="al-row-visitante-cb"></div>
+                    <div class="mini-pitch-row" id="al-row-visitante-mc"></div>
+                    <div class="mini-pitch-row" id="al-row-visitante-st"></div>
+                </div>
+            </div>
+        </div>
+        <div class="match-pause-panel" id="match-pause-panel" style="display:none;">
+            <div class="section-header" style="margin-bottom:20px;">
+                <h2 class="italic-title" style="font-size:2.2rem;">PARTIDO <span class="primary-text">PAUSADO</span></h2>
+                <button class="btn-ui" style="background:var(--primary); color:black;" onclick="togglePausaPartido()">REANUDAR</button>
+            </div>
+            <div class="pause-tabs">
+                <button class="pause-tab-btn activo" id="pause-tab-btn-cambios" onclick="cambiarTabPausa('cambios')">CAMBIOS</button>
+                <button class="pause-tab-btn" id="pause-tab-btn-stats" onclick="cambiarTabPausa('stats')">ESTADÍSTICAS</button>
+            </div>
+
+            <div class="pause-tab-content activo" id="pause-tab-cambios">
+                <div class="formacion-bar">
+                    <span style="color:rgba(255,255,255,0.5); font-weight:900; text-transform:uppercase; letter-spacing:1px; font-size:0.85rem; margin-right:4px;">CAMBIAR FORMACIÓN (<span id="cambios-formacion-restantes">2</span> restantes):</span>
+                    <button class="formacion-btn" data-form="2-2-2" onclick="cambiarFormacionPartido('2-2-2')">2-2-2</button>
+                    <button class="formacion-btn" data-form="3-2-1" onclick="cambiarFormacionPartido('3-2-1')">3-2-1</button>
+                    <button class="formacion-btn" data-form="2-3-1" onclick="cambiarFormacionPartido('2-3-1')">2-3-1</button>
+                    <button class="formacion-btn" data-form="2-1-3" onclick="cambiarFormacionPartido('2-1-3')">2-1-3</button>
+                    <button class="formacion-btn" data-form="3-1-2" onclick="cambiarFormacionPartido('3-1-2')">3-1-2</button>
+                </div>
+                <p style="font-size:0.85rem; color:rgba(255,255,255,0.4); margin-bottom:14px; text-transform:uppercase; letter-spacing:1px;">Toca un jugador del campo para sustituirlo, luego toca un suplente de la banca.</p>
+                <div class="match-pitch-wrapper">
+                    <div class="pitch-field" id="match-pitch-field">
+                        <div class="pitch-watermark">MPS UT</div>
+                        <div class="pitch-box-gk"></div>
+                        <div class="pitch-row" id="match-row-st"></div>
+                        <div class="pitch-row" id="match-row-mc"></div>
+                        <div class="pitch-row" id="match-row-cb"></div>
+                        <div class="pitch-row" id="match-row-gk"></div>
+                    </div>
+                    <div class="bench-wrapper" id="match-bench-wrapper">
+                        <div class="bench-label">Banca</div>
+                        <div class="bench-row" id="match-bench-row"></div>
+                    </div>
+                    <button class="bench-tab" id="match-bench-tab" onclick="toggleMatchBench()">
+                        <span>⬆ BANCA</span><span class="tab-arrow">▲</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="pause-tab-content" id="pause-tab-stats">
+                <div class="stats-teams-header">
+                    <span class="local" id="stats-nombre-local">LOCAL</span>
+                    <span id="stats-nombre-visitante">VISITANTE</span>
+                </div>
+                <div id="stats-contenido"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="resultado-partido-section" class="full-screen-overlay">
+        <div class="resultado-content">
+            <h1 class="italic-title" id="resultado-titulo">RESULTADO</h1>
+            <div class="resultado-marcador" id="resultado-marcador">0 - 0</div>
+            <div id="resultado-goleadores"></div>
+            <div id="resultado-apuesta" style="display:none; font-weight:800; font-size:1.05rem; margin-top:14px;"></div>
+            <button class="btn-ui" id="btn-reclamar-recompensa" style="background:var(--primary); color:black; margin-top:30px; padding:16px 40px; font-size:1.1rem;" onclick="reclamarRecompensa()">RECLAMAR RECOMPENSA</button>
+            <button class="btn-ui" id="btn-salir-resultado" style="margin-top:14px; padding:14px 40px; font-size:1rem;" onclick="salirDePantallaResultado()">VOLVER AL MENÚ</button>
+        </div>
+    </div>
+
     <div id="club-nav-section" class="full-screen-overlay">
         <div class="section-header">
             <h1 class="italic-title"><span class="primary-text">CLUB</span></h1>
@@ -382,18 +762,47 @@
     <div id="extra-nav-section" class="full-screen-overlay">
         <div class="section-header">
             <h1 class="italic-title"><span class="primary-text">EXTRA</span></h1>
-            <button class="btn-ui btn-back" onclick="cerrarSeccion('extra-nav-section')">REGRESAR</button>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <button class="btn-ui btn-back" onclick="cerrarSeccion('extra-nav-section')">REGRESAR</button>
+            </div>
         </div>
         <div class="nav-grid">
-            <div class="nav-btn nav-disabled">
-                <h2>MÚSICA</h2>
-                <span class="nav-sub">Próximamente</span>
+            <!-- Visible solo para el usuario administrador (UID VagrR5bfo5PUO2IKv0yaFdbhWvG3) -->
+            <div class="nav-btn" id="nav-btn-crear-club" style="display:none;" onclick="cerrarSeccion('extra-nav-section'); abrirSeccion('crear-club-section'); iniciarCreacionClub()">
+                <h2>CREAR CLUB</h2>
+                <span class="nav-sub">Herramienta de desarrollo</span>
             </div>
             <div class="nav-btn" onclick="abrirSeccion('base-datos-section')">
                 <h2>BASE DE DATOS</h2>
             </div>
             <div class="nav-btn" onclick="abrirSeccion('leaderboard-section'); renderizarLeaderboard()">
                 <h2>LEADERBOARD</h2>
+            </div>
+            <div class="nav-btn" onclick="window.abrirCambioNombreClub()">
+                <h2>NOMBRE DE CLUB</h2>
+                <span class="nav-sub" id="nav-sub-nombre-club">Cambiar nombre</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOMBRE DE CLUB -->
+    <div id="nombre-club-section" class="full-screen-overlay">
+        <div class="section-header">
+            <h1 class="italic-title">NOMBRE DE <span class="primary-text">CLUB</span></h1>
+            <button class="btn-ui btn-back" onclick="cerrarSeccion('nombre-club-section')">VOLVER</button>
+        </div>
+
+        <div class="devtools-panel">
+            <h3>🛡️ Nombre actual: <span id="nc-actual"></span></h3>
+            <div class="devtools-row">
+                <span id="nc-estado" style="min-width:200px; color:rgba(255,255,255,0.6);"></span>
+            </div>
+            <div class="devtools-row">
+                <input type="text" id="nc-nuevo-nombre" placeholder="Nuevo nombre (3-20 caracteres)" maxlength="20" style="flex:1; min-width:200px;">
+                <button class="btn-ui" id="nc-confirmar-btn" onclick="confirmarCambioNombreClub()">Cambiar nombre</button>
+            </div>
+            <div class="devtools-row">
+                <span style="font-size:0.85rem; color:rgba(255,255,255,0.4);">⚠️ Solo puedes cambiar el nombre de tu club una vez cada 7 días.</span>
             </div>
         </div>
     </div>
@@ -576,6 +985,18 @@
         </div>
     </div>
 
+    <div id="cc-selector-overlay" class="plantilla-selector-overlay" onclick="cerrarSelectorClub()">
+        <div class="plantilla-selector-panel" onclick="event.stopPropagation()">
+            <div class="section-header" style="margin-bottom:20px;">
+                <h2 class="italic-title" id="cc-selector-titulo" style="font-size:2.2rem;">ELEGIR JUGADOR</h2>
+                <button class="btn-ui btn-back" onclick="cerrarSelectorClub()">CERRAR</button>
+            </div>
+            <input type="text" id="cc-selector-buscar" placeholder="Buscar por nombre..." oninput="filtrarSelectorClub()" style="width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(0,255,170,0.3); padding:10px 14px; color:white; border-radius:4px; outline:none; font-size:1rem; margin-bottom:20px;">
+            <button class="btn-ui" id="cc-btn-quitar" style="background:#ff3232; color:white; width:100%; margin-bottom:25px; display:none;" onclick="quitarJugadorClub()">QUITAR DEL ONCE</button>
+            <div class="grid-container" id="cc-selector-grid"></div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, doc, onSnapshot, setDoc, updateDoc, collection, addDoc, deleteDoc, query, orderBy, getDoc, getDocs, where, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -594,12 +1015,21 @@
         const db   = getFirestore(app);
         const auth = getAuth(app);
 
+        // Exponemos referencias de Firestore a window para poder usarlas desde
+        // la consola del navegador (scripts de administración, ej. crear clubes rivales).
+        window.db = db;
+        window.doc = doc;
+        window.setDoc = setDoc;
+        window.collection = collection;
+        window.getDocs = getDocs;
+
         const SHEET_URL       = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTRZ3aXiCltsIuIyA9lWBNSF6svc6QAxIHuQ8nkqS7NnBNUK0NWAsc5tNn8hDbcUff-IHJzI2hsg4Lj/pub?output=csv";
         const ROBLOX_FALLBACK = "https://tr.rbxcdn.com/38c9c0fcce0f3ae07e2ac9e5afe7e9b2/150/150/AvatarHeadshot/Png";
         const PRECIOS_VENTA   = { bronce: 30, plata: 100, oro: 500, especial: 1000 };
 
         let databaseJugadores = [];
-        let gameData = { coins: 0, points: 0, inventario: [], username: "" };
+        Object.defineProperty(window, 'databaseJugadores', { get: () => databaseJugadores, configurable: true });
+        let gameData = { coins: 0, points: 0, inventario: [], username: "", nombreClub: "", nombreClubFecha: 0 };
         let jugadorSeleccionadoParaVenta = null;
         let accionPendiente = null;
         let mercadoSuscrito = false;
@@ -700,19 +1130,28 @@
         document.addEventListener('click', () => { if (!musicaIniciada) { window.reproducirSiguienteCualquiera(); musicaIniciada = true; } }, { once: true });
 
         // ── AUTH ─────────────────────────────────────────────────
+        const ADMIN_UID = 'VagrR5bfo5PUO2IKv0yaFdbhWvG3';
         onAuthStateChanged(auth, user => {
-            if (user) startGameLoad(user.uid);
-            else { document.getElementById('auth-form').style.display = 'flex'; document.getElementById('p-container').style.display = 'none'; }
+            if (user) {
+                startGameLoad(user.uid);
+                const btnCrearClub = document.getElementById('nav-btn-crear-club');
+                if (btnCrearClub) btnCrearClub.style.display = (user.uid === ADMIN_UID) ? 'flex' : 'none';
+            } else {
+                document.getElementById('auth-form').style.display = 'flex';
+                document.getElementById('p-container').style.display = 'none';
+            }
         });
 
         document.getElementById('register-btn').onclick = async () => {
             const nick = document.getElementById('auth-user').value.trim();
             const pass = document.getElementById('auth-pass').value;
+            const nombreClub = document.getElementById('auth-club').value.trim();
             if (!nick || pass.length < 6) return notif("El nombre no puede estar vacío y la contraseña debe tener mínimo 6 caracteres.", 'aviso');
+            if (nombreClub.length < 3 || nombreClub.length > 20) return notif("El nombre del club debe tener entre 3 y 20 caracteres.", 'aviso');
             try {
                 await setPersistence(auth, browserLocalPersistence);
                 const cred = await createUserWithEmailAndPassword(auth, `${nick.toLowerCase()}@mps.com`, pass);
-                await setDoc(doc(db, "jugadores", cred.user.uid), { username: nick.toUpperCase(), coins: 5000, points: 0, inventario: [], plantilla: getDefaultPlantilla(), plantillaMedia: 0 });
+                await setDoc(doc(db, "jugadores", cred.user.uid), { username: nick.toUpperCase(), nombreClub: nombreClub.toUpperCase(), nombreClubFecha: Date.now(), coins: 5000, points: 0, inventario: [], plantilla: getDefaultPlantilla(), plantillaMedia: 0 });
             } catch { notif("No se pudo registrar. Ese nombre puede estar en uso.", 'error'); }
         };
 
@@ -743,6 +1182,122 @@
             }
         };
 
+        // ── APUESTAS ONLINE: reembolso / liquidación ──────────────────
+        // Reutiliza la colección pagos_pendientes (misma que usa el mercado)
+        // como mecanismo anti-dupeo: crear un pago_pendiente es una escritura
+        // separada del documento de coins del jugador, así que nunca puede
+        // sumarse dos veces por el mismo evento — y sobrevive a un reload,
+        // ya que cobrarPagosPendientes() se ejecuta también al cargar el juego.
+        // El monto que se acredita SIEMPRE sale de campos ya certificados por
+        // el documento de la sala (apuestaMonto, ganador, motivoFin), nunca
+        // de un valor que el cliente pudiera inventar libremente.
+        async function crearPagoPendienteApuesta(uid, nombreClub, cantidad, motivo) {
+            if (!(cantidad > 0)) return;
+            try {
+                await addDoc(collection(db, "pagos_pendientes"), {
+                    vendedorId: uid,
+                    cantidad: Math.floor(cantidad),
+                    vendedorNombre: nombreClub || 'Jugador',
+                    fecha: Date.now(),
+                    motivo: motivo || 'apuesta_online'
+                });
+            } catch (e) { console.error("Error creando pago pendiente de apuesta:", e); }
+        }
+
+        // Si la sala se canceló (apuesta incompleta) y YO ya había pagado mi
+        // apuesta, me la devuelvo a mí mismo. Usa el flag persistido en la
+        // sala (apuestaHostPagada/apuestaGuestPagada) como fuente de verdad,
+        // no una variable local, para que sobreviva a un reload. Marca
+        // apuestaHostLiquidada/apuestaGuestLiquidada al terminar, para que
+        // el barrido de recuperación (revisarApuestasPendientes) nunca
+        // vuelva a procesar esta misma sala.
+        async function reembolsarApuestaPropiaSiCorresponde(salaId, sala, rol) {
+            const apuestaMonto = sala.apuestaMonto || 0;
+            if (apuestaMonto <= 0) return;
+            const campoPagada = rol === 'host' ? 'apuestaHostPagada' : 'apuestaGuestPagada';
+            const campoLiquidada = rol === 'host' ? 'apuestaHostLiquidada' : 'apuestaGuestLiquidada';
+            if (!sala[campoPagada] || sala[campoLiquidada]) return;
+            await crearPagoPendienteApuesta(auth.currentUser.uid, gameData.nombreClub, apuestaMonto, 'reembolso_apuesta_cancelada');
+            if (salaId) await updateDoc(doc(db, "salas_online", salaId), { [campoLiquidada]: true }).catch(() => {});
+            await cobrarPagosPendientes(auth.currentUser.uid).catch(() => {});
+        }
+
+        // Liquidación al terminar un partido CON apuesta. Se llama desde el
+        // lado que certifica el fin (host en fin normal/abandono_guest, guest
+        // en fin abandono_host) y también desde quien recibe el snapshot final
+        // (finalizarPartidoOnlineGuestVista), así que puede ejecutarse una vez
+        // por cliente por partido — cada uno solo se acredita/reembolsa A SÍ
+        // MISMO, nunca al rival, así que no hay forma de que un doble-disparo
+        // beneficie a nadie más que a quien ya tenía derecho a ese monto.
+        // El flag propio de liquidación (apuestaHostLiquidada/apuestaGuestLiquidada)
+        // evita que el mismo cliente se pague dos veces (ej. snapshot repetido
+        // + el barrido de recuperación al recargar la página).
+        async function liquidarApuestaPropia(sala, rolPropio, salaId) {
+            const apuestaMonto = sala.apuestaMonto || 0;
+            if (apuestaMonto <= 0) return;
+            const campoLiquidada = rolPropio === 'host' ? 'apuestaHostLiquidada' : 'apuestaGuestLiquidada';
+            if (sala[campoLiquidada]) return;
+            const uid = auth.currentUser.uid;
+            const nombre = gameData.nombreClub;
+            const idSala = salaId || salaOnlineId;
+
+            if (sala.motivoFin === 'abandono_host' || sala.motivoFin === 'abandono_guest') {
+                // Nadie se queda con el pozo del otro por una desconexión: cada
+                // quien recupera únicamente lo que puso, si es que lo pagó.
+                const campoPagada = rolPropio === 'host' ? 'apuestaHostPagada' : 'apuestaGuestPagada';
+                if (!sala[campoPagada]) return;
+                await crearPagoPendienteApuesta(uid, nombre, apuestaMonto, 'reembolso_apuesta_abandono');
+            } else if (sala.ganador === 'empate') {
+                await crearPagoPendienteApuesta(uid, nombre, apuestaMonto, 'reembolso_apuesta_empate');
+            } else if (sala.ganador === rolPropio) {
+                // Gana el pozo completo: su propia apuesta + la del rival.
+                await crearPagoPendienteApuesta(uid, nombre, apuestaMonto * 2, 'ganancia_apuesta');
+            }
+            // Si perdió, no recibe nada (ya se le debitó su apuesta al empezar).
+            if (idSala) await updateDoc(doc(db, "salas_online", idSala), { [campoLiquidada]: true }).catch(() => {});
+            await cobrarPagosPendientes(uid).catch(() => {});
+        }
+
+        // Cubre el caso límite: el jugador pagó su apuesta y luego se
+        // desconectó de verdad (cerró la pestaña) antes de que su propio
+        // cliente pudiera liquidar/reembolsar el resultado. Al volver a
+        // cargar el juego, revisamos sus salas recientes como host o guest
+        // que ya terminaron/cancelaron y donde él pagó pero su lado todavía
+        // no quedó marcado como liquidado, y se lo liquidamos ahora. Cada
+        // jugador solo puede tocar el flag de SU PROPIO rol en la sala.
+        async function revisarApuestasPendientes(uid) {
+            try {
+                const [comoHost, comoGuest] = await Promise.all([
+                    getDocs(query(collection(db, "salas_online"), where("hostId", "==", uid), where("apuestaHostPagada", "==", true))),
+                    getDocs(query(collection(db, "salas_online"), where("guestId", "==", uid), where("apuestaGuestPagada", "==", true)))
+                ]);
+                const tareas = [];
+                comoHost.forEach(docSnap => {
+                    const sala = docSnap.data();
+                    if ((sala.estado === 'terminado' || sala.estado === 'cancelada') && !sala.apuestaHostLiquidada) {
+                        tareas.push(liquidarApuestaPendienteDeSala(docSnap.id, sala, 'host'));
+                    }
+                });
+                comoGuest.forEach(docSnap => {
+                    const sala = docSnap.data();
+                    if ((sala.estado === 'terminado' || sala.estado === 'cancelada') && !sala.apuestaGuestLiquidada) {
+                        tareas.push(liquidarApuestaPendienteDeSala(docSnap.id, sala, 'guest'));
+                    }
+                });
+                if (tareas.length) await Promise.allSettled(tareas);
+            } catch (e) { console.error("Error revisando apuestas pendientes:", e); }
+        }
+
+        async function liquidarApuestaPendienteDeSala(salaId, sala, rol) {
+            try {
+                if (sala.estado === 'cancelada') {
+                    await reembolsarApuestaPropiaSiCorresponde(salaId, sala, rol);
+                } else {
+                    await liquidarApuestaPropia(sala, rol, salaId);
+                }
+            } catch (e) { console.error(`Error liquidando apuesta pendiente de sala ${salaId}:`, e); }
+        }
+
         // ── PAGOS PENDIENTES ─────────────────────────────────────
         async function cobrarPagosPendientes(uid) {
             try {
@@ -765,6 +1320,7 @@
             document.getElementById('p-container').style.display = 'block';
             const bar = document.getElementById('progress');
             await cobrarPagosPendientes(uid);
+            await revisarApuestasPendientes(uid);
             try {
                 const res = await fetch(SHEET_URL);
                 if (res.ok) {
@@ -1094,7 +1650,7 @@
                     const totalSlots = 1 + c.cb + c.mc + c.st;
                     if (titulares.filter(Boolean).length < totalSlots) return; // plantilla incompleta, ignorar
                     const media = data.plantillaMedia || 0;
-                    filas.push({ username: data.username || '???', plantilla: p, media });
+                    filas.push({ username: data.username || '???', nombreClub: data.nombreClub || '', plantilla: p, media });
                 });
 
                 filas.sort((a, b) => b.media - a.media);
@@ -1123,7 +1679,7 @@
                     row.className = 'lb-row';
                     row.innerHTML = `
                         <div class="lb-rank ${rankClass}">${rankLabel}</div>
-                        <div class="lb-user">${fila.username}</div>
+                        <div class="lb-user">${fila.username}${fila.nombreClub ? `<div class="lb-user-club">${fila.nombreClub}</div>` : ''}</div>
                         <div class="lb-cards">${miniCards.join('')}</div>
                         <div class="lb-media"><div class="media-num">${fila.media}</div><div class="media-lbl">MEDIA</div></div>
                     `;
@@ -1152,6 +1708,7 @@
             '2-1-3': { cb: 2, mc: 1, st: 3 },
             '3-1-2': { cb: 3, mc: 1, st: 2 }
         };
+        window.FORMACIONES = FORMACIONES;
         const LABELS_PLANTILLA = { gk: 'GK', cb: 'CB', mc: 'CM', st: 'ST' };
         const POS_DB_MAP = { gk: 'gk', cb: 'cb', mc: 'cm', st: 'st' };
         let selectorActual = null;
@@ -1298,10 +1855,218 @@
             guardarPlantilla(p);
         };
 
+        // ════════════════════════════════════════════════════════════
+        // CREAR CLUB — herramienta de desarrollo (menú EXTRA)
+        // Arma un club rival completo con el mismo sistema visual que
+        // "Mi Plantilla" (slots clickeables + overlay selector), pero
+        // buscando entre TODA la base de datos (no solo el inventario
+        // del usuario) y guardando en Firestore como
+        // clubs/{division}/equipos con el formato que espera el motor
+        // de Partido Rápido (ver construirEquipoRival).
+        // ════════════════════════════════════════════════════════════
+        function ccDefault() {
+            return { formacion: '2-2-2', gk: null, cb: [null, null, null], mc: [null, null, null], st: [null, null, null], subs: [null, null, null, null, null] };
+        }
+        let clubEnCreacion = ccDefault();
+        let ccSelectorActual = null;
+        let ccCandidatosSelector = [];
+
+        window.iniciarCreacionClub = function() {
+            clubEnCreacion = ccDefault();
+            document.getElementById('cc-nombre').value = '';
+            const sel = document.getElementById('cc-division');
+            if (sel.options.length !== TOTAL_DIVISIONES) {
+                sel.innerHTML = '';
+                for (let d = 1; d <= TOTAL_DIVISIONES; d++) {
+                    const opt = document.createElement('option');
+                    opt.value = `division${d}`;
+                    opt.textContent = NOMBRES_DIVISION[d];
+                    sel.appendChild(opt);
+                }
+            }
+            sel.value = 'division1';
+            renderizarClubEnCreacion();
+        };
+
+        function ccCalcularMedia(c) {
+            const counts = FORMACIONES[c.formacion];
+            const totalSlots = 1 + counts.cb + counts.mc + counts.st;
+            const ids = [c.gk, ...c.cb.slice(0, counts.cb), ...c.mc.slice(0, counts.mc), ...c.st.slice(0, counts.st)];
+            const total = ids.reduce((s, id) => { const j = id ? databaseJugadores.find(x => x.id === id) : null; return s + (j ? j.grl : 0); }, 0);
+            return totalSlots ? Math.round(total / totalSlots) : '--';
+        }
+
+        function ccCrearSlot(cat, index, jugadorId, esSub) {
+            const wrap = document.createElement('div');
+            wrap.className = esSub ? 'pitch-slot bench-slot' : 'pitch-slot';
+            const j = jugadorId ? databaseJugadores.find(p => p.id === jugadorId) : null;
+            if (j) {
+                wrap.innerHTML = `<div class="card ${j.rareza}"><div class="ovr">${j.grl}</div><div class="pos">${j.pos}</div>${imgTag(j.foto)}<div class="name">${j.name}</div></div>`;
+            } else {
+                wrap.innerHTML = `<div class="pitch-slot-empty"><div class="plus-icon">+</div><div class="pos-label">${esSub ? 'SUB' : LABELS_PLANTILLA[cat]}</div></div>`;
+            }
+            wrap.onclick = () => abrirSelectorClub(cat, index, esSub);
+            return wrap;
+        }
+
+        function ccRenderFila(rowId, cat, count, arr) {
+            const row = document.getElementById(rowId);
+            row.innerHTML = '';
+            for (let i = 0; i < count; i++) row.appendChild(ccCrearSlot(cat, i, arr[i], false));
+        }
+
+        function ccRenderBanca(subs) {
+            const bench = document.getElementById('cc-bench-row');
+            bench.innerHTML = '';
+            subs.forEach((id, i) => bench.appendChild(ccCrearSlot('sub', i, id, true)));
+        }
+
+        window.renderizarClubEnCreacion = function() {
+            const c = clubEnCreacion;
+            const counts = FORMACIONES[c.formacion];
+            document.querySelectorAll('#cc-formacion-selector .formacion-btn').forEach(b => b.classList.toggle('activo', b.dataset.form === c.formacion));
+            ccRenderFila('cc-row-st', 'st', counts.st, c.st);
+            ccRenderFila('cc-row-mc', 'mc', counts.mc, c.mc);
+            ccRenderFila('cc-row-cb', 'cb', counts.cb, c.cb);
+            ccRenderFila('cc-row-gk', 'gk', 1, [c.gk]);
+            ccRenderBanca(c.subs);
+            document.getElementById('cc-media').textContent = ccCalcularMedia(c) || '--';
+        };
+
+        window.ccCambiarFormacion = (formacion) => {
+            const c = clubEnCreacion;
+            if (c.formacion === formacion) return;
+            c.formacion = formacion;
+            c.gk = null;
+            c.cb = [null, null, null];
+            c.mc = [null, null, null];
+            c.st = [null, null, null];
+            c.subs = [null, null, null, null, null];
+            renderizarClubEnCreacion();
+        };
+
+        window.toggleClubBench = () => {
+            const bench = document.getElementById('cc-bench-wrapper');
+            const tab   = document.getElementById('cc-bench-tab');
+            if (!bench) return;
+            const open = bench.classList.toggle('visible');
+            tab.classList.toggle('activo', open);
+        };
+
+        window.abrirSelectorClub = (cat, index, esSub) => {
+            ccSelectorActual = { cat, index, esSub };
+            const c = clubEnCreacion;
+            const idActual = esSub ? c.subs[index] : (cat === 'gk' ? c.gk : c[cat][index]);
+            const usados = new Set([c.gk, ...c.cb, ...c.mc, ...c.st, ...c.subs].filter(Boolean));
+            usados.delete(idActual);
+
+            // A diferencia del selector de "Mi Plantilla", aquí se busca en TODA la base
+            // de jugadores (la Sheet completa), no solo en el inventario del usuario —
+            // porque estamos armando un club rival, no fichando cartas propias.
+            let candidatos = databaseJugadores.slice();
+            if (!esSub) candidatos = candidatos.filter(j => (j.pos || '').trim().toLowerCase() === (POS_DB_MAP[cat] || cat));
+            candidatos = candidatos.filter(j => !usados.has(j.id)).sort((a, b) => b.grl - a.grl);
+
+            ccCandidatosSelector = candidatos;
+            document.getElementById('cc-selector-titulo').textContent = esSub ? 'ELEGIR SUSTITUTO' : `ELEGIR ${LABELS_PLANTILLA[cat]}`;
+            document.getElementById('cc-btn-quitar').style.display = idActual ? 'block' : 'none';
+            document.getElementById('cc-selector-buscar').value = '';
+            ccPintarGridSelector(candidatos, idActual);
+            document.getElementById('cc-selector-overlay').style.display = 'block';
+        };
+
+        function ccPintarGridSelector(candidatos, idActual) {
+            const grid = document.getElementById('cc-selector-grid');
+            grid.innerHTML = '';
+            if (!candidatos.length) {
+                grid.innerHTML = `<div class="sin-resultados">No hay jugadores disponibles para esta posición.</div>`;
+                return;
+            }
+            candidatos.forEach(j => {
+                const w = document.createElement('div');
+                w.className = 'card-wrapper';
+                w.style.cursor = 'pointer';
+                const sel = j.id === idActual;
+                w.innerHTML = `<div class="card ${j.rareza}" style="${sel ? 'outline:3px solid var(--primary); border-radius:6px;' : ''}"><div class="ovr">${j.grl}</div><div class="pos">${j.pos}</div>${imgTag(j.foto)}<div class="name">${j.name}</div></div>`;
+                w.onclick = () => asignarJugadorClub(j.id);
+                grid.appendChild(w);
+            });
+        }
+
+        window.filtrarSelectorClub = () => {
+            const texto = document.getElementById('cc-selector-buscar').value.trim().toLowerCase();
+            const filtrados = texto ? ccCandidatosSelector.filter(j => (j.name || '').toLowerCase().includes(texto)) : ccCandidatosSelector;
+            const idActual = ccSelectorActual ? (ccSelectorActual.esSub ? clubEnCreacion.subs[ccSelectorActual.index] : (ccSelectorActual.cat === 'gk' ? clubEnCreacion.gk : clubEnCreacion[ccSelectorActual.cat][ccSelectorActual.index])) : null;
+            ccPintarGridSelector(filtrados, idActual);
+        };
+
+        window.cerrarSelectorClub = () => {
+            document.getElementById('cc-selector-overlay').style.display = 'none';
+            ccSelectorActual = null;
+        };
+
+        window.asignarJugadorClub = (id) => {
+            if (!ccSelectorActual) return;
+            const c = clubEnCreacion;
+            const { cat, index, esSub } = ccSelectorActual;
+            if (esSub) c.subs[index] = id; else if (cat === 'gk') c.gk = id; else c[cat][index] = id;
+            cerrarSelectorClub();
+            renderizarClubEnCreacion();
+        };
+
+        window.quitarJugadorClub = () => {
+            if (!ccSelectorActual) return;
+            const c = clubEnCreacion;
+            const { cat, index, esSub } = ccSelectorActual;
+            if (esSub) c.subs[index] = null; else if (cat === 'gk') c.gk = null; else c[cat][index] = null;
+            cerrarSelectorClub();
+            renderizarClubEnCreacion();
+        };
+
+        // Convierte un id de la Sheet en el objeto simple {nombre, pos, grl} que
+        // espera el motor de simulación de Partido Rápido (ver construirEquipoRival).
+        function ccObjetoSimple(id) {
+            const j = id ? databaseJugadores.find(x => x.id === id) : null;
+            return j ? { nombre: j.name, pos: (j.pos || '').trim().toLowerCase(), grl: j.grl } : null;
+        }
+
+        window.ccGuardarClub = async function() {
+            const c = clubEnCreacion;
+            const counts = FORMACIONES[c.formacion];
+            const nombre = document.getElementById('cc-nombre').value.trim();
+            const division = document.getElementById('cc-division').value;
+
+            if (!nombre) return notif("Ponle un nombre al club antes de guardar.", 'aviso');
+            const completo = c.gk && c.cb.slice(0, counts.cb).every(Boolean) && c.mc.slice(0, counts.mc).every(Boolean) && c.st.slice(0, counts.st).every(Boolean);
+            if (!completo) return notif("Completa el once titular (portero, defensas, mediocampistas y delanteros) antes de guardar.", 'aviso');
+
+            const clubData = {
+                nombre: nombre.toUpperCase(),
+                formacion: c.formacion,
+                titulares: {
+                    gk: ccObjetoSimple(c.gk),
+                    cb: c.cb.slice(0, counts.cb).map(ccObjetoSimple),
+                    mc: c.mc.slice(0, counts.mc).map(ccObjetoSimple),
+                    st: c.st.slice(0, counts.st).map(ccObjetoSimple)
+                },
+                suplentes: c.subs.map(ccObjetoSimple).filter(Boolean),
+                division
+            };
+
+            try {
+                await setDoc(doc(collection(db, "clubs", division, "equipos")), clubData);
+                notif(`Club "${clubData.nombre}" creado en ${division}.`, 'ok');
+                iniciarCreacionClub();
+            } catch (e) {
+                console.error("[ccGuardarClub] Error:", e);
+                notif("No se pudo guardar el club en la base de datos.", 'error');
+            }
+        };
+
         // ── NAVEGACIÓN ───────────────────────────────────────────
         window.abrirSeccion = (id) => {
             const el = document.getElementById(id);
-            el.style.display = (id === 'plantilla-section') ? "flex" : "block";
+            el.style.display = (id === 'plantilla-section' || id === 'crear-club-section') ? "flex" : "block";
             if (id === 'club-section') renderizarClub();
             if (id === 'base-datos-section') renderizarBaseDatos();
             if (id === 'plantilla-section') renderizarPlantilla();
@@ -1309,9 +2074,325 @@
         };
         window.cerrarSeccion = (id) => { document.getElementById(id).style.display = "none"; };
         window.enterGame = () => {
-            document.getElementById('user-display').innerHTML = `MPS 26 | <strong>${gameData.username}</strong>`;
+            document.getElementById('user-display').innerHTML = `MPS 26 | <strong>${gameData.username}</strong><div class="user-club-sub">${gameData.nombreClub || 'SIN CLUB'}</div>`;
             document.getElementById('loader').style.opacity = "0";
             setTimeout(() => { document.getElementById('loader').style.visibility = "hidden"; document.getElementById('main-content').style.opacity = "1"; document.getElementById('main-content').style.pointerEvents = "auto"; }, 800);
+        };
+
+        // ── NOMBRE DE CLUB (cooldown 7 días) ─────────────────────
+        const NOMBRE_CLUB_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
+        // ── ONLINE 1V1 — LOBBY DE SALAS ──────────────────────────
+        // Paso 1 del diseño: crear / listar / unirse. La lógica de
+        // partido en vivo (host simula, guest observa, pausas,
+        // heartbeat) se agrega en un paso posterior.
+        let lobbyOnlineSuscrito = false;
+        let salaPendienteUnion = null; // id de sala que se está intentando unir (para el modal de password)
+
+        window.iniciarLobbyOnline = () => {
+            limpiarSalasVencidas();
+            if (lobbyOnlineSuscrito) return;
+            lobbyOnlineSuscrito = true;
+            onSnapshot(
+                query(collection(db, "salas_online"), where("estado", "==", "esperando")),
+                renderizarLobbyOnline,
+                (err) => { console.error(err); notif("No se pudieron cargar las salas.", 'error'); }
+            );
+        };
+
+        // Borra del lado del cliente cualquier sala 'esperando' cuyo expiraEn ya pasó.
+        // No requiere Cloud Functions; se ejecuta cada vez que alguien abre el lobby.
+        async function limpiarSalasVencidas() {
+            try {
+                const snap = await getDocs(query(collection(db, "salas_online"), where("estado", "==", "esperando")));
+                const ahora = Date.now();
+                const borrados = [];
+                snap.forEach(docSnap => {
+                    const sala = docSnap.data();
+                    if (sala.expiraEn && sala.expiraEn <= ahora) borrados.push(deleteDoc(doc(db, "salas_online", docSnap.id)));
+                });
+                if (borrados.length) await Promise.allSettled(borrados);
+            } catch (e) { console.error("Error limpiando salas vencidas:", e); }
+        }
+
+        function renderizarLobbyOnline(snapshot) {
+            const cont = document.getElementById('ol-lista-salas');
+            if (!cont) return;
+            const filas = [];
+            snapshot.forEach(docSnap => {
+                const sala = docSnap.data();
+                if (sala.hostId === auth.currentUser?.uid) return; // no listar mi propia sala como "para unirse"
+                filas.push({ id: docSnap.id, sala });
+            });
+            filas.sort((a, b) => (b.sala.creadoEn || 0) - (a.sala.creadoEn || 0)); // orden client-side, sin necesitar índice compuesto
+            if (!filas.length) {
+                cont.innerHTML = `<div class="sin-resultados">No hay salas disponibles. ¡Crea la tuya!</div>`;
+                return;
+            }
+            cont.innerHTML = '';
+            filas.forEach(({ id, sala }) => {
+                const row = document.createElement('div');
+                row.className = 'devtools-row';
+                row.style.justifyContent = 'space-between';
+                const apuesta = sala.apuestaMonto || 0;
+                const hostMedia = sala.hostMedia || 0;
+                row.innerHTML = `
+                    <span style="min-width:180px; font-weight:700;">${sala.nombreSala} ${sala.password ? '🔒' : ''} ${apuesta > 0 ? `<span style="color:var(--primary);">🪙 ${apuesta.toLocaleString('es-ES')}</span>` : ''}</span>
+                    <span style="color:rgba(255,255,255,0.5);">Host: ${sala.hostNombreClub} <span style="color:var(--primary); font-weight:800;">MEDIA ${hostMedia || '--'}</span></span>
+                    <button class="btn-ui btn-unirse-sala" data-sala-id="${id}">Unirse</button>
+                `;
+                cont.appendChild(row);
+            });
+        }
+
+        document.getElementById('ol-lista-salas').addEventListener('click', (e) => {
+            const btn = e.target.closest('.btn-unirse-sala');
+            if (!btn) return;
+            intentarUnirseSala(btn.dataset.salaId);
+        });
+
+        const SALA_ONLINE_TTL_MS = 10 * 60 * 1000; // 10 minutos
+
+        window.crearSalaOnline = async () => {
+            const nombreSala = document.getElementById('ol-nombre-sala').value.trim();
+            const password = document.getElementById('ol-password-sala').value.trim();
+            const apuestaRaw = document.getElementById('ol-apuesta-sala').value.trim();
+            const apuestaMonto = apuestaRaw ? Math.floor(Number(apuestaRaw)) : 0;
+            if (nombreSala.length < 3 || nombreSala.length > 30) return notif("El nombre de la sala debe tener entre 3 y 30 caracteres.", 'aviso');
+            if (!gameData.plantilla) return notif("Necesitas armar tu plantilla antes de crear una sala.", 'aviso');
+            if (apuestaRaw && (!Number.isFinite(apuestaMonto) || apuestaMonto < 0)) return notif("El monto de la apuesta no es válido.", 'aviso');
+            if (apuestaMonto > 0 && apuestaMonto > (gameData.coins || 0)) return notif("No tienes suficientes monedas para esa apuesta.", 'aviso');
+            try {
+                const ahora = Date.now();
+                const salaRef = await addDoc(collection(db, "salas_online"), {
+                    estado: 'esperando',
+                    creadoEn: ahora,
+                    expiraEn: ahora + SALA_ONLINE_TTL_MS,
+                    nombreSala,
+                    hostId: auth.currentUser.uid,
+                    hostNombreClub: gameData.nombreClub || 'CLUB SIN NOMBRE',
+                    hostMedia: calcularMediaTitulares(gameData.plantilla) || 0,
+                    password: password || null,
+                    apuestaMonto,
+                    apuestaHostPagada: false,
+                    apuestaGuestPagada: false,
+                    guestId: null,
+                    guestNombreClub: null,
+                    plantillaHost: gameData.plantilla,
+                    plantillaGuest: null,
+                    pausadoPor: null,
+                    pausaIniciadaEn: null
+                });
+                document.getElementById('ol-nombre-sala').value = '';
+                document.getElementById('ol-password-sala').value = '';
+                document.getElementById('ol-apuesta-sala').value = '';
+                cerrarSeccion('online-lobby-section');
+                abrirSalaDeEspera(salaRef.id, nombreSala, !!password);
+            } catch (e) { console.error(e); notif("No se pudo crear la sala.", 'error'); }
+        };
+
+        // ── SALA DE ESPERA (host) ────────────────────────────────
+        let salaPropiaId = null;
+        let salaPropiaUnsub = null;
+
+        let salaPropiaCountdownInterval = null;
+
+        function abrirSalaDeEspera(salaId, nombreSala, tienePassword) {
+            salaPropiaId = salaId;
+            abrirSeccion('online-espera-section');
+            document.getElementById('oe-nombre-sala').innerText = nombreSala;
+            document.getElementById('oe-password-hint').innerText = tienePassword ? '🔒 Esta sala requiere contraseña para unirse.' : '';
+            if (salaPropiaUnsub) salaPropiaUnsub();
+            let expiraEn = null;
+            salaPropiaUnsub = onSnapshot(doc(db, "salas_online", salaId), (snap) => {
+                if (!snap.exists()) {
+                    // La sala fue borrada (ej. cancelada, o expiró).
+                    if (salaPropiaCountdownInterval) { clearInterval(salaPropiaCountdownInterval); salaPropiaCountdownInterval = null; }
+                    cerrarSeccion('online-espera-section');
+                    return;
+                }
+                const sala = snap.data();
+                expiraEn = sala.expiraEn || null;
+                if (sala.estado === 'listos' && !salaOnlineId) {
+                    if (salaPropiaCountdownInterval) { clearInterval(salaPropiaCountdownInterval); salaPropiaCountdownInterval = null; }
+                    notif(`¡${sala.guestNombreClub} se unió!`, 'exito');
+                    if (salaPropiaUnsub) { salaPropiaUnsub(); salaPropiaUnsub = null; }
+                    abrirPantallaListosOnline(salaId, sala, 'host');
+                }
+            });
+
+            // Cuenta regresiva visual + auto-borrado propio si nadie más limpia la sala primero.
+            if (salaPropiaCountdownInterval) clearInterval(salaPropiaCountdownInterval);
+            salaPropiaCountdownInterval = setInterval(async () => {
+                if (!expiraEn) return;
+                const restanteMs = expiraEn - Date.now();
+                if (restanteMs <= 0) {
+                    clearInterval(salaPropiaCountdownInterval);
+                    salaPropiaCountdownInterval = null;
+                    try { await deleteDoc(doc(db, "salas_online", salaId)); } catch (e) { console.error(e); }
+                    notif("Tu sala expiró tras 10 minutos sin rival.", 'aviso');
+                    cerrarSeccion('online-espera-section');
+                    return;
+                }
+                const mins = Math.floor(restanteMs / 60000);
+                const segs = Math.floor((restanteMs % 60000) / 1000).toString().padStart(2, '0');
+                document.getElementById('oe-countdown').innerText = `⏱️ Expira en ${mins}:${segs}`;
+            }, 1000);
+        }
+
+        window.cancelarSalaPropia = async () => {
+            if (salaPropiaCountdownInterval) { clearInterval(salaPropiaCountdownInterval); salaPropiaCountdownInterval = null; }
+            if (!salaPropiaId) { cerrarSeccion('online-espera-section'); return; }
+            try {
+                await deleteDoc(doc(db, "salas_online", salaPropiaId));
+            } catch (e) { console.error(e); }
+            if (salaPropiaUnsub) { salaPropiaUnsub(); salaPropiaUnsub = null; }
+            salaPropiaId = null;
+            cerrarSeccion('online-espera-section');
+        };
+
+        function intentarUnirseSala(salaId) {
+            salaPendienteUnion = salaId;
+            getDoc(doc(db, "salas_online", salaId)).then(snap => {
+                if (!snap.exists() || snap.data().estado !== 'esperando') {
+                    notif("Esa sala ya no está disponible.", 'aviso');
+                    salaPendienteUnion = null;
+                    return;
+                }
+                const sala = snap.data();
+                const apuestaMonto = sala.apuestaMonto || 0;
+                if (apuestaMonto > 0) {
+                    if (apuestaMonto > (gameData.coins || 0)) {
+                        notif(`Necesitas 🪙 ${apuestaMonto.toLocaleString('es-ES')} para unirte a esta sala y no tienes suficientes monedas.`, 'aviso');
+                        salaPendienteUnion = null;
+                        return;
+                    }
+                    salaPendienteApuestaMonto = apuestaMonto;
+                    document.getElementById('oa-monto-texto').textContent = apuestaMonto.toLocaleString('es-ES');
+                    document.getElementById('online-apuesta-modal').style.display = 'flex';
+                    return;
+                }
+                continuarUnionTrasApuesta(salaId, sala);
+            });
+        }
+
+        // Se llama tras aceptar (o no necesitar) la confirmación de apuesta.
+        // Continúa el flujo normal: pide contraseña si corresponde, o une directo.
+        function continuarUnionTrasApuesta(salaId, sala) {
+            if (sala.password) {
+                document.getElementById('ol-password-intento').value = '';
+                document.getElementById('online-password-modal').style.display = 'flex';
+            } else {
+                unirseSalaOnline(salaId, null);
+            }
+        }
+
+        window.cerrarModalApuestaOnline = () => {
+            document.getElementById('online-apuesta-modal').style.display = 'none';
+            salaPendienteUnion = null;
+            salaPendienteApuestaMonto = 0;
+        };
+
+        document.getElementById('oa-confirmar-btn').onclick = async () => {
+            document.getElementById('online-apuesta-modal').style.display = 'none';
+            if (!salaPendienteUnion) return;
+            // Revalida saldo en el momento de aceptar (por si cambió entre la
+            // apertura del modal y la confirmación, ej. gastó monedas en otra pestaña).
+            if (salaPendienteApuestaMonto > (gameData.coins || 0)) {
+                notif("Ya no tienes suficientes monedas para esta apuesta.", 'aviso');
+                salaPendienteUnion = null;
+                return;
+            }
+            try {
+                const snap = await getDoc(doc(db, "salas_online", salaPendienteUnion));
+                if (!snap.exists() || snap.data().estado !== 'esperando') {
+                    notif("Esa sala ya no está disponible.", 'aviso');
+                    salaPendienteUnion = null;
+                    return;
+                }
+                continuarUnionTrasApuesta(salaPendienteUnion, snap.data());
+            } catch (e) { console.error(e); notif("No se pudo unir a la sala.", 'error'); }
+        };
+
+        window.cerrarModalPasswordOnline = () => {
+            document.getElementById('online-password-modal').style.display = 'none';
+            salaPendienteUnion = null;
+        };
+
+        document.getElementById('ol-confirmar-password-btn').onclick = () => {
+            const intento = document.getElementById('ol-password-intento').value;
+            if (salaPendienteUnion) unirseSalaOnline(salaPendienteUnion, intento);
+        };
+
+        const ONLINE_LISTOS_MS = 15 * 1000; // 15s de countdown en la pantalla de "listos"
+
+        async function unirseSalaOnline(salaId, passwordIntento) {
+            if (!gameData.plantilla) return notif("Necesitas armar tu plantilla antes de unirte a una sala.", 'aviso');
+            try {
+                const salaRef = doc(db, "salas_online", salaId);
+                await runTransaction(db, async (tx) => {
+                    const snap = await tx.get(salaRef);
+                    if (!snap.exists()) throw new Error("La sala ya no existe.");
+                    const sala = snap.data();
+                    if (sala.estado !== 'esperando') throw new Error("La sala ya no está disponible.");
+                    if (sala.password && sala.password !== passwordIntento) throw new Error("Contraseña incorrecta.");
+                    tx.update(salaRef, {
+                        estado: 'listos',
+                        guestId: auth.currentUser.uid,
+                        guestNombreClub: gameData.nombreClub || 'CLUB SIN NOMBRE',
+                        plantillaGuest: gameData.plantilla,
+                        hostListo: false,
+                        guestListo: false,
+                        listosExpiraEn: Date.now() + ONLINE_LISTOS_MS
+                    });
+                });
+                document.getElementById('online-password-modal').style.display = 'none';
+                salaPendienteUnion = null;
+                notif("¡Te uniste a la sala!", 'exito');
+                const salaSnap = await getDoc(salaRef);
+                abrirPantallaListosOnline(salaId, salaSnap.data(), 'guest');
+            } catch (e) {
+                notif(e.message || "No se pudo unir a la sala.", 'error');
+            }
+        }
+
+        window.salirDelLobbyOnline = () => {
+            // No cancela salas creadas; solo deja de mostrar el lobby.
+            // La limpieza de salas abandonadas se maneja aparte (ver diseño, sección de limpieza).
+        };
+
+        window.abrirCambioNombreClub = () => {
+            abrirSeccion('nombre-club-section');
+            document.getElementById('nc-actual').innerText = gameData.nombreClub || 'SIN CLUB';
+            document.getElementById('nc-nuevo-nombre').value = '';
+            const fecha = gameData.nombreClubFecha || 0;
+            const restante = fecha + NOMBRE_CLUB_COOLDOWN_MS - Date.now();
+            const estadoEl = document.getElementById('nc-estado');
+            const btn = document.getElementById('nc-confirmar-btn');
+            if (restante > 0) {
+                const dias = Math.ceil(restante / (24 * 60 * 60 * 1000));
+                estadoEl.innerText = `⏳ Podrás cambiarlo en ${dias} día${dias === 1 ? '' : 's'}.`;
+                btn.disabled = true;
+                btn.style.opacity = '0.4';
+                btn.style.cursor = 'not-allowed';
+            } else {
+                estadoEl.innerText = '✅ Puedes cambiar el nombre de tu club ahora.';
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+            }
+        };
+
+        window.confirmarCambioNombreClub = async () => {
+            const fecha = gameData.nombreClubFecha || 0;
+            const restante = fecha + NOMBRE_CLUB_COOLDOWN_MS - Date.now();
+            if (restante > 0) return notif("Todavía no puedes cambiar el nombre de tu club.", 'aviso');
+            const nuevo = document.getElementById('nc-nuevo-nombre').value.trim();
+            if (nuevo.length < 3 || nuevo.length > 20) return notif("El nombre del club debe tener entre 3 y 20 caracteres.", 'aviso');
+            try {
+                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { nombreClub: nuevo.toUpperCase(), nombreClubFecha: Date.now() });
+                notif("¡Nombre de club actualizado!", 'exito');
+                cerrarSeccion('nombre-club-section');
+            } catch { notif("No se pudo cambiar el nombre del club.", 'error'); }
         };
 
         // ── ACCIONES CLUB ────────────────────────────────────────
@@ -1598,6 +2679,1941 @@
             document.getElementById('reveal-overlay').style.display = 'none';
             if (document.getElementById('club-section').style.display === "block") renderizarClub();
         };
+
+        // ════════════════════════════════════════════════════════════
+        // PARTIDO RÁPIDO — base de Division Rivals
+        // ════════════════════════════════════════════════════════════
+
+        // ── DIVISIONES DISPONIBLES ──
+        const TOTAL_DIVISIONES = 6;
+        const NOMBRES_DIVISION = { 1: 'PRS', 2: 'VF', 3: 'CBM', 4: 'UF26', 5: 'CHF', 6: 'CAM' };
+
+        async function obtenerClubesDeDivision(division) {
+            const snap = await getDocs(collection(db, "clubs", division, "equipos"));
+            return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        }
+
+        function calcularMediaClub(c) {
+            const t = c.titulares || {};
+            const arr = [t.gk, ...(t.cb || []), ...(t.mc || []), ...(t.st || [])].filter(Boolean);
+            if (!arr.length) return '--';
+            return Math.round(arr.reduce((s, j) => s + j.grl, 0) / arr.length);
+        }
+
+        function calcularMediaEquipoObjeto(equipo) {
+            const arr = [equipo.gk, ...equipo.cb, ...equipo.mc, ...equipo.st].filter(Boolean);
+            if (!arr.length) return '--';
+            return Math.round(arr.reduce((s, j) => s + j.grl, 0) / arr.length);
+        }
+
+        // ── NAVEGACIÓN DE SELECCIÓN DE RIVAL ────────────────────────
+        let divisionActualRival = 'division1';
+
+        function renderizarSelectorDivisionRival() {
+            const cont = document.getElementById('division-selector');
+            // Ya generado (solo el <span> de la etiqueta) — evitamos duplicar botones si se reabre la sección.
+            if (cont.querySelectorAll('.formacion-btn').length === TOTAL_DIVISIONES) return;
+            cont.querySelectorAll('.formacion-btn').forEach(b => b.remove());
+            for (let d = 1; d <= TOTAL_DIVISIONES; d++) {
+                const btn = document.createElement('button');
+                btn.className = 'formacion-btn' + (d === 1 ? ' activo' : '');
+                btn.dataset.div = `division${d}`;
+                btn.textContent = NOMBRES_DIVISION[d];
+                btn.onclick = () => cambiarDivisionRival(`division${d}`);
+                cont.appendChild(btn);
+            }
+        }
+
+        window.iniciarPartidoRapido = function() {
+            renderizarSelectorDivisionRival();
+            cambiarDivisionRival(divisionActualRival);
+        };
+
+        window.cambiarDivisionRival = async function(division) {
+            divisionActualRival = division;
+            document.querySelectorAll('#division-selector .formacion-btn').forEach(b => b.classList.toggle('activo', b.dataset.div === division));
+            const grid = document.getElementById('rivales-grid');
+            grid.innerHTML = `<div class="sin-resultados">Cargando rivales...</div>`;
+            try {
+                const clubes = await obtenerClubesDeDivision(division);
+                if (!clubes.length) { grid.innerHTML = `<div class="sin-resultados">No hay clubes disponibles en esta división.</div>`; return; }
+                grid.innerHTML = '';
+                clubes.forEach(c => {
+                    const card = document.createElement('div');
+                    card.className = 'rival-card';
+                    card.innerHTML = `<h3>${c.nombre}</h3><div class="rival-meta"><span>FORMACIÓN ${c.formacion}</span><span class="rival-media">${calcularMediaClub(c)}</span></div>`;
+                    card.onclick = () => seleccionarRival(c);
+                    grid.appendChild(card);
+                });
+            } catch (e) {
+                console.error(e);
+                grid.innerHTML = `<div class="sin-resultados">Error cargando rivales.</div>`;
+                notif("No se pudieron cargar los clubes rivales.", "error");
+            }
+        };
+
+        // ── CONSTRUCCIÓN DE EQUIPOS PARA EL MOTOR DE SIMULACIÓN ─────
+        function construirEquipoLocal(p) {
+            const counts = FORMACIONES[p.formacion];
+            const obtenerJugador = id => {
+                const j = id ? databaseJugadores.find(x => x.id === id) : null;
+                return j ? { id: j.id, nombre: j.name, pos: (j.pos || '').trim().toLowerCase(), grl: j.grl, rareza: j.rareza, foto: j.foto } : null;
+            };
+            return {
+                nombre: gameData.nombreClub || "MI CLUB",
+                formacion: p.formacion,
+                gk: obtenerJugador(p.gk),
+                cb: p.cb.slice(0, counts.cb).map(obtenerJugador),
+                mc: p.mc.slice(0, counts.mc).map(obtenerJugador),
+                st: p.st.slice(0, counts.st).map(obtenerJugador),
+                subs: p.subs.map(obtenerJugador).filter(Boolean)
+            };
+        }
+
+        function construirEquipoRival(clubData) {
+            return {
+                nombre: clubData.nombre,
+                formacion: clubData.formacion,
+                gk: clubData.titulares.gk,
+                cb: clubData.titulares.cb,
+                mc: clubData.titulares.mc,
+                st: clubData.titulares.st,
+                subs: clubData.suplentes || []
+            };
+        }
+
+        let equipoLocalPartido = null, equipoVisitantePartido = null;
+
+        window.seleccionarRival = function(clubData) {
+            const p = getPlantilla();
+            const counts = FORMACIONES[p.formacion];
+            const completo = p.gk && p.cb.slice(0, counts.cb).every(Boolean) && p.mc.slice(0, counts.mc).every(Boolean) && p.st.slice(0, counts.st).every(Boolean);
+            if (!completo) { notif("Completa tu once titular en PLANTILLA antes de jugar un Partido Rápido.", "aviso"); return; }
+            equipoLocalPartido = construirEquipoLocal(p);
+            equipoVisitantePartido = construirEquipoRival(clubData);
+            renderPreviewPartido();
+            cerrarSeccion('partido-rapido-section');
+            abrirSeccion('preview-partido-section');
+        };
+
+        function pintarEquipoPreview(elId, equipo) {
+            const el = document.getElementById(elId);
+            const cal = calidadEquipo(equipo);
+            const filaJugadores = (titulo, arr) => `<div class="preview-linea"><div class="preview-linea-titulo">${titulo}</div>${arr.filter(Boolean).map(j => `<div class="preview-jugador"><span>${j.nombre}</span><span class="preview-jugador-grl">${j.grl}</span></div>`).join('')}</div>`;
+            el.innerHTML = `
+                <h2 class="italic-title" style="font-size:2rem;">${equipo.nombre}</h2>
+                <div class="preview-meta">FORMACIÓN ${equipo.formacion} · MEDIA ${calcularMediaEquipoObjeto(equipo)}</div>
+                ${filaJugadores('PORTERO', [equipo.gk])}
+                ${filaJugadores(`DEFENSA · CALIDAD COLECTIVA ${cal.defensa}`, equipo.cb)}
+                ${filaJugadores(`MEDIOCAMPO · CALIDAD COLECTIVA ${cal.mediocampo}`, equipo.mc)}
+                ${filaJugadores(`DELANTERA · CALIDAD COLECTIVA ${cal.delantera}`, equipo.st)}
+            `;
+        }
+
+        function renderPreviewPartido() {
+            pintarEquipoPreview('preview-local', equipoLocalPartido);
+            pintarEquipoPreview('preview-visitante', equipoVisitantePartido);
+        }
+
+        // ── MOTOR DE SIMULACIÓN ──────────────────────────────────────
+        // Calidad colectiva = SUMA (no promedio) de los ratings de la línea.
+        function calidadLinea(jugadores) { return (jugadores || []).reduce((s, j) => s + (j ? j.grl : 0), 0); }
+        function calidadEquipo(equipo) {
+            return {
+                defensa: calidadLinea(equipo.cb),
+                mediocampo: calidadLinea(equipo.mc),
+                delantera: calidadLinea(equipo.st)
+            };
+        }
+
+        // ════════════════════════════════════════════════════════════
+        // PERFILES TÁCTICOS DE FORMACIÓN
+        // Cada formación tiene 4 rasgos ocultos (0-10) que el motor
+        // compara entre ambos equipos para generar una ventaja táctica
+        // real (no solo "más jugadores en una línea"). La ventaja se
+        // calibra para pesar entre un 17% y un 20% sobre la ocasión/
+        // ataque generado — se siente, pero no decide el partido solo.
+        // ════════════════════════════════════════════════════════════
+        const PERFILES_TACTICOS = {
+            '2-1-3': { presion: 8,  control: 4,  amplitud: 7, solidez: 5  },
+            '2-3-1': { presion: 5,  control: 10, amplitud: 6, solidez: 5  },
+            '3-2-1': { presion: 4,  control: 6,  amplitud: 3, solidez: 10 },
+            '3-1-2': { presion: 6,  control: 5,  amplitud: 4, solidez: 9  },
+            '2-2-2': { presion: 7,  control: 7,  amplitud: 7, solidez: 7  }
+        };
+        const VENTAJA_TACTICA_MAX = 0.20; // tope superior de la ventaja táctica pedida (17%-20%)
+        const VENTAJA_TACTICA_MIN = 0.17; // piso: la ventaja mínima que se aplica en cuanto hay CUALQUIER diferencia táctica
+
+        // Compara los perfiles de ATACANTE (presión + amplitud, para generar y sostener el ataque)
+        // contra los de DEFENSOR (control + solidez, para contenerlo) y devuelve un multiplicador
+        // de ventaja/desventaja centrado en 1.0 (sin bonus si los perfiles empatan exactamente).
+        // Cuando SÍ hay diferencia táctica, esa ventaja pesa entre 17% y 20% (según qué tan marcada
+        // sea la diferencia), tal como se pidió — nunca queda "aplastada" a un valor fijo.
+        function ventajaTactica(formacionAtacante, formacionDefensora) {
+            const a = PERFILES_TACTICOS[formacionAtacante] || PERFILES_TACTICOS['2-2-2'];
+            const d = PERFILES_TACTICOS[formacionDefensora] || PERFILES_TACTICOS['2-2-2'];
+            const puntajeAtaque   = a.presion + a.amplitud;
+            const puntajeDefensa  = d.control + d.solidez;
+            const diffMax = 20; // máxima diferencia posible entre puntajeAtaque y puntajeDefensa (0-10 cada rasgo, 2 rasgos)
+            const diff = puntajeAtaque - puntajeDefensa;
+            if (diff === 0) return 1; // perfiles empatados exactamente: sin ventaja táctica
+            const intensidad = Math.min(1, Math.abs(diff) / diffMax); // 0..1 según qué tan marcada es la diferencia
+            const magnitud = VENTAJA_TACTICA_MIN + (VENTAJA_TACTICA_MAX - VENTAJA_TACTICA_MIN) * intensidad;
+            return 1 + (diff > 0 ? magnitud : -magnitud);
+        }
+
+        // Probabilidad de que el mediocampio genere un ataque este minuto. Nunca llega al 100%.
+        // Reducida a la mitad respecto a la versión anterior para que el partido tenga menos
+        // jugadas por minuto y se sienta menos saturado de eventos.
+        function probabilidadAtaque(calidadMediocampo) {
+            return Math.min(0.21, 0.04 + calidadMediocampo / 1120);
+        }
+
+        // Probabilidad de que un ataque se transforme en ocasión clara, según la diferencia delantera vs defensa.
+        // Peso de la diferencia aumentado ~60% respecto a la versión anterior (era /320).
+        function probabilidadOcasion(diferencia, multiplicadorTactico) {
+            const base = 0.30 + diferencia / 200;
+            return Math.min(0.62, Math.max(0.06, base * multiplicadorTactico));
+        }
+
+        // Probabilidad individual de realizar una jugada destacada según el rating del jugador.
+        // Reducida a la mitad respecto a la versión anterior para bajar la frecuencia general
+        // de eventos por minuto.
+        function probabilidadIndividualidad(rating) {
+            return 0.00278 * Math.pow(2, (rating - 70) / 10);
+        }
+
+        function elegirPorPeso(candidatos) {
+            if (!candidatos.length) return null;
+            const total = candidatos.reduce((s, j) => s + j.grl, 0);
+            let r = Math.random() * total;
+            for (const j of candidatos) { r -= j.grl; if (r <= 0) return j; }
+            return candidatos[candidatos.length - 1];
+        }
+
+        function elegirGoleador(equipo) {
+            const candidatos = [...equipo.st.filter(Boolean), ...equipo.mc.filter(Boolean)];
+            const j = elegirPorPeso(candidatos);
+            return j ? j.nombre : 'Jugador';
+        }
+
+        // ════════════════════════════════════════════════════════════
+        // NARRACIÓN — bancos de plantillas variadas con protagonismo
+        // de jugadores concretos. Cada función elige al azar entre
+        // varias frases para evitar la repetición.
+        // ════════════════════════════════════════════════════════════
+        function elegirFrase(plantillas, datos) {
+            const plantilla = plantillas[Math.floor(Math.random() * plantillas.length)];
+            return plantilla(datos);
+        }
+
+        const FRASES_RECUPERACION = [
+            d => `${d.jugador} recupera el balón en el mediocampo.`,
+            d => `${d.jugador} corta el avance rival y recupera la posesión.`,
+            d => `Buena lectura de ${d.jugador}, que roba el balón.`,
+            d => `${d.jugador} se anticipa y le quita el balón al rival.`
+        ];
+        const FRASES_INICIO_ATAQUE = [
+            d => `${d.equipo} construye una jugada de ataque.`,
+            d => `${d.equipo} sale jugando desde atrás en busca del gol.`,
+            d => `${d.jugador} inicia el ataque para ${d.equipo}.`,
+            d => `${d.equipo} presiona en campo rival y arma la jugada.`
+        ];
+        const FRASES_PASE_CLAVE = [
+            d => `${d.jugador} encuentra un gran espacio para ${d.receptor}.`,
+            d => `${d.jugador} le da un DIME a ${d.receptor} que lo deja en posición de disparo.`,
+            d => `${d.jugador} filtra un balón perfecto para ${d.receptor}.`,
+            d => `${d.jugador} abre el juego hacia ${d.receptor}.`
+        ];
+        const FRASES_DEFENSA_DESPEJA = [
+            d => `La defensa de ${d.equipo} despeja el peligro.`,
+            d => `${d.jugador} se anticipa y corta el pase.`,
+            d => `${d.jugador} llega justo a tiempo para desactivar la jugada.`,
+            d => `La zaga de ${d.equipo} logra reordenarse y despejar.`
+        ];
+        const FRASES_CORTE_ESPECTACULAR = [
+            d => `🛡️ ¡Corte espectacular de ${d.jugador} (${d.equipo}) que evita el peligro!`,
+            d => `🛡️ ¡Entrada perfecta de ${d.jugador} que salva a ${d.equipo}!`,
+            d => `🛡️ ${d.jugador} se lanza y saca el balón casi en la línea de gol.`
+        ];
+        const FRASES_OCASION = [
+            d => `¡Ocasión clara para ${d.equipo}! ${d.jugador} dispara ${d.ubicacion}.`,
+            d => `¡${d.jugador} queda con espacio y dispara ${d.ubicacion}!`,
+            d => `¡Gran oportunidad para ${d.equipo}! ${d.jugador} remata ${d.ubicacion}.`
+        ];
+        const FRASES_ENCARA = [
+            d => `${d.jugador} encara a ${d.rival}.`,
+            d => `${d.jugador} se perfila frente a ${d.rival}.`,
+            d => `${d.jugador} hace shielding ante ${d.rival}.`
+        ];
+        const FRASES_SUPERA_RIVAL = [
+            d => `${d.jugador} deja atrás a ${d.rival}.`,
+            d => `${d.jugador} supera con facilidad a ${d.rival}.`,
+            d => `${d.jugador} mixeó a ${d.rival} con unos movimientos impresionantes!`,
+            d => `${d.jugador} se chopeó a ${d.rival} y lo dejó atrás.`
+        ];
+        const FRASES_DISPARO_LEJANO = [
+            d => `💥 ¡Disparo lejano de ${d.jugador} ${d.ubicacion}!`,
+            d => `💥 ${d.jugador} prueba suerte ${d.ubicacion}.`,
+            d => `💥 ¡${d.jugador} saca un derechazo ${d.ubicacion}!`
+        ];
+        const FRASES_PARADA = [
+            d => `🧤 ¡Gran atajada de ${d.portero} al remate de ${d.jugador}!`,
+            d => `🧤 ${d.portero} responde con una parada de reflejos al disparo de ${d.jugador}.`,
+            d => `🧤 ¡${d.portero} realiza una enorme atajada ante el remate de ${d.jugador}!`,
+            d => `🧤 ${d.portero} predictea el tiro de ${d.jugador} y evita el gol!`
+        ];
+        const FRASES_DISPARO_DESVIADO = [
+            d => `El disparo de ${d.jugador} se va apenas desviado.`,
+            d => `${d.jugador} no logra encuadrar el remate.`,
+            d => `El balón se pierde cerca del poste tras el remate de ${d.jugador}.`,
+            d => `SONIDO METÁLICO! el tiro de ${d.jugador} pega dramáticamente en el travesaño.`
+        ];
+        const FRASES_GOL = [
+            d => `${d.jugador} define con categoría.`,
+            d => `${d.jugador} define al segundo palo.`,
+            d => `¡${d.jugador} la clava en el ángulo!`,
+            d => `${d.jugador} no perdona dentro del área y es gol.`,
+            d => `${d.jugador} remata con potencia y no le da chances al portero.`
+        ];
+        const FRASES_CENTRO = [
+            d => `${d.jugador} tira un centro al área buscando a sus compañeros.`,
+            d => `${d.jugador} envía un centro peligroso desde la banda.`,
+            d => `${d.jugador} pone un balón colgado al corazón del área.`
+        ];
+        const FRASES_MOSS_ATAQUE = [
+            d => `¡${d.jugador} mossea en el área y conecta con el balón!`,
+            d => `${d.jugador} gana el moss y cabecea el centro.`,
+            d => `${d.jugador} se eleva y le gana la posición al defensor en el centro.`
+        ];
+        const FRASES_MOSS_DEFENSA = [
+            d => `${d.jugador} mossea y despeja el centro.`,
+            d => `${d.jugador} se anticipa en el aire y corta el centro.`,
+            d => `${d.jugador} gana el moss defensivo y aleja el peligro.`
+        ];
+
+        // Ubicaciones posibles desde donde se produce un disparo, ponderadas por cercanía al arco.
+        const UBICACIONES_DISPARO = [
+            { texto: 'desde el borde del área chica', peso: 1 },
+            { texto: 'desde dentro del área grande', peso: 5 },
+            { texto: 'desde el borde del área grande', peso: 3 },
+            { texto: 'desde fuera del área', peso: 2 }
+        ];
+        function elegirUbicacionDisparo() {
+            const total = UBICACIONES_DISPARO.reduce((s, u) => s + u.peso, 0);
+            let r = Math.random() * total;
+            for (const u of UBICACIONES_DISPARO) { r -= u.peso; if (r <= 0) return u.texto; }
+            return UBICACIONES_DISPARO[0].texto;
+        }
+
+        function agregarEvento(match, texto, destacado, esVisitante) {
+            match.eventos.push({ minuto: match.minutoAbsoluto, texto });
+            const feed = document.getElementById('match-commentary');
+            if (!feed) return;
+            const linea = document.createElement('div');
+            linea.className = 'commentary-line' + (destacado ? ' destacado' : '') + (esVisitante ? ' visitante' : '');
+            linea.innerHTML = `<span class="commentary-min">${match.minutoAbsoluto}'</span> ${texto}`;
+            feed.prepend(linea);
+        }
+
+        function actualizarHUDMarcador(match) {
+            const el = document.getElementById('hud-marcador');
+            if (el) el.textContent = `${match.marcador.local} - ${match.marcador.visitante}`;
+        }
+
+        // ════════════════════════════════════════════════════════════
+        // ESTADÍSTICAS — se registran EN VIVO durante la simulación,
+        // nunca se calculan al final. statsEquipo() crea el objeto
+        // base; statsJugador() crea/recupera el registro individual.
+        // ════════════════════════════════════════════════════════════
+        function statsEquipoDefault() {
+            return { posesion: 0, ataques: 0, ocasiones: 0, disparos: 0, disparosPuerta: 0, goles: 0, atajadas: 0, individualidades: 0, recuperaciones: 0, pasesClave: 0, asistencias: 0, cambios: 0 };
+        }
+
+        function statsJugador(match, jugador) {
+            if (!jugador) return null;
+            if (!match.statsJugadores[jugador.id]) {
+                match.statsJugadores[jugador.id] = { nombre: jugador.nombre, goles: 0, asistencias: 0, disparos: 0, disparosPuerta: 0, pasesClave: 0, recuperaciones: 0, individualidades: 0, atajadas: 0, perdidas: 0, minutosJugados: 0 };
+            }
+            return match.statsJugadores[jugador.id];
+        }
+
+        function incStat(objetoStats, campo, valor) {
+            if (!objetoStats) return;
+            objetoStats[campo] = (objetoStats[campo] || 0) + (valor === undefined ? 1 : valor);
+        }
+
+        function marcarGol(match, esLocal, goleador, asistente) {
+            if (esLocal) match.marcador.local++; else match.marcador.visitante++;
+            match.goleadores.push({ minuto: match.minutoAbsoluto, esLocal, nombre: goleador ? goleador.nombre : 'Jugador', asistente: asistente ? asistente.nombre : null });
+
+            const statsEq = esLocal ? match.stats.local : match.stats.visitante;
+            incStat(statsEq, 'goles');
+            if (goleador) incStat(statsJugador(match, goleador), 'goles');
+            if (asistente) { incStat(statsEq, 'asistencias'); incStat(statsJugador(match, asistente), 'asistencias'); }
+
+            let texto = `⚽ ¡GOOOOL! ${elegirFrase(FRASES_GOL, { jugador: goleador ? goleador.nombre : 'El jugador' })}`;
+            if (asistente) texto += ` 🅰️ Asistencia de ${asistente.nombre}.`;
+            agregarEvento(match, texto, true);
+            actualizarHUDMarcador(match);
+        }
+
+        // Resuelve un disparo: puede terminar en gol, atajada o desvío/travesaño. `asistente` es
+        // opcional (quién dio el pase clave previo al remate, si lo hubo). `ubicacion` es la frase
+        // de dónde partió el tiro (ej. "desde dentro del área grande"), y se muestra en la atajada
+        // también para que el comentario nunca quede sin decir quién y desde dónde disparó.
+        function resolverDisparo(match, atacante, defensor, esLocal, rematador, asistente, ubicacion) {
+            const portero = defensor.gk;
+            const statsAtaque = esLocal ? match.stats.local : match.stats.visitante;
+            const statsDefensa = esLocal ? match.stats.visitante : match.stats.local;
+            const nombreRematador = rematador ? rematador.nombre : elegirGoleador(atacante);
+            incStat(statsAtaque, 'disparos');
+            if (rematador) incStat(statsJugador(match, rematador), 'disparos');
+
+            // Desde el borde del área chica el remate es prácticamente un mano a mano con el
+            // arco vacío: la probabilidad de gol debe ser muy alta y solo bajar por una
+            // atajada espectacular del portero, casi nunca por error del rematador.
+            const esAreaChica = ubicacion === 'desde el borde del área chica';
+            const baseProbGol = esAreaChica ? 0.88 : 0.55;
+            const techoProbGol = esAreaChica ? 0.95 : 0.78;
+            const probGol = Math.min(techoProbGol, Math.max(0.10, baseProbGol - (portero ? portero.grl / 250 : 0)));
+            const resultado = Math.random();
+            const esGol = resultado < probGol;
+            const esDesviado = !esGol && resultado > probGol + (1 - probGol) * 0.55; // dentro del "no gol", una fracción se va desviado/travesaño en vez de atajada
+
+            if (!esDesviado) {
+                incStat(statsAtaque, 'disparosPuerta');
+                if (rematador) incStat(statsJugador(match, rematador), 'disparosPuerta');
+            }
+
+            if (esGol) {
+                marcarGol(match, esLocal, rematador || { nombre: nombreRematador }, asistente);
+            } else if (esDesviado) {
+                agregarEvento(match, elegirFrase(FRASES_DISPARO_DESVIADO, { jugador: nombreRematador }), false, !esLocal);
+            } else {
+                incStat(statsDefensa, 'atajadas');
+                if (portero) incStat(statsJugador(match, portero), 'atajadas');
+                agregarEvento(match, elegirFrase(FRASES_PARADA, { portero: portero ? portero.nombre : 'El portero', equipo: defensor.nombre, jugador: nombreRematador }), false, esLocal);
+            }
+        }
+
+        function procesarAtaque(match, atacante, defensor, esLocal) {
+            const calAtacante = calidadEquipo(atacante);
+            const calDefensor = calidadEquipo(defensor);
+            const statsAtaque = esLocal ? match.stats.local : match.stats.visitante;
+
+            if (Math.random() > probabilidadAtaque(calAtacante.mediocampo)) return;
+            incStat(statsAtaque, 'ataques');
+
+            const iniciador = elegirPorPeso((atacante.mc || []).filter(Boolean)) || elegirPorPeso((atacante.st || []).filter(Boolean));
+            agregarEvento(match, elegirFrase(FRASES_INICIO_ATAQUE, { equipo: atacante.nombre, jugador: iniciador ? iniciador.nombre : atacante.nombre }), false, !esLocal);
+
+            const multiplicadorTactico = ventajaTactica(atacante.formacion, defensor.formacion);
+            const diferencia = calAtacante.delantera - calDefensor.defensa;
+            if (Math.random() > probabilidadOcasion(diferencia, multiplicadorTactico)) {
+                const defensorQueDespeja = elegirPorPeso((defensor.cb || []).filter(Boolean));
+                const statsDef = esLocal ? match.stats.visitante : match.stats.local;
+                incStat(statsDef, 'recuperaciones');
+                if (defensorQueDespeja) incStat(statsJugador(match, defensorQueDespeja), 'recuperaciones');
+                agregarEvento(match, elegirFrase(FRASES_DEFENSA_DESPEJA, { equipo: defensor.nombre, jugador: defensorQueDespeja ? defensorQueDespeja.nombre : defensor.nombre }), false, esLocal);
+                return;
+            }
+
+            incStat(statsAtaque, 'ocasiones');
+
+            // Ya hay ocasión clara: ahora sí tiene sentido que un defensor haga un corte
+            // espectacular "in extremis" para evitar el gol casi cantado.
+            const defensorEstrella = (defensor.cb || []).filter(Boolean).find(j => Math.random() < probabilidadIndividualidad(j.grl) * 0.8);
+            if (defensorEstrella) {
+                const statsDef = esLocal ? match.stats.visitante : match.stats.local;
+                incStat(statsDef, 'recuperaciones');
+                incStat(statsJugador(match, defensorEstrella), 'recuperaciones');
+                agregarEvento(match, elegirFrase(FRASES_CORTE_ESPECTACULAR, { jugador: defensorEstrella.nombre, equipo: defensor.nombre }), false, esLocal);
+                return;
+            }
+
+            // ── VÍA DE CENTRO + MOSS (alternativa a la jugada por el piso) ──
+            // Con cierta probabilidad, la ocasión se resuelve como un centro al área
+            // disputado por arriba en vez de una jugada armada por el piso.
+            if (Math.random() < 0.30) {
+                const centrador = elegirPorPeso((atacante.mc || []).filter(Boolean)) || iniciador;
+                if (centrador) {
+                    agregarEvento(match, elegirFrase(FRASES_CENTRO, { jugador: centrador.nombre }), false, !esLocal);
+                    const rematadorCentro = elegirPorPeso([...(atacante.st || []).filter(Boolean), ...(atacante.mc || []).filter(Boolean)]);
+                    const defensorMoss = elegirPorPeso((defensor.cb || []).filter(Boolean));
+                    const calRematador = rematadorCentro ? rematadorCentro.grl : 0;
+                    const calDefensorMoss = defensorMoss ? defensorMoss.grl : 0;
+                    const probGanaMoss = calRematador + calDefensorMoss > 0 ? calRematador / (calRematador + calDefensorMoss) : 0.5;
+                    if (rematadorCentro && Math.random() < probGanaMoss) {
+                        agregarEvento(match, elegirFrase(FRASES_MOSS_ATAQUE, { jugador: rematadorCentro.nombre }), false, !esLocal);
+                        resolverDisparo(match, atacante, defensor, esLocal, rematadorCentro, centrador.id !== rematadorCentro.id ? centrador : null, 'dentro del área');
+                    } else {
+                        const statsDef = esLocal ? match.stats.visitante : match.stats.local;
+                        incStat(statsDef, 'recuperaciones');
+                        if (defensorMoss) incStat(statsJugador(match, defensorMoss), 'recuperaciones');
+                        agregarEvento(match, elegirFrase(FRASES_MOSS_DEFENSA, { jugador: defensorMoss ? defensorMoss.nombre : defensor.nombre }), false, esLocal);
+                    }
+                    return;
+                }
+            }
+
+            const rematador = elegirPorPeso([...(atacante.st || []).filter(Boolean), ...(atacante.mc || []).filter(Boolean)]);
+            if (!rematador) return; // sin jugadores disponibles para rematar, no hay disparo que narrar
+
+            let asistente = null;
+            if (iniciador && iniciador.id !== rematador.id && Math.random() < 0.6) {
+                asistente = iniciador;
+                incStat(statsAtaque, 'pasesClave');
+                incStat(statsJugador(match, iniciador), 'pasesClave');
+                agregarEvento(match, elegirFrase(FRASES_PASE_CLAVE, { jugador: iniciador.nombre, receptor: rematador.nombre }), false, !esLocal);
+            }
+            const ubicacion = elegirUbicacionDisparo();
+            agregarEvento(match, elegirFrase(FRASES_OCASION, { equipo: atacante.nombre, jugador: rematador.nombre, ubicacion }), false, !esLocal);
+            resolverDisparo(match, atacante, defensor, esLocal, rematador, asistente, ubicacion);
+        }
+
+        // Las jugadas individuales representan acciones YA exitosas: si aparecen, el jugador
+        // ya superó a su marcador. A partir de ahí solo queda disparo → parada o gol.
+        function procesarIndividualidades(match, atacante, defensor, esLocal) {
+            const accionables = [
+                ...(atacante.mc || []).filter(Boolean).map(j => ({ j, linea: 'mc' })),
+                ...(atacante.st || []).filter(Boolean).map(j => ({ j, linea: 'st' }))
+            ];
+            const statsAtaque = esLocal ? match.stats.local : match.stats.visitante;
+            for (const { j, linea } of accionables) {
+                if (Math.random() > probabilidadIndividualidad(j.grl)) continue;
+                incStat(statsAtaque, 'individualidades');
+                incStat(statsJugador(match, j), 'individualidades');
+                const marcador = elegirPorPeso((defensor.cb || []).filter(Boolean));
+
+                if (linea === 'mc') {
+                    if (Math.random() < 0.85) {
+                        const receptor = elegirPorPeso((atacante.st || []).filter(Boolean));
+                        agregarEvento(match, `⚡ ${elegirFrase(FRASES_PASE_CLAVE, { jugador: j.nombre, receptor: receptor ? receptor.nombre : atacante.nombre })}`, false, !esLocal);
+                        if (receptor) {
+                            incStat(statsAtaque, 'pasesClave');
+                            incStat(statsJugador(match, j), 'pasesClave');
+                            // Toda jugada de DIME debe cerrarse con un disparo: nunca puede
+                            // quedar en el aire sin decir cómo terminó la ocasión.
+                            resolverDisparo(match, atacante, defensor, esLocal, receptor, j, 'dentro del área');
+                        }
+                    } else {
+                        agregarEvento(match, `🌟 ${elegirFrase(FRASES_SUPERA_RIVAL, { jugador: j.nombre, rival: marcador ? marcador.nombre : 'su marcador' })}`, false, !esLocal);
+                        resolverDisparo(match, atacante, defensor, esLocal, j, null, 'desde el borde del área grande');
+                    }
+                } else {
+                    if (Math.random() < 0.7) {
+                        agregarEvento(match, elegirFrase(FRASES_ENCARA, { jugador: j.nombre, rival: marcador ? marcador.nombre : 'su marcador' }), false, !esLocal);
+                        agregarEvento(match, `🔥 ${elegirFrase(FRASES_SUPERA_RIVAL, { jugador: j.nombre, rival: marcador ? marcador.nombre : 'su marcador' })}`, false, !esLocal);
+                        resolverDisparo(match, atacante, defensor, esLocal, j, null, 'desde dentro del área grande');
+                    } else {
+                        agregarEvento(match, elegirFrase(FRASES_DISPARO_LEJANO, { jugador: j.nombre, ubicacion: 'desde fuera del área' }), false, !esLocal);
+                        resolverDisparo(match, atacante, defensor, esLocal, j, null, 'desde fuera del área');
+                    }
+                }
+                break; // máximo una individualidad por equipo por minuto
+            }
+        }
+
+        // Actualiza la posesión de forma acumulativa: cada minuto "reparte" un punto de
+        // posesión hacia el equipo cuyo mediocampo domina ese instante (con algo de azar).
+        function actualizarPosesion(match) {
+            const calLocal = calidadEquipo(match.local).mediocampo;
+            const calVisitante = calidadEquipo(match.visitante).mediocampo;
+            const total = calLocal + calVisitante || 1;
+            const probLocal = calLocal / total;
+            if (Math.random() < probLocal) match.posesionTicks.local++; else match.posesionTicks.visitante++;
+            const totalTicks = match.posesionTicks.local + match.posesionTicks.visitante || 1;
+            match.stats.local.posesion = Math.round((match.posesionTicks.local / totalTicks) * 100);
+            match.stats.visitante.posesion = 100 - match.stats.local.posesion;
+        }
+
+        function simularMinuto(match) {
+            actualizarPosesion(match);
+            procesarAtaque(match, match.local, match.visitante, true);
+            if (match.fase === 'finalizado') return;
+            procesarAtaque(match, match.visitante, match.local, false);
+            procesarIndividualidades(match, match.local, match.visitante, true);
+            procesarIndividualidades(match, match.visitante, match.local, false);
+        }
+
+        // ── CONTROL DEL PARTIDO (duración, pausa, cambios) ──────────
+        const MINUTOS_POR_TIEMPO = 45;
+        const MINUTOS_TOTALES = MINUTOS_POR_TIEMPO * 2; // 90' — cronómetro continuo
+        const DURACION_TIEMPO_MS = 30000; // 30 segundos reales por tiempo
+        const TICK_MS = DURACION_TIEMPO_MS / MINUTOS_POR_TIEMPO;
+
+        let matchState = null;
+        let matchInterval = null;
+        let seleccionCambio = null;
+        let recompensaPendiente = 0;
+        let velocidadPartido = 1; // multiplicador de velocidad: 1, 2 o 3
+
+        window.iniciarPartido = function() {
+            matchState = {
+                minuto: 0,             // minuto dentro del tiempo actual (0-45), se usa solo para detectar el corte de tiempo
+                minutoAbsoluto: 0,     // cronómetro continuo 0-90 que se muestra y se usa en eventos/estadísticas
+                fase: 'primer_tiempo',
+                pausado: false,
+                marcador: { local: 0, visitante: 0 },
+                goleadores: [],
+                eventos: [],
+                local: JSON.parse(JSON.stringify(equipoLocalPartido)),
+                visitante: JSON.parse(JSON.stringify(equipoVisitantePartido)),
+                cambiosFormacionLocal: 0,
+                jugadoresSalieronLocal: new Set(),
+                stats: { local: statsEquipoDefault(), visitante: statsEquipoDefault() },
+                statsJugadores: {},
+                posesionTicks: { local: 0, visitante: 0 },
+                pausaTabActiva: 'cambios'
+            };
+            cerrarSeccion('preview-partido-section');
+            abrirSeccion('partido-en-vivo-section');
+            document.getElementById('hud-nombre-local').textContent = matchState.local.nombre;
+            document.getElementById('hud-nombre-visitante').textContent = matchState.visitante.nombre;
+            document.getElementById('stats-nombre-local').textContent = matchState.local.nombre;
+            document.getElementById('stats-nombre-visitante').textContent = matchState.visitante.nombre;
+            document.getElementById('hud-minuto').textContent = "0'";
+            document.getElementById('hud-fase').textContent = '1ER TIEMPO';
+            document.getElementById('btn-pausa').textContent = '⏸ PAUSAR';
+            document.getElementById('match-commentary').innerHTML = '';
+            document.getElementById('match-pause-panel').style.display = 'none';
+            velocidadPartido = 1;
+            cambiarTabPausa('cambios');
+            actualizarHUDMarcador(matchState);
+            agregarEvento(matchState, `⚽ ¡Comienza el partido! ${matchState.local.nombre} vs ${matchState.visitante.nombre}`, true);
+            arrancarTickPartido();
+        };
+
+        function arrancarTickPartido() {
+            clearInterval(matchInterval);
+            matchInterval = setInterval(() => {
+                if (!matchState || matchState.pausado) return;
+                matchState.minuto++;
+                matchState.minutoAbsoluto++;
+                document.getElementById('hud-minuto').textContent = matchState.minutoAbsoluto + "'";
+                simularMinuto(matchState);
+                if (matchState.minuto >= MINUTOS_POR_TIEMPO) {
+                    if (matchState.fase === 'primer_tiempo') {
+                        clearInterval(matchInterval);
+                        matchState.fase = 'descanso';
+                        document.getElementById('hud-fase').textContent = 'DESCANSO';
+                        agregarEvento(matchState, '🟡 Fin del primer tiempo. Descanso.', true);
+                        // El descanso queda pausado a la espera de que el jugador reanude
+                        // manualmente el partido, en vez de continuar automáticamente.
+                        matchState.pausado = true;
+                        document.getElementById('btn-pausa').textContent = '▶ REANUDAR';
+                        document.getElementById('match-pause-panel').style.display = 'block';
+                        renderPanelPausaPartido();
+                    } else if (matchState.fase === 'segundo_tiempo') {
+                        clearInterval(matchInterval);
+                        finalizarPartido();
+                    }
+                }
+            }, TICK_MS / velocidadPartido);
+        }
+
+        // El partido siempre corre a velocidad x1 — el control de velocidad fue eliminado.
+
+        window.togglePausaPartido = function() {
+            if (!matchState || matchState.fase === 'finalizado') return;
+
+            // Caso especial: el partido está en el descanso esperando que el jugador
+            // reanude manualmente. Al reanudar, arranca el segundo tiempo.
+            if (matchState.fase === 'descanso') {
+                matchState.fase = 'segundo_tiempo';
+                matchState.minuto = 0; // reinicia el contador interno del tiempo, NO el cronómetro visible
+                matchState.pausado = false;
+                document.getElementById('hud-fase').textContent = '2DO TIEMPO';
+                document.getElementById('btn-pausa').textContent = '⏸ PAUSAR';
+                document.getElementById('match-pause-panel').style.display = 'none';
+                agregarEvento(matchState, '🟢 ¡Comienza el segundo tiempo!', true);
+                arrancarTickPartido();
+                return;
+            }
+
+            matchState.pausado = !matchState.pausado;
+            seleccionCambio = null;
+            document.getElementById('btn-pausa').textContent = matchState.pausado ? '▶ REANUDAR' : '⏸ PAUSAR';
+            document.getElementById('match-pause-panel').style.display = matchState.pausado ? 'block' : 'none';
+            if (matchState.pausado) renderPanelPausaPartido();
+        };
+
+        window.abandonarPartido = function() {
+            clearInterval(matchInterval);
+            matchState = null;
+            cerrarSeccion('partido-en-vivo-section');
+            abrirSeccion('jugar-nav-section');
+        };
+
+        // ── TABS DEL PANEL DE PAUSA (Cambios / Estadísticas) ─────────
+        window.cambiarTabPausa = function(tab) {
+            if (matchState) matchState.pausaTabActiva = tab;
+            document.getElementById('pause-tab-btn-cambios').classList.toggle('activo', tab === 'cambios');
+            document.getElementById('pause-tab-btn-stats').classList.toggle('activo', tab === 'stats');
+            document.getElementById('pause-tab-cambios').classList.toggle('activo', tab === 'cambios');
+            document.getElementById('pause-tab-stats').classList.toggle('activo', tab === 'stats');
+            if (tab === 'stats' && matchState) renderPanelEstadisticas();
+        };
+
+        function crearSlotPartido(linea, idx, jugador, esSub, seleccionado) {
+            const wrap = document.createElement('div');
+            wrap.className = esSub ? 'pitch-slot bench-slot' : 'pitch-slot';
+            const yaSalio = esSub && jugador && matchState.jugadoresSalieronLocal.has(jugador.id);
+            if (jugador) {
+                wrap.innerHTML = `<div class="card ${jugador.rareza || ''}" style="${seleccionado ? 'outline:3px solid var(--primary); border-radius:6px;' : ''}"><div class="ovr">${jugador.grl}</div><div class="pos">${(jugador.pos || '').toUpperCase()}</div>${jugador.foto ? imgTag(jugador.foto) : ''}<div class="name">${jugador.nombre}</div></div>${yaSalio ? '<div style="text-align:center;font-size:0.65rem;color:#ff3232;margin-top:4px;font-weight:bold;">YA SALIÓ</div>' : ''}`;
+            } else {
+                wrap.innerHTML = `<div class="pitch-slot-empty"><div class="plus-icon">+</div><div class="pos-label">${esSub ? 'VACÍO' : LABELS_PLANTILLA[linea]}</div></div>`;
+            }
+            if (esSub) {
+                if (jugador && !yaSalio) wrap.onclick = () => abrirSelectorEntrada(idx);
+                else wrap.style.cursor = 'default';
+            } else {
+                wrap.onclick = () => abrirSelectorSustitucion(linea, idx);
+            }
+            return wrap;
+        }
+
+        function renderPanelPausaPartido() {
+            const equipo = matchState.local;
+            const counts = FORMACIONES[equipo.formacion];
+            document.getElementById('cambios-formacion-restantes').textContent = 2 - matchState.cambiosFormacionLocal;
+            document.querySelectorAll('#match-pause-panel .formacion-btn').forEach(b => {
+                const esActual = b.dataset.form === equipo.formacion;
+                b.classList.toggle('activo', esActual);
+                const bloqueado = !esActual && matchState.cambiosFormacionLocal >= 2;
+                b.style.opacity = bloqueado ? 0.3 : 1;
+                b.style.cursor = bloqueado ? 'not-allowed' : 'pointer';
+                b.disabled = bloqueado;
+            });
+
+            const esSel = (linea, idx) => !!seleccionCambio && seleccionCambio.linea === linea && seleccionCambio.idx === idx;
+
+            const fillRow = (rowId, linea, count, arr) => {
+                const row = document.getElementById(rowId);
+                row.innerHTML = '';
+                for (let i = 0; i < count; i++) row.appendChild(crearSlotPartido(linea, i, arr[i], false, esSel(linea, i)));
+            };
+            fillRow('match-row-st', 'st', counts.st, equipo.st);
+            fillRow('match-row-mc', 'mc', counts.mc, equipo.mc);
+            fillRow('match-row-cb', 'cb', counts.cb, equipo.cb);
+            fillRow('match-row-gk', 'gk', 1, [equipo.gk]);
+
+            const bench = document.getElementById('match-bench-row');
+            bench.innerHTML = '';
+            equipo.subs.forEach((j, i) => bench.appendChild(crearSlotPartido('sub', i, j, true, false)));
+
+            if (matchState.pausaTabActiva === 'stats') renderPanelEstadisticas();
+        }
+
+        // ── PANEL DE ESTADÍSTICAS EN VIVO ────────────────────────────
+        const STAT_FILAS = [
+            { campo: 'posesion',        label: 'POSESIÓN', sufijo: '%' },
+            { campo: 'ataques',         label: 'ATAQUES' },
+            { campo: 'ocasiones',       label: 'OCASIONES' },
+            { campo: 'disparos',        label: 'DISPAROS' },
+            { campo: 'disparosPuerta',  label: 'A PUERTA' },
+            { campo: 'goles',           label: 'GOLES' },
+            { campo: 'atajadas',        label: 'ATAJADAS' },
+            { campo: 'individualidades',label: 'INDIVIDUALES' },
+            { campo: 'recuperaciones',  label: 'RECUPERACIONES' },
+            { campo: 'pasesClave',      label: 'PASES CLAVE' },
+            { campo: 'asistencias',     label: 'ASISTENCIAS' },
+            { campo: 'cambios',         label: 'CAMBIOS' }
+        ];
+
+        function renderPanelEstadisticas() {
+            const cont = document.getElementById('stats-contenido');
+            if (!cont || !matchState) return;
+            const { local, visitante } = matchState.stats;
+            cont.innerHTML = STAT_FILAS.map(({ campo, label, sufijo }) => {
+                const vl = local[campo] || 0, vv = visitante[campo] || 0;
+                const total = vl + vv || 1;
+                const pctLocal = campo === 'posesion' ? vl : Math.round((vl / total) * 100);
+                return `
+                <div class="stat-row">
+                    <div class="stat-value local">${vl}${sufijo || ''}</div>
+                    <div class="stat-bar-wrap"><div class="stat-bar-local" style="width:${pctLocal}%"></div><div class="stat-bar-visitante" style="width:${100 - pctLocal}%"></div></div>
+                    <div class="stat-label">${label}</div>
+                    <div class="stat-bar-wrap"><div class="stat-bar-visitante" style="width:${100 - pctLocal}%; margin-left:auto;"></div></div>
+                    <div class="stat-value visitante">${vv}${sufijo || ''}</div>
+                </div>`;
+            }).join('');
+        }
+
+        window.toggleMatchBench = () => {
+            const bench = document.getElementById('match-bench-wrapper');
+            const tab   = document.getElementById('match-bench-tab');
+            if (!bench) return;
+            const open = bench.classList.toggle('visible');
+            tab.classList.toggle('activo', open);
+        };
+
+        function abrirSelectorSustitucion(linea, idx) {
+            seleccionCambio = { linea, idx };
+            const jugador = linea === 'gk' ? matchState.local.gk : matchState.local[linea][idx];
+            notif(jugador ? `Elegiste sustituir a ${jugador.nombre}. Ahora toca un suplente de la banca para que entre.` : `Ranura vacía seleccionada. Toca un suplente de la banca para colocarlo ahí.`, 'aviso');
+            renderPanelPausaPartido();
+        }
+
+        function abrirSelectorEntrada(subIdx) {
+            if (!seleccionCambio) { notif('Primero toca la posición del campo (o ranura vacía) que quieres llenar.', 'aviso'); return; }
+            const entrante = matchState.local.subs[subIdx];
+            if (!entrante || matchState.jugadoresSalieronLocal.has(entrante.id)) return;
+            const { linea, idx } = seleccionCambio;
+            const saliente = linea === 'gk' ? matchState.local.gk : matchState.local[linea][idx];
+            if (saliente) matchState.jugadoresSalieronLocal.add(saliente.id);
+            if (linea === 'gk') matchState.local.gk = entrante; else matchState.local[linea][idx] = entrante;
+            matchState.local.subs[subIdx] = null; // el jugador que sale no puede volver a ingresar al campo
+            seleccionCambio = null;
+            incStat(matchState.stats.local, 'cambios');
+            agregarEvento(matchState, `🔄 Cambio en ${matchState.local.nombre}: entra ${entrante.nombre}${saliente ? `, sale ${saliente.nombre}` : ''}.`, true);
+            renderPanelPausaPartido();
+            // El HOST se sincroniza solo con su volcado periódico (cada ~1.5s), pero el
+            // GUEST necesita mandar esto de inmediato: sus cambios de titulares no pasan
+            // por ningún otro volcado a Firestore.
+            if (matchState.modo === 'online' && rolOnline === 'guest' && salaOnlineId) {
+                updateDoc(doc(db, "salas_online", salaOnlineId), { formacionActualGuest: alineacionSerializable(matchState.local) }).catch(() => {});
+            }
+        }
+
+        window.cambiarFormacionPartido = function(formacion) {
+            if (!matchState) return;
+            if (matchState.local.formacion === formacion) return;
+            if (matchState.cambiosFormacionLocal >= 2) { notif('Ya usaste tus 2 cambios de formación disponibles para este partido.', 'aviso'); return; }
+            const counts = FORMACIONES[formacion];
+            const antiguo = matchState.local;
+            const disponibles = [antiguo.gk, ...antiguo.cb, ...antiguo.mc, ...antiguo.st, ...antiguo.subs]
+                .filter(j => j && !matchState.jugadoresSalieronLocal.has(j.id));
+            const porPos = pos => disponibles.filter(j => j.pos === pos);
+
+            const nuevo = {
+                nombre: antiguo.nombre,
+                formacion,
+                gk: antiguo.gk,
+                cb: Array.from({ length: counts.cb }, (_, i) => (porPos('cb')[i] || null)),
+                mc: Array.from({ length: counts.mc }, (_, i) => (porPos('mc')[i] || null)),
+                st: Array.from({ length: counts.st }, (_, i) => (porPos('st')[i] || null))
+            };
+            const usados = new Set([nuevo.gk, ...nuevo.cb, ...nuevo.mc, ...nuevo.st].filter(Boolean).map(j => j.id));
+            nuevo.subs = disponibles.filter(j => !usados.has(j.id));
+            while (nuevo.subs.length < 5) nuevo.subs.push(null);
+
+            matchState.local = nuevo;
+            matchState.cambiosFormacionLocal++;
+            seleccionCambio = null;
+            // La calidad colectiva, los perfiles tácticos y las probabilidades de ataque se derivan
+            // en vivo de matchState.local en cada simulación de minuto — no requieren recálculo manual.
+            agregarEvento(matchState, `🔁 ${matchState.local.nombre} cambia a formación ${formacion}. El equipo se reordena en el campo al instante.`, true);
+            renderPanelPausaPartido();
+        };
+
+        // ── FIN DE PARTIDO Y RECOMPENSAS ─────────────────────────────
+        function finalizarPartido() {
+            matchState.fase = 'finalizado';
+            document.getElementById('hud-fase').textContent = 'FINALIZADO';
+            document.getElementById('match-pause-panel').style.display = 'none';
+            agregarEvento(matchState, `🏁 Final del partido: ${matchState.marcador.local} - ${matchState.marcador.visitante}`, true);
+
+            const { local, visitante } = matchState.marcador;
+            let resultado, recompensa;
+            if (local > visitante) { resultado = 'VICTORIA'; recompensa = 300; }
+            else if (local < visitante) { resultado = 'DERROTA'; recompensa = 50; }
+            else { resultado = 'EMPATE'; recompensa = 120; } // sistema preparado para empates
+
+            setTimeout(() => mostrarResultadoPartido(resultado, recompensa), 1200);
+        }
+
+        function mostrarResultadoPartido(resultado, recompensa, apuestaInfo) {
+            restaurarBotonReclamar();
+            cerrarSeccion('partido-en-vivo-section');
+            const titulo = document.getElementById('resultado-titulo');
+            titulo.textContent = resultado;
+            titulo.style.color = resultado === 'VICTORIA' ? 'var(--primary)' : resultado === 'DERROTA' ? '#ff3232' : '#f1c40f';
+            document.getElementById('resultado-marcador').textContent = `${matchState.local.nombre}  ${matchState.marcador.local} - ${matchState.marcador.visitante}  ${matchState.visitante.nombre}`;
+            const goles = document.getElementById('resultado-goleadores');
+            goles.innerHTML = matchState.goleadores.length
+                ? matchState.goleadores.map(g => `<div class="gol-linea">⚽ ${g.minuto}' — ${g.nombre}${g.asistente ? ` <span style="color:rgba(255,255,255,0.5); font-size:0.85em;">(asist. ${g.asistente})</span>` : ''} (${g.esLocal ? matchState.local.nombre : matchState.visitante.nombre})</div>`).join('')
+                : '<div class="gol-linea">Sin goles en el partido.</div>';
+            document.getElementById('btn-reclamar-recompensa').textContent = `RECLAMAR 🪙 ${recompensa.toLocaleString('es-ES')}`;
+            recompensaPendiente = recompensa;
+
+            const apuestaDiv = document.getElementById('resultado-apuesta');
+            if (apuestaDiv) {
+                if (apuestaInfo && apuestaInfo.monto > 0) {
+                    apuestaDiv.style.display = 'block';
+                    apuestaDiv.textContent = apuestaInfo.gane
+                        ? `🪙 ¡Ganaste el pozo de la apuesta: +${(apuestaInfo.monto * 2).toLocaleString('es-ES')}!`
+                        : `🪙 Perdiste tu apuesta de ${apuestaInfo.monto.toLocaleString('es-ES')} monedas.`;
+                    apuestaDiv.style.color = apuestaInfo.gane ? 'var(--primary)' : '#ff3232';
+                } else {
+                    apuestaDiv.style.display = 'none';
+                }
+            }
+            abrirSeccion('resultado-partido-section');
+        }
+
+        window.reclamarRecompensa = async function() {
+            const monedas = recompensaPendiente;
+            try {
+                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { coins: (gameData.coins || 0) + monedas });
+                notif(`¡Recompensa reclamada! +🪙 ${monedas.toLocaleString('es-ES')}`, 'ok');
+            } catch (e) {
+                console.error(e);
+                notif('No se pudo acreditar la recompensa.', 'error');
+            }
+            cerrarSeccion('resultado-partido-section');
+            matchState = null;
+        };
+
+        // Botón "VOLVER AL MENÚ" — siempre visible en la pantalla de resultado, para no
+        // dejar a nadie encerrado ahí (ej. tras un partido interrumpido sin recompensa
+        // que reclamar, que es el único botón que quedaba antes de este botón existir).
+        window.salirDePantallaResultado = function() {
+            cerrarSeccion('resultado-partido-section');
+            matchState = null;
+            recompensaPendiente = 0;
+        };
+
+        // Pantalla de fin de partido para CUALQUIER desconexión/abandono online — a propósito
+        // nunca reparte recompensas (ni al que se fue ni al que se quedó), para no incentivar
+        // desconexiones "aprovechadas" ni premiar partidos que no se jugaron hasta el final.
+        function mostrarFinPorAbandonoOnline(motivo) {
+            cerrarSeccion('partido-en-vivo-section');
+            const titulo = document.getElementById('resultado-titulo');
+            titulo.textContent = 'PARTIDO INTERRUMPIDO';
+            titulo.style.color = '#f1c40f';
+            document.getElementById('resultado-marcador').textContent = motivo;
+            document.getElementById('resultado-goleadores').innerHTML = '<div class="gol-linea">No se otorgan recompensas en partidos interrumpidos.</div>';
+            const btnReclamar = document.getElementById('btn-reclamar-recompensa');
+            btnReclamar.style.display = 'none'; // sin recompensa que reclamar
+            recompensaPendiente = 0;
+            abrirSeccion('resultado-partido-section');
+        }
+
+        // Al volver a abrir la pantalla de resultado para un partido normal, hay que
+        // restaurar el botón de reclamar por si quedó oculto tras un abandono previo.
+        function restaurarBotonReclamar() {
+            const btn = document.getElementById('btn-reclamar-recompensa');
+            if (btn) btn.style.display = '';
+        }
+
+        // ════════════════════════════════════════════════════════════
+        // PARTIDO ONLINE 1v1 — PASO 2
+        // Reutiliza matchState / simularMinuto / agregarEvento / el HUD
+        // y el panel de pausa ya existentes de Partido Rápido. El host
+        // corre el motor real y escribe a Firestore por lotes; el guest
+        // corre el motor real y escribe a Firestore por lotes; el guest
+        // solo observa vía onSnapshot y manda "intenciones" puntuales.
+        // Ver diseno_online.md para el modelo de datos completo.
+        // ════════════════════════════════════════════════════════════
+
+        // ── DETECCIÓN DE PESTAÑA EN SEGUNDO PLANO ─────────────────────
+        // Los navegadores frenan agresivamente los setInterval/setTimeout de
+        // pestañas que no están visibles (ej. al tener dos usuarios de prueba
+        // en pestañas distintas del mismo navegador). Esto puede hacer que el
+        // propio ping, o la propia lectura de snapshots, se atrase mucho más
+        // que cualquier margen razonable — sin que el rival se haya
+        // desconectado realmente. Se registra el último momento en que ESTA
+        // pestaña volvió a estar visible, para poder descartar detecciones de
+        // abandono que coincidan con ese período de congelamiento propio.
+        let ultimaVezQueMiPestañaVolvioAVisible = 0;
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                ultimaVezQueMiPestañaVolvioAVisible = Date.now();
+                // Al recuperar el foco, escribe el propio ping YA (no esperar
+                // al próximo tick del setInterval, que puede tardar hasta
+                // ONLINE_PING_MS más) para minimizar cuánto ve el rival un
+                // ping viejo mío.
+                if (pingOnlineInterval && salaOnlineId && rolOnline) {
+                    const campoPing = rolOnline === 'host' ? 'hostLastPing' : 'guestLastPing';
+                    updateDoc(doc(db, "salas_online", salaOnlineId), { [campoPing]: Date.now() }).catch(() => {});
+                }
+            }
+        });
+        function miPestañaEstuvoOcultaHaceMenosDe(ms) {
+            if (document.visibilityState === 'hidden') return true; // sigue oculta ahora mismo
+            return (Date.now() - ultimaVezQueMiPestañaVolvioAVisible) < ms;
+        }
+
+        const ONLINE_PING_MS = 2000;          // cada cliente escribe su ping cada 2s reales
+        const ONLINE_PING_TIMEOUT_MS = 9000;   // margen ampliado: tolera jitter de red y el último tick del partido sin declarar abandono de forma prematura
+        const ONLINE_BATCH_MS = 1500;          // el host vuelca su batch a Firestore cada ~1.5s reales
+        const ONLINE_PAUSA_MAX_MS = 30000;     // 30s reales por pausa (ver diseño, sección 4)
+        const ONLINE_PAUSAS_INICIALES = 2;
+
+        // Estado de sesión online (separado de matchState, que sigue siendo el motor de fútbol puro)
+        let salaOnlineId = null;
+        let rolOnline = null;              // 'host' | 'guest'
+        let salaOnlineUnsub = null;
+        let pingOnlineInterval = null;
+        let batchOnlineInterval = null;
+        let ultimaSalaSnapshot = null;      // último doc completo de la sala, para comparar cambios
+        let salaOnlineTerminando = false;   // evita doble-escritura de fin de partido
+        let ultimoEventosVolcadosCount = 0;
+
+        // ── ALINEACIONES EN VIVO: cancha con la alineación actual de cada lado ──
+        // Se muestra durante todo el partido (no solo en pausa), tanto para el
+        // host como para el guest, y se refresca cada vez que hay tick/snapshot.
+        let alineacionesPanelAbierto = false;
+
+        window.toggleAlineacionesEnVivo = function() {
+            alineacionesPanelAbierto = !alineacionesPanelAbierto;
+            document.getElementById('alineaciones-panel').style.display = alineacionesPanelAbierto ? 'block' : 'none';
+            if (alineacionesPanelAbierto) renderAlineacionesEnVivo();
+        };
+
+        function crearMiniSlot(jugador) {
+            const el = document.createElement('div');
+            if (!jugador) {
+                el.className = 'mini-pitch-slot-empty';
+            } else {
+                el.className = 'mini-pitch-slot';
+                el.innerHTML = `<div class="mini-ovr">${jugador.grl ?? ''}</div><div class="mini-nombre">${jugador.nombre || ''}</div>`;
+            }
+            return el;
+        }
+
+        function pintarMiniCancha(prefijo, equipo) {
+            if (!equipo) return;
+            const counts = FORMACIONES[equipo.formacion] || FORMACIONES['2-2-2'];
+            const fillRow = (rowId, arr, count) => {
+                const row = document.getElementById(rowId);
+                if (!row) return;
+                row.innerHTML = '';
+                for (let i = 0; i < count; i++) row.appendChild(crearMiniSlot(arr[i]));
+            };
+            fillRow(`al-row-${prefijo}-gk`, [equipo.gk], 1);
+            fillRow(`al-row-${prefijo}-cb`, equipo.cb, counts.cb);
+            fillRow(`al-row-${prefijo}-mc`, equipo.mc, counts.mc);
+            fillRow(`al-row-${prefijo}-st`, equipo.st, counts.st);
+        }
+
+        // Renderiza con lo que YA tiene matchState.local/.visitante en memoria: para
+        // el host es siempre exacto (es la autoridad de simulación); para el guest
+        // se mantiene al día porque su onSnapshot actualiza matchState.visitante
+        // (su propio equipo) al hacer cambios, y matchState.local (el host) se
+        // sincroniza cada vez que llega formacionActualHost — ver sincronizarAlineacionRivalGuest().
+        function renderAlineacionesEnVivo() {
+            if (!alineacionesPanelAbierto || !matchState) return;
+            document.getElementById('al-nombre-local').textContent = matchState.local.nombre;
+            document.getElementById('al-nombre-visitante').textContent = matchState.visitante.nombre;
+            document.getElementById('al-formacion-local').textContent = matchState.local.formacion;
+            document.getElementById('al-formacion-visitante').textContent = matchState.visitante.formacion;
+            pintarMiniCancha('local', matchState.local);
+            pintarMiniCancha('visitante', matchState.visitante);
+        }
+
+        // ── PANTALLA "LISTOS": puente entre sala de espera y partido en vivo ──
+        // Countdown visual de 15s + botón LISTO para cada jugador. Si ambos
+        // confirman antes de tiempo, el partido arranca ya; si se acaba el
+        // countdown, arranca igual (con o sin ambas confirmaciones).
+        let listosUnsub = null;
+        let listosCountdownInterval = null;
+        let listosRolPropio = null;
+        let listosYaConfirmado = false;
+        let listosArrancoPartido = false; // evita doble-disparo del host
+        let salaPendienteApuestaMonto = 0; // apuesta de la sala a la que se está por unir el guest (para el modal de confirmación)
+
+        function abrirPantallaListosOnline(salaId, sala, rol) {
+            salaOnlineId = salaId;
+            listosRolPropio = rol;
+            listosYaConfirmado = false;
+            listosArrancoPartido = false;
+            cerrarSeccion('online-espera-section');
+            cerrarSeccion('online-lobby-section');
+            abrirSeccion('online-listos-section');
+
+            const nombreLocal = rol === 'host' ? (sala.hostNombreClub || 'MI CLUB') : (sala.guestNombreClub || 'MI CLUB');
+            const nombreRival = rol === 'host' ? (sala.guestNombreClub || 'RIVAL') : (sala.hostNombreClub || 'RIVAL');
+            document.getElementById('ol-listos-nombre-local').textContent = nombreLocal;
+            document.getElementById('ol-listos-nombre-rival').textContent = nombreRival;
+            document.getElementById('ol-btn-listo').disabled = false;
+            document.getElementById('ol-btn-listo').style.opacity = '1';
+            document.getElementById('ol-listos-estado-local').textContent = 'Esperando confirmación...';
+            document.getElementById('ol-listos-estado-rival').textContent = 'Esperando confirmación...';
+
+            const apuestaMonto = sala.apuestaMonto || 0;
+            const avisoApuesta = document.getElementById('ol-listos-apuesta-aviso');
+            if (avisoApuesta) {
+                avisoApuesta.style.display = apuestaMonto > 0 ? 'block' : 'none';
+                avisoApuesta.textContent = apuestaMonto > 0 ? `🪙 Partido con apuesta: ${apuestaMonto.toLocaleString('es-ES')} monedas. Al confirmar LISTO se debita tu apuesta.` : '';
+            }
+
+            if (listosUnsub) listosUnsub();
+            listosUnsub = onSnapshot(doc(db, "salas_online", salaId), (snap) => {
+                if (!snap.exists()) { cerrarPantallaListosOnline(); return; }
+                const s = snap.data();
+
+                if (s.estado === 'jugando') {
+                    cerrarPantallaListosOnline();
+                    if (rol === 'host') iniciarPartidoOnlineComoHost(salaId, s);
+                    else iniciarPartidoOnlineComoGuest(salaId, s);
+                    return;
+                }
+                if (s.estado === 'cancelada') {
+                    cerrarPantallaListosOnline();
+                    reembolsarApuestaPropiaSiCorresponde(salaId, s, rol).finally(() => {
+                        notif("La sala se canceló: no ambos jugadores confirmaron la apuesta a tiempo. Se te devolvió tu apuesta si la habías pagado.", 'aviso');
+                        cerrarSeccion('online-listos-section');
+                    });
+                    return;
+                }
+                if (s.estado !== 'listos') return; // otro estado inesperado
+
+                const miCampo = rol === 'host' ? 'hostListo' : 'guestListo';
+                const rivalCampo = rol === 'host' ? 'guestListo' : 'hostListo';
+                document.getElementById('ol-listos-estado-local').textContent = s[miCampo] ? '✅ Listo' : 'Esperando confirmación...';
+                document.getElementById('ol-listos-estado-rival').textContent = s[rivalCampo] ? '✅ Listo' : 'Esperando confirmación...';
+
+                // Si ambos confirmaron, el HOST dispara el arranque inmediato.
+                if (rol === 'host' && s.hostListo && s.guestListo && !listosArrancoPartido) {
+                    arrancarPartidoDesdeListos(salaId, s);
+                }
+            });
+
+            if (listosCountdownInterval) clearInterval(listosCountdownInterval);
+            const expiraEn = sala.listosExpiraEn || (Date.now() + ONLINE_LISTOS_MS);
+            listosCountdownInterval = setInterval(() => {
+                const restanteMs = expiraEn - Date.now();
+                const restanteSeg = Math.max(0, Math.ceil(restanteMs / 1000));
+                document.getElementById('ol-listos-countdown').textContent = restanteSeg;
+                if (restanteMs <= 0) {
+                    clearInterval(listosCountdownInterval);
+                    listosCountdownInterval = null;
+                    // Se acabó el tiempo: el HOST fuerza el arranque, confirmado o no.
+                    if (listosRolPropio === 'host' && !listosArrancoPartido) {
+                        getDoc(doc(db, "salas_online", salaId)).then(snap => {
+                            if (snap.exists() && snap.data().estado === 'listos') arrancarPartidoDesdeListos(salaId, snap.data());
+                        }).catch(() => {});
+                    }
+                }
+            }, 250);
+        }
+
+        window.confirmarListoOnline = async function() {
+            if (!salaOnlineId || listosYaConfirmado) return;
+            listosYaConfirmado = true;
+            document.getElementById('ol-btn-listo').disabled = true;
+            document.getElementById('ol-btn-listo').style.opacity = '0.5';
+            const campo = listosRolPropio === 'host' ? 'hostListo' : 'guestListo';
+            const campoPagada = listosRolPropio === 'host' ? 'apuestaHostPagada' : 'apuestaGuestPagada';
+            try {
+                // Lee la sala fresca para saber el monto de apuesta y si YA se
+                // debitó antes (ej. reconexión tras haber confirmado ya).
+                const salaSnap = await getDoc(doc(db, "salas_online", salaOnlineId));
+                if (!salaSnap.exists()) throw new Error("La sala ya no existe.");
+                const sala = salaSnap.data();
+                const apuestaMonto = sala.apuestaMonto || 0;
+
+                if (apuestaMonto > 0 && !sala[campoPagada]) {
+                    // Débito por adelantado: se descuenta ANTES de marcar "listo",
+                    // y solo si no se había debitado ya (flag persistido en la
+                    // sala, no en memoria — sobrevive a un reload/reconexión).
+                    if ((gameData.coins || 0) < apuestaMonto) {
+                        throw new Error("No tienes suficientes monedas para cubrir la apuesta.");
+                    }
+                    await updateDoc(doc(db, "jugadores", auth.currentUser.uid), { coins: (gameData.coins || 0) - apuestaMonto });
+                    await updateDoc(doc(db, "salas_online", salaOnlineId), { [campoPagada]: true, [campo]: true });
+                } else {
+                    await updateDoc(doc(db, "salas_online", salaOnlineId), { [campo]: true });
+                }
+            } catch (e) {
+                console.error(e);
+                listosYaConfirmado = false;
+                document.getElementById('ol-btn-listo').disabled = false;
+                document.getElementById('ol-btn-listo').style.opacity = '1';
+                notif(e.message || "No se pudo confirmar. Intenta de nuevo.", 'error');
+            }
+        };
+
+        // Solo el HOST llama a esto (ambos confirmaron, o venció el countdown).
+        // Reusa exactamente el mismo updateDoc de arranque que ya existía, solo
+        // que ahora parte desde 'listos' en vez de 'jugando'.
+        // Con apuesta activa, el partido SOLO puede arrancar si ambos ya
+        // debitaron su apuesta (apuestaHostPagada/apuestaGuestPagada). Si el
+        // countdown venció sin que ambos hayan pagado, se cancela la sala en
+        // vez de arrancar con el pozo desbalanceado (ver cancelarSalaPorApuestaIncompleta).
+        function arrancarPartidoDesdeListos(salaId, sala) {
+            if (listosArrancoPartido) return;
+            const apuestaMonto = sala.apuestaMonto || 0;
+            if (apuestaMonto > 0 && !(sala.apuestaHostPagada && sala.apuestaGuestPagada)) {
+                listosArrancoPartido = true;
+                if (listosCountdownInterval) { clearInterval(listosCountdownInterval); listosCountdownInterval = null; }
+                cancelarSalaPorApuestaIncompleta(salaId, sala);
+                return;
+            }
+            listosArrancoPartido = true;
+            if (listosCountdownInterval) { clearInterval(listosCountdownInterval); listosCountdownInterval = null; }
+            updateDoc(doc(db, "salas_online", salaId), { estado: 'jugando' }).catch(e => console.error(e));
+            // El propio onSnapshot de abrirPantallaListosOnline detecta 'jugando' y
+            // llama a iniciarPartidoOnlineComoHost; no hace falta duplicarlo aquí.
+        }
+
+        // Cancela la sala cuando venció el countdown de "listos" y no ambos
+        // pagaron su apuesta. Marca la sala como 'cancelada' para que ambos
+        // clientes lo detecten vía snapshot y, quien sí pagó, se reembolse
+        // a sí mismo (cada uno solo puede escribir su propio documento).
+        function cancelarSalaPorApuestaIncompleta(salaId, sala) {
+            updateDoc(doc(db, "salas_online", salaId), { estado: 'cancelada' }).catch(e => console.error(e));
+        }
+
+        function cerrarPantallaListosOnline() {
+            if (listosUnsub) { listosUnsub(); listosUnsub = null; }
+            if (listosCountdownInterval) { clearInterval(listosCountdownInterval); listosCountdownInterval = null; }
+            cerrarSeccion('online-listos-section');
+        }
+
+        // ── ENTRADA: desde la pantalla de listos, cuando pasa a 'jugando' ──
+        function iniciarPartidoOnlineComoHost(salaId, sala) {
+            salaOnlineId = salaId;
+            rolOnline = 'host';
+            salaOnlineTerminando = false;
+            ultimoEventosVolcadosCount = 0;
+            equipoLocalPartido = construirEquipoLocal(getPlantilla());
+            equipoVisitantePartido = construirEquipoLocal(sala.plantillaGuest);
+            equipoVisitantePartido.nombre = sala.guestNombreClub || 'RIVAL';
+
+            matchState = crearMatchStateBase(equipoLocalPartido, equipoVisitantePartido);
+            matchState.modo = 'online';
+            matchState.rolOnline = 'host';
+            matchState.pausasRestantes = { propio: ONLINE_PAUSAS_INICIALES, rival: ONLINE_PAUSAS_INICIALES };
+
+            prepararUIPartidoOnline();
+            agregarEvento(matchState, `⚽ ¡Comienza el partido! ${matchState.local.nombre} vs ${matchState.visitante.nombre}`, true);
+
+            updateDoc(doc(db, "salas_online", salaId), {
+                minutoActual: 0,
+                marcador: { local: 0, visitante: 0 },
+                eventos: [],
+                faseActual: 'primer_tiempo',
+                formacionActualHost: alineacionSerializable(matchState.local),
+                formacionActualGuest: alineacionSerializable(matchState.visitante),
+                pausasRestantesHost: ONLINE_PAUSAS_INICIALES,
+                pausasRestantesGuest: ONLINE_PAUSAS_INICIALES,
+                pausadoPor: null,
+                pausaIniciadaEn: null,
+                hostLastPing: Date.now(),
+                ganador: null,
+                motivoFin: null
+            }).catch(e => console.error(e));
+
+            arrancarPingOnline('hostLastPing');
+            suscribirSalaOnlineHost(salaId);
+            arrancarTickPartidoOnlineHost();
+        }
+
+        function iniciarPartidoOnlineComoGuest(salaId, sala) {
+            salaOnlineId = salaId;
+            rolOnline = 'guest';
+            salaOnlineTerminando = false;
+            equipoLocalPartido = construirEquipoLocal(sala.plantillaHost);   // "local" en pantalla = el host
+            equipoLocalPartido.nombre = sala.hostNombreClub || 'RIVAL';
+            equipoVisitantePartido = construirEquipoLocal(getPlantilla());   // el guest se ve como "visitante"
+
+            matchState = crearMatchStateBase(equipoLocalPartido, equipoVisitantePartido);
+            matchState.modo = 'online';
+            matchState.rolOnline = 'guest';
+            matchState.pausasRestantes = { propio: ONLINE_PAUSAS_INICIALES, rival: ONLINE_PAUSAS_INICIALES };
+
+            prepararUIPartidoOnline();
+            agregarEvento(matchState, `⚽ ¡Comienza el partido! ${matchState.local.nombre} vs ${matchState.visitante.nombre}`, true);
+
+            arrancarPingOnline('guestLastPing');
+            suscribirSalaOnlineGuest(salaId);
+        }
+
+        // Serializa la alineación ACTUAL de un equipo (formación + jugadores en cada
+        // línea) para volcarla en formacionActualHost/Guest. Se manda el equipo entero
+        // (no solo el nombre de formación) para que el rival pueda ver, en su panel de
+        // "alineaciones en vivo", exactamente qué jugadores están en cancha tras
+        // cambios de formación o sustituciones — no solo cuántos.
+        function alineacionSerializable(equipo) {
+            return {
+                formacion: equipo.formacion,
+                gk: equipo.gk || null,
+                cb: equipo.cb,
+                mc: equipo.mc,
+                st: equipo.st
+            };
+        }
+
+        function crearMatchStateBase(local, visitante) {
+            return {
+                minuto: 0,
+                minutoAbsoluto: 0,
+                fase: 'primer_tiempo',
+                pausado: false,
+                marcador: { local: 0, visitante: 0 },
+                goleadores: [],
+                eventos: [],
+                local: JSON.parse(JSON.stringify(local)),
+                visitante: JSON.parse(JSON.stringify(visitante)),
+                cambiosFormacionLocal: 0,
+                jugadoresSalieronLocal: new Set(),
+                stats: { local: statsEquipoDefault(), visitante: statsEquipoDefault() },
+                statsJugadores: {},
+                posesionTicks: { local: 0, visitante: 0 },
+                pausaTabActiva: 'cambios'
+            };
+        }
+
+        function prepararUIPartidoOnline() {
+            cerrarSeccion('online-espera-section');
+            cerrarSeccion('online-lobby-section');
+            abrirSeccion('partido-en-vivo-section');
+            document.getElementById('hud-nombre-local').textContent = matchState.local.nombre;
+            document.getElementById('hud-nombre-visitante').textContent = matchState.visitante.nombre;
+            document.getElementById('stats-nombre-local').textContent = matchState.local.nombre;
+            document.getElementById('stats-nombre-visitante').textContent = matchState.visitante.nombre;
+            document.getElementById('hud-minuto').textContent = "0'";
+            document.getElementById('hud-fase').textContent = '1ER TIEMPO';
+            document.getElementById('btn-pausa').textContent = '⏸ PAUSAR';
+            document.getElementById('match-commentary').innerHTML = '';
+            document.getElementById('match-pause-panel').style.display = 'none';
+            // El control de velocidad no aplica online: ambos jugadores deben ver el mismo reloj.
+            document.querySelectorAll('.btn-velocidad').forEach(b => b.style.display = 'none');
+            // No se puede abandonar un partido online voluntariamente (ver window.abandonarPartido).
+            const btnSalir = document.getElementById('btn-abandonar');
+            if (btnSalir) { btnSalir.disabled = true; btnSalir.style.opacity = '0.35'; btnSalir.style.cursor = 'not-allowed'; btnSalir.title = 'No puedes abandonar un partido online'; }
+            velocidadPartido = 1;
+            cambiarTabPausa('cambios');
+            actualizarHUDMarcador(matchState);
+            arrancarContadorPausaRestante();
+        }
+
+        // ── INDICADOR: cuánto falta para que la pausa actual termine ──────
+        // Corre en ambos roles (host y guest); lee ultimaSalaSnapshot, que
+        // ambos mantienen actualizado con cada onSnapshot de la sala.
+        let hudPausaRestanteInterval = null;
+        function arrancarContadorPausaRestante() {
+            if (hudPausaRestanteInterval) clearInterval(hudPausaRestanteInterval);
+            hudPausaRestanteInterval = setInterval(() => {
+                const el = document.getElementById('hud-pausa-restante');
+                if (!el) return;
+                const sala = ultimaSalaSnapshot;
+                // Solo aplica a pausas normales (2 por jugador); el descanso tiene
+                // su propia pantalla con su propio countdown, no usa pausadoPor.
+                if (!sala || !sala.pausadoPor || !sala.pausaIniciadaEn || matchState?.fase === 'descanso') {
+                    el.style.display = 'none';
+                    return;
+                }
+                const restanteMs = ONLINE_PAUSA_MAX_MS - (Date.now() - sala.pausaIniciadaEn);
+                if (restanteMs <= 0) { el.style.display = 'none'; return; }
+                const segs = Math.ceil(restanteMs / 1000);
+                el.style.display = '';
+                el.textContent = `⏱ ${segs}s para reanudar`;
+            }, 250);
+        }
+
+        // ── HEARTBEAT (ambos roles) ──────────────────────────────────
+        function arrancarPingOnline(campoPing) {
+            if (pingOnlineInterval) clearInterval(pingOnlineInterval);
+            const escribirPing = () => updateDoc(doc(db, "salas_online", salaOnlineId), { [campoPing]: Date.now() }).catch(() => {});
+            escribirPing();
+            pingOnlineInterval = setInterval(escribirPing, ONLINE_PING_MS);
+        }
+
+        function detenerSesionOnline() {
+            if (pingOnlineInterval) { clearInterval(pingOnlineInterval); pingOnlineInterval = null; }
+            if (batchOnlineInterval) { clearInterval(batchOnlineInterval); batchOnlineInterval = null; }
+            if (matchInterval) { clearInterval(matchInterval); matchInterval = null; }
+            if (salaOnlineUnsub) { salaOnlineUnsub(); salaOnlineUnsub = null; }
+            if (hudPausaRestanteInterval) { clearInterval(hudPausaRestanteInterval); hudPausaRestanteInterval = null; }
+            const elPausaRestante = document.getElementById('hud-pausa-restante');
+            if (elPausaRestante) elPausaRestante.style.display = 'none';
+            cerrarPanelDescansoOnline();
+            alineacionesPanelAbierto = false;
+            const panelAl = document.getElementById('alineaciones-panel');
+            if (panelAl) panelAl.style.display = 'none';
+            document.querySelectorAll('.btn-velocidad').forEach(b => b.style.display = '');
+            const btnSalir = document.getElementById('btn-abandonar');
+            if (btnSalir) { btnSalir.disabled = false; btnSalir.style.opacity = ''; btnSalir.style.cursor = ''; btnSalir.title = ''; }
+            salaOnlineId = null;
+            rolOnline = null;
+        }
+
+        // ── LADO HOST: loop de simulación + volcado por lotes + lectura de intenciones ──
+        function arrancarTickPartidoOnlineHost() {
+            clearInterval(matchInterval);
+            if (batchOnlineInterval) clearInterval(batchOnlineInterval);
+
+            matchInterval = setInterval(() => {
+                if (!matchState || salaOnlineTerminando) return;
+                if (matchState.fase === 'descanso') return; // esperando confirmación de "listo" (ver pantalla de descanso)
+                if (matchState.pausado) { chequearAutoReanudacionHost(); return; }
+
+                matchState.minuto++;
+                matchState.minutoAbsoluto++;
+                document.getElementById('hud-minuto').textContent = matchState.minutoAbsoluto + "'";
+                simularMinuto(matchState);
+
+                if (matchState.fase === 'finalizado') { return; } // por si algún día el motor corta antes (no ocurre hoy)
+
+                if (matchState.minuto >= MINUTOS_POR_TIEMPO) {
+                    if (matchState.fase === 'primer_tiempo') {
+                        entrarEnDescansoOnlineHost();
+                    } else if (matchState.fase === 'segundo_tiempo') {
+                        finalizarPartidoOnlineHost();
+                    }
+                }
+            }, TICK_MS);
+
+            // Volcado periódico a Firestore (no en cada tick, para no saturar de escrituras).
+            batchOnlineInterval = setInterval(() => volcarEstadoOnline(false), ONLINE_BATCH_MS);
+        }
+
+        // Vuelca a Firestore el estado actual del partido. `forzado` se usa en momentos clave
+        // (entretiempo, fin) para asegurar que se escriba aunque no toque el intervalo periódico.
+        function volcarEstadoOnline(forzado) {
+            if (!salaOnlineId || rolOnline !== 'host' || !matchState || salaOnlineTerminando) return;
+            const hayEventosNuevos = matchState.eventos.length > ultimoEventosVolcadosCount;
+            if (!hayEventosNuevos && !forzado) return;
+            ultimoEventosVolcadosCount = matchState.eventos.length;
+            updateDoc(doc(db, "salas_online", salaOnlineId), {
+                minutoActual: matchState.minutoAbsoluto,
+                marcador: { ...matchState.marcador },
+                eventos: matchState.eventos, // append-only en el diseño; se manda completo porque el motor local ya lo tiene todo
+                faseActual: matchState.fase,
+                formacionActualHost: alineacionSerializable(matchState.local)
+            }).catch(e => console.error(e));
+        }
+
+        // El host escucha su propia sala para enterarse de intenciones del guest
+        // (pausas y cambios de formación), ya que el guest sí escribe esos campos puntuales.
+        function suscribirSalaOnlineHost(salaId) {
+            if (salaOnlineUnsub) salaOnlineUnsub();
+            salaOnlineUnsub = onSnapshot(doc(db, "salas_online", salaId), (snap) => {
+                if (!snap.exists()) return;
+                const sala = snap.data();
+                ultimaSalaSnapshot = sala;
+                chequearPingRivalHost(sala);
+                chequearSolicitudPausaDeGuest(sala);
+
+                // Sincroniza matchState.visitante (el guest, visto desde el host) con la
+                // alineación real que el guest fue armando en su propia pausa. Antes de
+                // esto, un cambio de formación/sustitución del guest solo se veía como
+                // texto pero el motor de simulación seguía usando su alineación vieja;
+                // ahora el motor también respeta los cambios reales del rival.
+                if (matchState && sala.formacionActualGuest) sincronizarAlineacionDesdeSala(matchState.visitante, sala.formacionActualGuest);
+                renderAlineacionesEnVivo();
+
+                // Descanso: si ya lo arrancó el propio host (descansoPanelAbierto true
+                // porque entrarEnDescansoOnlineHost ya llamó abrirPanelDescansoOnline),
+                // refresca las confirmaciones de "listo" con lo que va llegando de la sala.
+                if (descansoPanelAbierto && sala.estado === 'descanso') {
+                    actualizarPanelDescansoOnline(sala, 'host');
+                }
+                if (descansoPanelAbierto && sala.estado === 'jugando') {
+                    cerrarPanelDescansoOnline();
+                    arrancarSegundoTiempoOnline('host');
+                }
+            });
+        }
+
+        let chequeoAbandonoHostPendiente = false;
+        function chequearPingRivalHost(sala) {
+            if (salaOnlineTerminando) return;
+            if (sala.estado === 'terminado' || sala.faseActual === 'finalizado') return;
+            if (matchState && matchState.fase === 'finalizado') return;
+            const ping = sala.guestLastPing || 0;
+            if (!ping || Date.now() - ping <= ONLINE_PING_TIMEOUT_MS) return;
+            if (chequeoAbandonoHostPendiente) return;
+            // Si ESTA MISMA pestaña estuvo en segundo plano hace poco (el navegador
+            // frena sus propios timers ahí, lo cual retrasa tanto la lectura de
+            // snapshots como el propio ping), no se puede confiar en que el ping
+            // vencido del rival signifique que el rival se desconectó — puede ser
+            // un efecto secundario de que ESTA pestaña estuvo congelada. Se descarta
+            // la detección en ese caso.
+            if (miPestañaEstuvoOcultaHaceMenosDe(ONLINE_PING_TIMEOUT_MS + 5000)) return;
+            // Mismo criterio que del lado guest: no declarar abandono con una sola
+            // lectura vencida, reconfirmar tras una pausa breve antes de decidir.
+            chequeoAbandonoHostPendiente = true;
+            setTimeout(async () => {
+                chequeoAbandonoHostPendiente = false;
+                if (salaOnlineTerminando || (matchState && matchState.fase === 'finalizado')) return;
+                if (miPestañaEstuvoOcultaHaceMenosDe(5000)) return;
+                try {
+                    const snap = await getDoc(doc(db, "salas_online", salaOnlineId));
+                    if (!snap.exists()) return;
+                    const salaFresca = snap.data();
+                    if (salaFresca.estado === 'terminado' || salaFresca.faseActual === 'finalizado') return;
+                    if (salaOnlineTerminando || (matchState && matchState.fase === 'finalizado')) return;
+                    const pingFresco = salaFresca.guestLastPing || 0;
+                    if (pingFresco && Date.now() - pingFresco > ONLINE_PING_TIMEOUT_MS) {
+                        declararAbandonoOnline('host'); // gana el host
+                    }
+                } catch (e) { console.error(e); }
+            }, 2500);
+        }
+
+        // Si el guest pidió pausa (pausadoPor === 'guest'), el host pausa su propio loop
+        // para que ambos vean el mismo estado de juego (el motor sigue viviendo en el host).
+        function chequearSolicitudPausaDeGuest(sala) {
+            if (!matchState || matchState.fase === 'finalizado') return;
+            if (sala.pausadoPor === 'guest' && !matchState.pausado) {
+                matchState.pausado = true;
+                document.getElementById('btn-pausa').textContent = '▶ REANUDAR (RIVAL)';
+                document.getElementById('match-pause-panel').style.display = 'none'; // el host no edita la formación del guest
+                agregarEvento(matchState, '⏸ El rival pausó el partido.', true);
+                volcarEstadoOnline(true);
+            }
+            if (sala.pausadoPor === null && matchState.pausado && matchState.fase !== 'descanso') {
+                matchState.pausado = false;
+                document.getElementById('btn-pausa').textContent = '⏸ PAUSAR';
+                document.getElementById('match-pause-panel').style.display = 'none';
+                agregarEvento(matchState, '▶ Se reanuda el partido.', true);
+            }
+        }
+
+        function chequearAutoReanudacionHost() {
+            if (!ultimaSalaSnapshot || !ultimaSalaSnapshot.pausaIniciadaEn) return;
+            if (matchState.fase === 'descanso') return; // el descanso se reanuda manualmente, no por timeout de pausa
+            const transcurrido = Date.now() - ultimaSalaSnapshot.pausaIniciadaEn;
+            if (transcurrido > ONLINE_PAUSA_MAX_MS) {
+                updateDoc(doc(db, "salas_online", salaOnlineId), { pausadoPor: null, pausaIniciadaEn: null }).catch(() => {});
+                if (matchState.pausado && ultimaSalaSnapshot.pausadoPor === 'host') {
+                    matchState.pausado = false;
+                    document.getElementById('btn-pausa').textContent = '⏸ PAUSAR';
+                    document.getElementById('match-pause-panel').style.display = 'none';
+                    agregarEvento(matchState, '▶ Se reanuda el partido (tiempo de pausa agotado).', true);
+                }
+                ultimaSalaSnapshot.pausaIniciadaEn = null; // evita relanzar mientras llega el próximo snapshot
+            }
+        }
+
+        // ── DESCANSO (medio tiempo): countdown de 20s + confirmación doble ──
+        // Misma mecánica que la pantalla de "listos" pre-partido, pero para el
+        // entretiempo. Antes esto se manejaba como una pausa normal sin dueño
+        // (pausadoPor quedaba en null), lo que dejaba el partido bloqueado sin
+        // que NINGUNO de los dos pudiera reanudar. Ahora es un estado propio de
+        // la sala ('descanso'), con sus propias confirmaciones. No abre un
+        // onSnapshot propio: reutiliza el que ya tiene cada rol (suscribirSalaOnlineHost
+        // / suscribirSalaOnlineGuest), para no duplicar listeners sobre el mismo doc.
+        const ONLINE_DESCANSO_MS = 20 * 1000;
+        let descansoCountdownInterval = null;
+        let descansoYaConfirmado = false;
+        let descansoArrancoSegundoTiempo = false; // evita doble-disparo del host
+        let descansoPanelAbierto = false; // fuente de verdad de si el panel ya está mostrado (no depende de matchState.fase)
+
+        // Llamado por el HOST al llegar al minuto de descanso.
+        function entrarEnDescansoOnlineHost() {
+            matchState.fase = 'descanso';
+            document.getElementById('hud-fase').textContent = 'DESCANSO';
+            agregarEvento(matchState, '🟡 Fin del primer tiempo. Descanso.', true);
+            ultimoEventosVolcadosCount = matchState.eventos.length;
+            // Un solo updateDoc atómico: antes esto eran dos escrituras separadas
+            // (volcarEstadoOnline + el cambio de estado), y Firestore podía entregarle
+            // al guest los snapshots en cualquier orden. Si el snapshot con
+            // faseActual:'descanso' le llegaba ANTES que el de estado:'descanso', el
+            // guest actualizaba su fase local sin nunca abrir el panel de descanso —
+            // quedaba colgado sin ninguna forma de reaccionar cuando el host reanudaba.
+            updateDoc(doc(db, "salas_online", salaOnlineId), {
+                minutoActual: matchState.minutoAbsoluto,
+                marcador: { ...matchState.marcador },
+                eventos: matchState.eventos,
+                faseActual: 'descanso',
+                formacionActualHost: alineacionSerializable(matchState.local),
+                estado: 'descanso',
+                hostListoDescanso: false,
+                guestListoDescanso: false,
+                descansoExpiraEn: Date.now() + ONLINE_DESCANSO_MS
+            }).catch(e => console.error(e));
+            abrirPanelDescansoOnline();
+        }
+
+
+        // Abre la UI del panel de descanso y arranca su countdown visual local.
+        // Se llama una vez, tanto por el host (al entrar) como por el guest
+        // (al detectar sala.estado === 'descanso' en su snapshot).
+        function abrirPanelDescansoOnline() {
+            descansoPanelAbierto = true;
+            descansoYaConfirmado = false;
+            descansoArrancoSegundoTiempo = false;
+            document.getElementById('online-descanso-panel').style.display = 'block';
+            document.getElementById('desc-marcador').textContent = `${matchState.marcador.local} - ${matchState.marcador.visitante}`;
+            document.getElementById('desc-btn-listo').disabled = false;
+            document.getElementById('desc-btn-listo').style.opacity = '1';
+            document.getElementById('desc-estado-local').textContent = 'Esperando confirmación...';
+            document.getElementById('desc-estado-rival').textContent = 'Esperando confirmación...';
+            // Se deja visible el panel de cambios (formación/sustituciones) para
+            // que cada jugador pueda ajustar su alineación mientras espera.
+            document.getElementById('match-pause-panel').style.display = 'block';
+            renderPanelPausaPartido();
+
+            if (descansoCountdownInterval) clearInterval(descansoCountdownInterval);
+            const expiraEn = Date.now() + ONLINE_DESCANSO_MS;
+            descansoCountdownInterval = setInterval(() => {
+                const restanteMs = expiraEn - Date.now();
+                const restanteSeg = Math.max(0, Math.ceil(restanteMs / 1000));
+                document.getElementById('desc-countdown').textContent = restanteSeg;
+                if (restanteMs <= 0) {
+                    clearInterval(descansoCountdownInterval);
+                    descansoCountdownInterval = null;
+                    // Se acabó el tiempo: SOLO el host fuerza el paso a segundo tiempo.
+                    if (rolOnline === 'host' && !descansoArrancoSegundoTiempo) {
+                        getDoc(doc(db, "salas_online", salaOnlineId)).then(snap => {
+                            if (snap.exists() && snap.data().estado === 'descanso') arrancarSegundoTiempoDesdeDescanso(snap.data());
+                        }).catch(() => {});
+                    }
+                }
+            }, 250);
+        }
+
+        // Llamada desde el onSnapshot de cada rol mientras sala.estado === 'descanso':
+        // refresca los indicadores de "listo" y, si es el host, chequea si ya puede
+        // arrancar el segundo tiempo porque ambos confirmaron.
+        function actualizarPanelDescansoOnline(sala, rol) {
+            const miCampo = rol === 'host' ? 'hostListoDescanso' : 'guestListoDescanso';
+            const rivalCampo = rol === 'host' ? 'guestListoDescanso' : 'hostListoDescanso';
+            document.getElementById('desc-estado-local').textContent = sala[miCampo] ? '✅ Listo' : 'Esperando confirmación...';
+            document.getElementById('desc-estado-rival').textContent = sala[rivalCampo] ? '✅ Listo' : 'Esperando confirmación...';
+            if (rol === 'host' && sala.hostListoDescanso && sala.guestListoDescanso && !descansoArrancoSegundoTiempo) {
+                arrancarSegundoTiempoDesdeDescanso(sala);
+            }
+        }
+
+        window.confirmarListoDescanso = async function() {
+            if (!salaOnlineId || descansoYaConfirmado) return;
+            descansoYaConfirmado = true;
+            document.getElementById('desc-btn-listo').disabled = true;
+            document.getElementById('desc-btn-listo').style.opacity = '0.5';
+            const campo = rolOnline === 'host' ? 'hostListoDescanso' : 'guestListoDescanso';
+            try {
+                await updateDoc(doc(db, "salas_online", salaOnlineId), { [campo]: true });
+            } catch (e) {
+                console.error(e);
+                descansoYaConfirmado = false;
+                document.getElementById('desc-btn-listo').disabled = false;
+                document.getElementById('desc-btn-listo').style.opacity = '1';
+            }
+        };
+
+        // Solo el HOST llama a esto (ambos confirmaron, o venció el countdown de 20s).
+        function arrancarSegundoTiempoDesdeDescanso(sala) {
+            if (descansoArrancoSegundoTiempo) return;
+            descansoArrancoSegundoTiempo = true;
+            if (descansoCountdownInterval) { clearInterval(descansoCountdownInterval); descansoCountdownInterval = null; }
+            updateDoc(doc(db, "salas_online", salaOnlineId), {
+                estado: 'jugando',
+                faseActual: 'segundo_tiempo'
+            }).catch(e => console.error(e));
+            // El propio onSnapshot de cada rol detecta 'jugando' y llama a
+            // arrancarSegundoTiempoOnline; no hace falta duplicarlo aquí.
+        }
+
+        function cerrarPanelDescansoOnline() {
+            descansoPanelAbierto = false;
+            if (descansoCountdownInterval) { clearInterval(descansoCountdownInterval); descansoCountdownInterval = null; }
+            const panel = document.getElementById('online-descanso-panel');
+            if (panel) panel.style.display = 'none';
+        }
+
+        // Común a host y guest: aplica el pasaje real a segundo tiempo en el
+        // matchState local, una vez que la sala ya está en 'jugando' de nuevo.
+        function arrancarSegundoTiempoOnline(rol) {
+            matchState.fase = 'segundo_tiempo';
+            matchState.minuto = 0; // reinicia el contador interno del tiempo, NO el cronómetro visible
+            matchState.pausado = false;
+            document.getElementById('hud-fase').textContent = '2DO TIEMPO';
+            document.getElementById('btn-pausa').textContent = '⏸ PAUSAR';
+            document.getElementById('match-pause-panel').style.display = 'none';
+            agregarEvento(matchState, '🟢 ¡Comienza el segundo tiempo!', true);
+            if (rol === 'host') volcarEstadoOnline(true);
+        }
+
+        function finalizarPartidoOnlineHost() {
+            salaOnlineTerminando = true;
+            clearInterval(matchInterval);
+            if (batchOnlineInterval) clearInterval(batchOnlineInterval);
+            matchState.fase = 'finalizado';
+            document.getElementById('hud-fase').textContent = 'FINALIZADO';
+            document.getElementById('match-pause-panel').style.display = 'none';
+            agregarEvento(matchState, `🏁 Final del partido: ${matchState.marcador.local} - ${matchState.marcador.visitante}`, true);
+
+            const { local, visitante } = matchState.marcador;
+            const ganador = local > visitante ? 'host' : (local < visitante ? 'guest' : 'empate');
+
+            updateDoc(doc(db, "salas_online", salaOnlineId), {
+                estado: 'terminado',
+                minutoActual: matchState.minutoAbsoluto,
+                marcador: { ...matchState.marcador },
+                eventos: matchState.eventos,
+                faseActual: 'finalizado',
+                ganador,
+                motivoFin: 'normal'
+            }).catch(e => console.error(e));
+
+            const recompensa = ganador === 'host' ? 300 : (ganador === 'guest' ? 50 : 120);
+            const resultado = ganador === 'host' ? 'VICTORIA' : (ganador === 'guest' ? 'DERROTA' : 'EMPATE');
+            const apuestaMonto = (ultimaSalaSnapshot && ultimaSalaSnapshot.apuestaMonto) || 0;
+            liquidarApuestaPropia({ apuestaMonto, ganador, motivoFin: 'normal', apuestaHostPagada: true, apuestaGuestPagada: true }, 'host').catch(e => console.error(e));
+            setTimeout(() => { mostrarResultadoPartido(resultado, recompensa, apuestaMonto > 0 ? { monto: apuestaMonto, gane: ganador === 'host' } : null); detenerSesionOnline(); }, 1200);
+        }
+
+        // ── LADO GUEST: solo observa + manda intenciones ──────────────
+        function suscribirSalaOnlineGuest(salaId) {
+            if (salaOnlineUnsub) salaOnlineUnsub();
+            let eventosRenderizados = 0;
+            salaOnlineUnsub = onSnapshot(doc(db, "salas_online", salaId), (snap) => {
+                if (!snap.exists()) return;
+                const sala = snap.data();
+                ultimaSalaSnapshot = sala;
+                if (!matchState) return;
+
+                // Guarda dura: si la sala YA está 'terminado' o el partido ya se
+                // marcó 'finalizado' localmente, jamás se evalúa el ping de
+                // abandono. Esto blinda contra cualquier orden de snapshots:
+                // no importa si el ping del rival quedó viejo en este mismo
+                // documento, un partido ya terminado nunca puede convertirse
+                // en un "abandono" retroactivo.
+                if (salaOnlineTerminando || sala.estado === 'terminado' || matchState.fase === 'finalizado') {
+                    if (sala.estado === 'terminado' && matchState.fase !== 'finalizado') {
+                        finalizarPartidoOnlineGuestVista(sala);
+                    }
+                    return;
+                }
+
+                chequearPingRivalGuest(sala);
+                if (salaOnlineTerminando) return;
+
+                matchState.minutoAbsoluto = sala.minutoActual || 0;
+                matchState.marcador = sala.marcador || { local: 0, visitante: 0 };
+                document.getElementById('hud-minuto').textContent = matchState.minutoAbsoluto + "'";
+                actualizarHUDMarcador(matchState);
+
+                const eventos = sala.eventos || [];
+                if (eventos.length > eventosRenderizados) {
+                    for (let i = eventosRenderizados; i < eventos.length; i++) {
+                        const ev = eventos[i];
+                        const feed = document.getElementById('match-commentary');
+                        const linea = document.createElement('div');
+                        linea.className = 'commentary-line';
+                        linea.innerHTML = `<span class="commentary-min">${ev.minuto}'</span> ${ev.texto}`;
+                        feed.prepend(linea);
+                    }
+                    eventosRenderizados = eventos.length;
+                }
+
+                const faseAnterior = matchState.fase;
+                if (sala.estado === 'descanso' && !descansoPanelAbierto) {
+                    matchState.fase = 'descanso';
+                    document.getElementById('hud-fase').textContent = 'DESCANSO';
+                    abrirPanelDescansoOnline();
+                } else if (sala.estado === 'jugando' && descansoPanelAbierto) {
+                    cerrarPanelDescansoOnline();
+                    arrancarSegundoTiempoOnline('guest');
+                } else if (sala.estado !== 'descanso') {
+                    matchState.fase = sala.faseActual || matchState.fase;
+                }
+                if (matchState.fase === 'segundo_tiempo' && faseAnterior !== 'segundo_tiempo' && faseAnterior !== 'descanso') {
+                    document.getElementById('hud-fase').textContent = '2DO TIEMPO';
+                }
+                if (matchState.fase === 'finalizado' && faseAnterior !== 'finalizado') {
+                    finalizarPartidoOnlineGuestVista(sala);
+                    return;
+                }
+
+                // Durante el descanso, las confirmaciones de "listo" y el countdown
+                // se manejan acá mismo (actualizarPanelDescansoOnline), reusando este
+                // mismo snapshot; evitamos que la lógica de pausas normales interfiera.
+                if (descansoPanelAbierto) {
+                    if (sala.estado === 'descanso') actualizarPanelDescansoOnline(sala, 'guest');
+                    if (sala.formacionActualHost) sincronizarAlineacionDesdeSala(matchState.local, sala.formacionActualHost);
+                    renderAlineacionesEnVivo();
+                    return;
+                }
+
+                matchState.pausado = !!sala.pausadoPor;
+                document.getElementById('btn-pausa').textContent = matchState.pausado
+                    ? (sala.pausadoPor === 'guest' ? '▶ REANUDAR' : '⏸ PAUSADO (RIVAL)')
+                    : '⏸ PAUSAR';
+                document.getElementById('match-pause-panel').style.display = (matchState.pausado && sala.pausadoPor === 'guest') ? 'block' : 'none';
+                if (matchState.pausado && sala.pausadoPor === 'guest') renderPanelPausaPartido();
+
+                // Sincroniza la alineación REAL del host (matchState.local, en la
+                // pantalla del guest) con lo que el host va volcando. Necesario para
+                // que el panel de "alineaciones en vivo" del guest muestre los
+                // titulares reales del rival, no solo el nombre de la formación.
+                if (sala.formacionActualHost) sincronizarAlineacionDesdeSala(matchState.local, sala.formacionActualHost);
+                renderAlineacionesEnVivo();
+            });
+        }
+
+        // Aplica una alineación serializada (ver alineacionSerializable) recibida
+        // desde Firestore sobre un equipo del matchState local, sin tocar nombre/subs.
+        function sincronizarAlineacionDesdeSala(equipoDestino, alineacion) {
+            if (!alineacion || !alineacion.formacion) return;
+            equipoDestino.formacion = alineacion.formacion;
+            equipoDestino.gk = alineacion.gk || null;
+            equipoDestino.cb = alineacion.cb || [];
+            equipoDestino.mc = alineacion.mc || [];
+            equipoDestino.st = alineacion.st || [];
+        }
+
+        let chequeoAbandonoGuestPendiente = false; // evita agendar múltiples reconfirmaciones en paralelo
+        function chequearPingRivalGuest(sala) {
+            if (salaOnlineTerminando) return;
+            if (sala.estado === 'terminado' || sala.faseActual === 'finalizado') return;
+            if (matchState && matchState.fase === 'finalizado') return;
+            const ping = sala.hostLastPing || 0;
+            if (!ping || Date.now() - ping <= ONLINE_PING_TIMEOUT_MS) return;
+            if (chequeoAbandonoGuestPendiente) return;
+            if (miPestañaEstuvoOcultaHaceMenosDe(ONLINE_PING_TIMEOUT_MS + 5000)) return;
+            // No se declara abandono con una sola lectura vencida: eso puede pasar
+            // por un snapshot atrasado justo en el minuto 90, mientras el host
+            // recién está terminando de escribir el resultado real. Se reconfirma
+            // leyendo la sala de nuevo tras una pausa breve — si para entonces el
+            // partido ya está 'terminado' (normal) o el ping se recuperó, no se
+            // declara nada; solo si el ping SIGUE vencido de verdad, se declara.
+            chequeoAbandonoGuestPendiente = true;
+            setTimeout(async () => {
+                chequeoAbandonoGuestPendiente = false;
+                if (salaOnlineTerminando || (matchState && matchState.fase === 'finalizado')) return;
+                if (miPestañaEstuvoOcultaHaceMenosDe(5000)) return;
+                try {
+                    const snap = await getDoc(doc(db, "salas_online", salaOnlineId));
+                    if (!snap.exists()) return;
+                    const salaFresca = snap.data();
+                    if (salaFresca.estado === 'terminado' || salaFresca.faseActual === 'finalizado') return;
+                    if (salaOnlineTerminando || (matchState && matchState.fase === 'finalizado')) return;
+                    const pingFresco = salaFresca.hostLastPing || 0;
+                    if (pingFresco && Date.now() - pingFresco > ONLINE_PING_TIMEOUT_MS) {
+                        declararAbandonoOnline('guest'); // gana el guest — única excepción donde el guest escribe el resultado
+                    }
+                } catch (e) { console.error(e); }
+            }, 2500);
+        }
+
+        // Se llama cuando se detecta que el RIVAL se desconectó (heartbeat vencido). Termina
+        // la sala en Firestore para que quede registrado quién se desconectó, pero — a pedido
+        // explícito — NO reparte recompensa a nadie, ni siquiera a quien se quedó jugando.
+        function declararAbandonoOnline(quienGana) {
+            if (salaOnlineTerminando) return;
+            if (matchState && matchState.fase === 'finalizado') return;
+            salaOnlineTerminando = true;
+            const apuestaMonto = (ultimaSalaSnapshot && ultimaSalaSnapshot.apuestaMonto) || 0;
+            if (quienGana === 'host') {
+                clearInterval(matchInterval);
+                if (batchOnlineInterval) clearInterval(batchOnlineInterval);
+                updateDoc(doc(db, "salas_online", salaOnlineId), {
+                    estado: 'terminado', ganador: 'host', motivoFin: 'abandono_guest'
+                }).catch(e => console.error(e));
+                // Con apuesta: nadie se queda con el pozo del otro por una
+                // desconexión. Quien se quedó jugando (host, en este caso) se
+                // reembolsa lo propio si lo había pagado.
+                liquidarApuestaPropia({ apuestaMonto, motivoFin: 'abandono_guest', apuestaHostPagada: !!(ultimaSalaSnapshot && ultimaSalaSnapshot.apuestaHostPagada) }, 'host').catch(e => console.error(e));
+                setTimeout(() => { mostrarFinPorAbandonoOnline('El rival se desconectó. Partido sin recompensa.'); detenerSesionOnline(); }, 800);
+            } else {
+                updateDoc(doc(db, "salas_online", salaOnlineId), {
+                    estado: 'terminado', ganador: 'guest', motivoFin: 'abandono_host'
+                }).catch(e => console.error(e));
+                liquidarApuestaPropia({ apuestaMonto, motivoFin: 'abandono_host', apuestaGuestPagada: !!(ultimaSalaSnapshot && ultimaSalaSnapshot.apuestaGuestPagada) }, 'guest').catch(e => console.error(e));
+                setTimeout(() => { mostrarFinPorAbandonoOnline('El rival (host) se desconectó. Partido sin recompensa.'); detenerSesionOnline(); }, 800);
+            }
+        }
+
+        function finalizarPartidoOnlineGuestVista(sala) {
+            salaOnlineTerminando = true;
+            document.getElementById('hud-fase').textContent = 'FINALIZADO';
+            document.getElementById('match-pause-panel').style.display = 'none';
+
+            const apuestaMonto = sala.apuestaMonto || 0;
+
+            // Si el partido terminó por abandono/desconexión (no llegó al minuto 90),
+            // no se reparte recompensa a nadie, sea cual sea el "ganador" registrado.
+            if (sala.motivoFin === 'abandono_host' || sala.motivoFin === 'abandono_guest') {
+                liquidarApuestaPropia({ apuestaMonto, motivoFin: sala.motivoFin, apuestaGuestPagada: !!sala.apuestaGuestPagada }, 'guest').catch(e => console.error(e));
+                setTimeout(() => { mostrarFinPorAbandonoOnline('El partido terminó por desconexión. Sin recompensa.'); detenerSesionOnline(); }, 800);
+                return;
+            }
+
+            let resultado, recompensa;
+            if (sala.ganador === 'guest') { resultado = 'VICTORIA'; recompensa = 300; }
+            else if (sala.ganador === 'host') { resultado = 'DERROTA'; recompensa = 50; }
+            else { resultado = 'EMPATE'; recompensa = 120; }
+            liquidarApuestaPropia({ apuestaMonto, ganador: sala.ganador, motivoFin: 'normal' }, 'guest').catch(e => console.error(e));
+            setTimeout(() => { mostrarResultadoPartido(resultado, recompensa, apuestaMonto > 0 ? { monto: apuestaMonto, gane: sala.ganador === 'guest' } : null); detenerSesionOnline(); }, 1200);
+        }
+
+        // ── PAUSAS Y CAMBIOS EN VIVO ──────────────────────────────────
+        // togglePausaPartido, cambiarFormacionPartido y los selectores de sustitución YA
+        // EXISTEN para Partido Rápido; acá se envuelven para que, en modo online, además
+        // escriban la intención a Firestore en vez de (o además de) mutar matchState local.
+
+        window.togglePausaPartidoOnline = async function() {
+            if (!matchState || matchState.fase === 'finalizado' || !salaOnlineId) return;
+
+            if (!matchState.pausado) {
+                if (matchState.pausasRestantes.propio <= 0) { notif('Ya usaste tus 2 pausas en este partido.', 'aviso'); return; }
+                const restantesNuevo = matchState.pausasRestantes.propio - 1;
+                matchState.pausasRestantes.propio = restantesNuevo;
+                const campoPausas = rolOnline === 'host' ? 'pausasRestantesHost' : 'pausasRestantesGuest';
+                await updateDoc(doc(db, "salas_online", salaOnlineId), {
+                    pausadoPor: rolOnline,
+                    pausaIniciadaEn: Date.now(),
+                    [campoPausas]: restantesNuevo
+                });
+                if (rolOnline === 'host') {
+                    matchState.pausado = true;
+                    document.getElementById('btn-pausa').textContent = '▶ REANUDAR';
+                    document.getElementById('match-pause-panel').style.display = 'block';
+                    renderPanelPausaPartido();
+                }
+                // Si es el guest, la actualización visual la maneja su propio onSnapshot.
+            } else {
+                if (ultimaSalaSnapshot && ultimaSalaSnapshot.pausadoPor !== rolOnline) {
+                    notif('Solo quien pausó puede reanudar antes de tiempo.', 'aviso');
+                    return;
+                }
+                await updateDoc(doc(db, "salas_online", salaOnlineId), { pausadoPor: null, pausaIniciadaEn: null });
+                if (rolOnline === 'host') {
+                    matchState.pausado = false;
+                    document.getElementById('btn-pausa').textContent = '⏸ PAUSAR';
+                    document.getElementById('match-pause-panel').style.display = 'none';
+                }
+            }
+        };
+
+        // Envuelve cambiarFormacionPartido para, en modo online, exigir que sea la propia
+        // pausa de quien la pide, y para escribir formacionActualHost/Guest tras el cambio.
+        const _cambiarFormacionPartidoLocal = window.cambiarFormacionPartido;
+        window.cambiarFormacionPartido = function(formacion) {
+            if (matchState && matchState.modo === 'online') {
+                if (!ultimaSalaSnapshot || ultimaSalaSnapshot.pausadoPor !== rolOnline) {
+                    notif('Solo puedes cambiar de formación durante tu propia pausa.', 'aviso');
+                    return;
+                }
+            }
+            _cambiarFormacionPartidoLocal(formacion);
+            if (matchState && matchState.modo === 'online' && salaOnlineId) {
+                const campo = rolOnline === 'host' ? 'formacionActualHost' : 'formacionActualGuest';
+                updateDoc(doc(db, "salas_online", salaOnlineId), { [campo]: alineacionSerializable(matchState.local) }).catch(() => {});
+            }
+            renderAlineacionesEnVivo();
+        };
+
+        // togglePausaPartido ya existe para Partido Rápido; en modo online se redirige a la
+        // versión que escribe a Firestore, para no duplicar el botón del HUD.
+        const _togglePausaPartidoLocal = window.togglePausaPartido;
+        window.togglePausaPartido = function() {
+            if (matchState && matchState.modo === 'online') { window.togglePausaPartidoOnline(); return; }
+            _togglePausaPartidoLocal();
+        };
+
+        // En partidos online NO se puede abandonar desde el botón: si alguien se
+        // desconecta de verdad (cierra la pestaña, pierde internet), el heartbeat
+        // se encarga de detectarlo y terminar la sala — pero un click voluntario en
+        // SALIR no debe darle la victoria ni recompensas a nadie. Ver aviso más abajo.
+        const _abandonarPartidoLocal = window.abandonarPartido;
+        window.abandonarPartido = function() {
+            if (matchState && matchState.modo === 'online') {
+                notif('No puedes abandonar un partido online. Si cierras la app, perderás la conexión y el rival ganará por abandono.', 'aviso');
+                return;
+            }
+            _abandonarPartidoLocal();
+        };
+
     </script>
 </body>
 </html>
