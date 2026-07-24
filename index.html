@@ -4750,50 +4750,58 @@
             return { sobres: 0, partidosJugados: 0, partidosGanados: 0 };
         }
 
-        // Se llama tras cada login / cada snapshot de gameData para asegurar que
-        // el documento tenga los campos de misiones inicializados con el periodo
-        // correcto. Si no existen, o si el periodo guardado quedó viejo, esta
-        // función hace el reset — pero SIEMPRE a través de una escritura que
-        // las reglas validan (mismo mecanismo que usa el resto del progreso).
+        // Se llama tras cada login para asegurar que el documento tenga los
+        // campos de misiones inicializados con el periodo correcto. Se apoya
+        // en incrementarProgresoMision(null) — una transacción que lee el
+        // documento REAL del servidor (no el gameData local, que puede no
+        // estar sincronizado todavía) y hace el reset ahí mismo si hace falta.
         async function asegurarPeriodosMisiones(uid) {
-            const diaActual = diaActualUTC();
-            const semanaActual = semanaActualUTC();
-            const upd = {};
-            if (!gameData.misionesDiarias || gameData.misionesDiarias.periodo !== diaActual) {
-                upd.misionesDiarias = { periodo: diaActual, progreso: progresoDiarioVacio(), reclamadas: [] };
-            }
-            if (!gameData.misionesSemanales || gameData.misionesSemanales.periodo !== semanaActual) {
-                upd.misionesSemanales = { periodo: semanaActual, progreso: progresoSemanalVacio(), reclamadas: [] };
-            }
-            if (Object.keys(upd).length) {
-                try { await updateDoc(doc(db, "jugadores", uid), upd); }
-                catch (e) { console.error("[misiones] Error al inicializar/resetear periodo:", e); }
-            }
+            await incrementarProgresoMision(null);
         }
 
-        // Incrementa en 1 (nunca más) un contador de progreso, diario y/o semanal.
-        // Si el campo no existe en la definición semanal, simplemente se omite ahí.
-        // Cualquier fallo se ignora silenciosamente (no debe interrumpir el flujo
-        // de juego) pero queda logueado para debug.
+        // Incrementa en 1 (nunca más) un contador de progreso, diario y/o
+        // semanal, y de paso resetea el periodo si venció. Usa runTransaction
+        // para leer el documento DIRECTO DEL SERVIDOR en el momento de escribir
+        // — nunca confía en gameData local, que se actualiza de forma asíncrona
+        // vía onSnapshot y puede estar desactualizado (o directamente vacío)
+        // justo después de una escritura previa, causando que el incremento se
+        // pierda silenciosamente si se confiara en él. Pasar campo=null solo
+        // asegura/resetea el periodo sin incrementar nada.
         async function incrementarProgresoMision(campo) {
             try {
-                await asegurarPeriodosMisiones(auth.currentUser.uid);
-                const upd = {};
-                if (gameData.misionesDiarias && (campo in gameData.misionesDiarias.progreso)) {
-                    upd.misionesDiarias = {
-                        periodo: gameData.misionesDiarias.periodo,
-                        progreso: { ...gameData.misionesDiarias.progreso, [campo]: (gameData.misionesDiarias.progreso[campo] || 0) + 1 },
-                        reclamadas: gameData.misionesDiarias.reclamadas || []
-                    };
-                }
-                if (gameData.misionesSemanales && (campo in gameData.misionesSemanales.progreso)) {
-                    upd.misionesSemanales = {
-                        periodo: gameData.misionesSemanales.periodo,
-                        progreso: { ...gameData.misionesSemanales.progreso, [campo]: (gameData.misionesSemanales.progreso[campo] || 0) + 1 },
-                        reclamadas: gameData.misionesSemanales.reclamadas || []
-                    };
-                }
-                if (Object.keys(upd).length) await updateDoc(doc(db, "jugadores", auth.currentUser.uid), upd);
+                const ref = doc(db, "jugadores", auth.currentUser.uid);
+                await runTransaction(db, async (tx) => {
+                    const snap = await tx.get(ref);
+                    if (!snap.exists()) return;
+                    const data = snap.data();
+                    const diaActual = diaActualUTC();
+                    const semanaActual = semanaActualUTC();
+                    const upd = {};
+
+                    let diarias = data.misionesDiarias;
+                    if (!diarias || diarias.periodo !== diaActual) {
+                        diarias = { periodo: diaActual, progreso: progresoDiarioVacio(), reclamadas: [] };
+                    }
+                    if (campo && (campo in diarias.progreso)) {
+                        diarias = { ...diarias, progreso: { ...diarias.progreso, [campo]: (diarias.progreso[campo] || 0) + 1 } };
+                    }
+                    if (!data.misionesDiarias || JSON.stringify(data.misionesDiarias) !== JSON.stringify(diarias)) {
+                        upd.misionesDiarias = diarias;
+                    }
+
+                    let semanales = data.misionesSemanales;
+                    if (!semanales || semanales.periodo !== semanaActual) {
+                        semanales = { periodo: semanaActual, progreso: progresoSemanalVacio(), reclamadas: [] };
+                    }
+                    if (campo && (campo in semanales.progreso)) {
+                        semanales = { ...semanales, progreso: { ...semanales.progreso, [campo]: (semanales.progreso[campo] || 0) + 1 } };
+                    }
+                    if (!data.misionesSemanales || JSON.stringify(data.misionesSemanales) !== JSON.stringify(semanales)) {
+                        upd.misionesSemanales = semanales;
+                    }
+
+                    if (Object.keys(upd).length) tx.update(ref, upd);
+                });
             } catch (e) {
                 console.error(`[misiones] Error al incrementar progreso "${campo}":`, e);
             }
