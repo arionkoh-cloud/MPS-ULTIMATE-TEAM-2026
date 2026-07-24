@@ -415,6 +415,7 @@
         <main class="main-menu">
             <div class="menu-btn" onclick="abrirSeccion('jugar-nav-section')"><h2>JUGAR</h2></div>
             <div class="menu-btn" onclick="abrirSeccion('club-nav-section')"><h2>CLUB</h2></div>
+            <div class="menu-btn" onclick="abrirSeccion('misiones-section'); renderizarMisiones()"><h2>MISIONES</h2></div>
             <div class="menu-btn" onclick="abrirSeccion('extra-nav-section')"><h2>EXTRA</h2></div>
         </main>
     </div>
@@ -792,10 +793,6 @@
             </div>
             <div class="nav-btn" onclick="abrirSeccion('leaderboard-section'); renderizarLeaderboard()">
                 <h2>LEADERBOARD</h2>
-            </div>
-            <div class="nav-btn" onclick="abrirSeccion('misiones-section'); renderizarMisiones()">
-                <h2>MISIONES</h2>
-                <span class="nav-sub">Diarias y semanales</span>
             </div>
             <div class="nav-btn" onclick="window.abrirCambioNombreClub()">
                 <h2>NOMBRE DE CLUB</h2>
@@ -4849,7 +4846,7 @@
             }
         };
 
-        function renderizarMisiones() {
+        window.renderizarMisiones = function() {
             const cont = document.getElementById('misiones-container');
             if (!cont) return;
             if (!gameData.misionesDiarias || !gameData.misionesSemanales) {
