@@ -356,6 +356,18 @@
         .resultado-content { max-width: 600px; margin: 12vh auto 0; text-align: center; }
         .resultado-marcador { font-size: 3.5rem; font-weight: 900; color: white; margin: 20px 0; }
         .gol-linea { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 10px 16px; margin-bottom: 8px; text-align: left; }
+        /* ── MISIONES ─────────────────────────────────────────── */
+        .misiones-bloque { max-width: 900px; margin: 0 auto 40px auto; }
+        .misiones-bloque-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
+        .mision-reset-timer { color: rgba(255,255,255,0.5); font-size:0.85rem; letter-spacing:1px; }
+        .mision-item { display:flex; align-items:center; justify-content:space-between; gap:20px; background:rgba(255,255,255,0.04); border:1px solid rgba(0,255,170,0.15); border-radius:10px; padding:14px 20px; margin-bottom:10px; flex-wrap:wrap; }
+        .mision-info { flex:1; min-width:220px; display:flex; flex-direction:column; gap:6px; }
+        .mision-texto { font-weight:700; font-size:0.95rem; }
+        .mision-barra-bg { width:100%; height:8px; background:rgba(255,255,255,0.1); border-radius:6px; overflow:hidden; }
+        .mision-barra-fill { height:100%; border-radius:6px; transition: width 0.3s ease; }
+        .mision-contador { font-size:0.78rem; color:rgba(255,255,255,0.5); }
+        .mision-accion { display:flex; align-items:center; gap:10px; min-width:140px; justify-content:flex-end; }
+        .mini-spinner { width:18px; height:18px; border:3px solid rgba(0,255,170,0.25); border-top-color: var(--primary); border-radius:50%; animation: spin 0.7s linear infinite; }
     </style>
 </head>
 <body>
@@ -781,6 +793,10 @@
             <div class="nav-btn" onclick="abrirSeccion('leaderboard-section'); renderizarLeaderboard()">
                 <h2>LEADERBOARD</h2>
             </div>
+            <div class="nav-btn" onclick="abrirSeccion('misiones-section'); renderizarMisiones()">
+                <h2>MISIONES</h2>
+                <span class="nav-sub">Diarias y semanales</span>
+            </div>
             <div class="nav-btn" onclick="window.abrirCambioNombreClub()">
                 <h2>NOMBRE DE CLUB</h2>
                 <span class="nav-sub" id="nav-sub-nombre-club">Cambiar nombre</span>
@@ -817,6 +833,21 @@
             <button class="btn-ui btn-back" onclick="cerrarSeccion('leaderboard-section')">VOLVER</button>
         </div>
         <div id="leaderboard-container" style="display:flex; flex-direction:column; gap:16px; max-width:1100px; margin:0 auto;"></div>
+    </div>
+
+    <!-- MISIONES -->
+    <div id="misiones-section" class="full-screen-overlay">
+        <div class="section-header">
+            <h1 class="italic-title"><span class="primary-text">MISIONES</span></h1>
+            <div style="display:flex; align-items:center; gap:20px;">
+                <div class="stats">
+                    <span id="coins-display-misiones">🪙 --</span>
+                    <span id="points-display-misiones">💎 --</span>
+                </div>
+                <button class="btn-ui btn-back" onclick="cerrarSeccion('misiones-section')">VOLVER</button>
+            </div>
+        </div>
+        <div id="misiones-container"></div>
     </div>
 
     <div id="base-datos-section" class="full-screen-overlay">
@@ -1358,10 +1389,13 @@
                     actualizarUI();
                     if (document.getElementById('club-section').style.display === "block") renderizarClub();
                     if (document.getElementById('plantilla-section').style.display === "flex") renderizarPlantilla();
+                    const misSec = document.getElementById('misiones-section');
+                    if (misSec && (misSec.style.display === "block" || misSec.style.display === "flex")) renderizarMisiones();
                     bar.style.width = "100%";
                     document.getElementById('continue-btn').classList.add('ready');
                 }
             });
+            asegurarPeriodosMisiones(uid);
         }
 
         function parsearCSVFila(fila) {
@@ -1397,11 +1431,11 @@
         function actualizarUI() {
             const coinsTxt = `🪙 ${gameData.coins.toLocaleString('es-ES')}`;
             const pointsTxt = `💎 ${gameData.points.toLocaleString('es-ES')}`;
-            ['coins-display', 'coins-display-club', 'coins-display-mercado', 'coins-display-tienda'].forEach(id => {
+            ['coins-display', 'coins-display-club', 'coins-display-mercado', 'coins-display-tienda', 'coins-display-misiones'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.innerText = coinsTxt;
             });
-            ['points-display', 'points-display-club', 'points-display-mercado', 'points-display-tienda'].forEach(id => {
+            ['points-display', 'points-display-club', 'points-display-mercado', 'points-display-tienda', 'points-display-misiones'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.innerText = pointsTxt;
             });
@@ -1641,6 +1675,7 @@
                     tx.delete(ofertaRef);
                 });
                 // Éxito — el onSnapshot de "jugadores" y de "mercado" actualizan la UI solos
+                incrementarProgresoMision('comprasMercado');
             } catch (e) {
                 console.error("[fichar] Error:", e);
                 notif(e.message || "No se pudo completar el fichaje.", 'error');
@@ -2611,6 +2646,7 @@
                         fecha: Date.now()
                     });
                 });
+                incrementarProgresoMision('ventasMercado');
             } catch (e) {
                 console.error("[venderEnMercado] Error:", e);
                 notif(e.message || "Error al publicar la carta.", 'error');
@@ -2648,6 +2684,7 @@
                 if (metodoPago==='coins')  upd.coins  = gameData.coins  - cc;
                 if (metodoPago==='points') upd.points = gameData.points - cp;
                 await updateDoc(doc(db,"jugadores",auth.currentUser.uid), upd);
+                incrementarProgresoMision('sobres');
                 mostrarAnimacionPack(elegido);
             } catch(e) {
                 console.error(e);
@@ -3571,6 +3608,9 @@
             else if (local < visitante) { resultado = 'DERROTA'; recompensa = tabla.derrota; }
             else { resultado = 'EMPATE'; recompensa = tabla.empate; }
 
+            incrementarProgresoMision('partidosJugados');
+            if (resultado === 'VICTORIA') incrementarProgresoMision('partidosGanados');
+
             setTimeout(() => mostrarResultadoPartido(resultado, recompensa), 1200);
         }
 
@@ -4405,6 +4445,8 @@
 
             const resultado = ganador === 'host' ? 'VICTORIA' : (ganador === 'guest' ? 'DERROTA' : 'EMPATE');
             const apuestaMonto = (ultimaSalaSnapshot && ultimaSalaSnapshot.apuestaMonto) || 0;
+            incrementarProgresoMision('partidosOnline');
+            if (resultado === 'VICTORIA') incrementarProgresoMision('victoriasOnline');
             liquidarApuestaPropia({ apuestaMonto, ganador, motivoFin: 'normal', apuestaHostPagada: true, apuestaGuestPagada: true }, 'host').catch(e => console.error(e));
             setTimeout(() => { mostrarResultadoPartido(resultado, null, apuestaMonto > 0 ? { monto: apuestaMonto, gane: ganador === 'host' } : null); detenerSesionOnline(); }, 1200);
         }
@@ -4590,6 +4632,8 @@
             if (sala.ganador === 'guest') { resultado = 'VICTORIA'; }
             else if (sala.ganador === 'host') { resultado = 'DERROTA'; }
             else { resultado = 'EMPATE'; }
+            incrementarProgresoMision('partidosOnline');
+            if (resultado === 'VICTORIA') incrementarProgresoMision('victoriasOnline');
             liquidarApuestaPropia({ apuestaMonto, ganador: sala.ganador, motivoFin: 'normal' }, 'guest').catch(e => console.error(e));
             setTimeout(() => { mostrarResultadoPartido(resultado, null, apuestaMonto > 0 ? { monto: apuestaMonto, gane: sala.ganador === 'guest' } : null); detenerSesionOnline(); }, 1200);
         }
@@ -4671,6 +4715,214 @@
             }
             _abandonarPartidoLocal();
         };
+
+        // ════════════════════════════════════════════════════════════
+        // ── SISTEMA DE MISIONES DIARIAS Y SEMANALES ──────────────────
+        // ════════════════════════════════════════════════════════════
+        //
+        // El progreso vive en jugadores/{uid}.misionesDiarias / .misionesSemanales.
+        // Las reglas de Firestore validan TODO: que el progreso solo suba de a 1,
+        // que el reseteo de periodo sea correcto, y que reclamar una misión exija
+        // que el progreso guardado en el servidor ya alcanzó el objetivo — nunca
+        // confían en lo que este cliente mande. Este código solo intenta avisarle
+        // al servidor "esto pasó" y "quiero reclamar esto"; si intenta hacer trampa,
+        // Firestore rechaza la escritura.
+
+        const MISIONES_DIARIAS_DEF = [
+            { id: 'sobres',          texto: 'Abrir 50 sobres',                objetivo: 50,  recompensa: 30,  tipo: 'joyas' },
+            { id: 'partidosJugados', texto: 'Jugar 10 partidos',              objetivo: 10,  recompensa: 30,  tipo: 'joyas' },
+            { id: 'partidosGanados', texto: 'Ganar 5 partidos',               objetivo: 5,   recompensa: 30,  tipo: 'joyas' },
+            { id: 'partidosOnline',  texto: 'Jugar 3 partidos online',        objetivo: 3,   recompensa: 30,  tipo: 'joyas' },
+            { id: 'victoriasOnline', texto: 'Ganar un partido online',        objetivo: 1,   recompensa: 30,  tipo: 'joyas' },
+            { id: 'comprasMercado',  texto: 'Comprar un jugador del mercado', objetivo: 1,   recompensa: 30,  tipo: 'joyas' },
+            { id: 'ventasMercado',   texto: 'Vender un jugador en el mercado',objetivo: 1,   recompensa: 30,  tipo: 'joyas' },
+        ];
+        const MISIONES_SEMANALES_DEF = [
+            { id: 'sobres',          texto: 'Abrir 500 sobres',   objetivo: 500, recompensa: 100, tipo: 'joyas' },
+            { id: 'partidosJugados', texto: 'Jugar 100 partidos', objetivo: 100, recompensa: 100, tipo: 'joyas' },
+            { id: 'partidosGanados', texto: 'Ganar 50 partidos',  objetivo: 50,  recompensa: 100, tipo: 'joyas' },
+        ];
+
+        function diaActualUTC() { return String(Math.floor(Date.now() / 86400000)); }
+        function semanaActualUTC() { return String(Math.floor(Date.now() / 604800000)); }
+
+        function progresoDiarioVacio() {
+            return { sobres: 0, partidosJugados: 0, partidosGanados: 0, partidosOnline: 0, victoriasOnline: 0, comprasMercado: 0, ventasMercado: 0 };
+        }
+        function progresoSemanalVacio() {
+            return { sobres: 0, partidosJugados: 0, partidosGanados: 0 };
+        }
+
+        // Se llama tras cada login / cada snapshot de gameData para asegurar que
+        // el documento tenga los campos de misiones inicializados con el periodo
+        // correcto. Si no existen, o si el periodo guardado quedó viejo, esta
+        // función hace el reset — pero SIEMPRE a través de una escritura que
+        // las reglas validan (mismo mecanismo que usa el resto del progreso).
+        async function asegurarPeriodosMisiones(uid) {
+            const diaActual = diaActualUTC();
+            const semanaActual = semanaActualUTC();
+            const upd = {};
+            if (!gameData.misionesDiarias || gameData.misionesDiarias.periodo !== diaActual) {
+                upd.misionesDiarias = { periodo: diaActual, progreso: progresoDiarioVacio(), reclamadas: [] };
+            }
+            if (!gameData.misionesSemanales || gameData.misionesSemanales.periodo !== semanaActual) {
+                upd.misionesSemanales = { periodo: semanaActual, progreso: progresoSemanalVacio(), reclamadas: [] };
+            }
+            if (Object.keys(upd).length) {
+                try { await updateDoc(doc(db, "jugadores", uid), upd); }
+                catch (e) { console.error("[misiones] Error al inicializar/resetear periodo:", e); }
+            }
+        }
+
+        // Incrementa en 1 (nunca más) un contador de progreso, diario y/o semanal.
+        // Si el campo no existe en la definición semanal, simplemente se omite ahí.
+        // Cualquier fallo se ignora silenciosamente (no debe interrumpir el flujo
+        // de juego) pero queda logueado para debug.
+        async function incrementarProgresoMision(campo) {
+            try {
+                await asegurarPeriodosMisiones(auth.currentUser.uid);
+                const upd = {};
+                if (gameData.misionesDiarias && (campo in gameData.misionesDiarias.progreso)) {
+                    upd.misionesDiarias = {
+                        periodo: gameData.misionesDiarias.periodo,
+                        progreso: { ...gameData.misionesDiarias.progreso, [campo]: (gameData.misionesDiarias.progreso[campo] || 0) + 1 },
+                        reclamadas: gameData.misionesDiarias.reclamadas || []
+                    };
+                }
+                if (gameData.misionesSemanales && (campo in gameData.misionesSemanales.progreso)) {
+                    upd.misionesSemanales = {
+                        periodo: gameData.misionesSemanales.periodo,
+                        progreso: { ...gameData.misionesSemanales.progreso, [campo]: (gameData.misionesSemanales.progreso[campo] || 0) + 1 },
+                        reclamadas: gameData.misionesSemanales.reclamadas || []
+                    };
+                }
+                if (Object.keys(upd).length) await updateDoc(doc(db, "jugadores", auth.currentUser.uid), upd);
+            } catch (e) {
+                console.error(`[misiones] Error al incrementar progreso "${campo}":`, e);
+            }
+        }
+
+        // ── RECLAMO — con spinner anti-dupeo (doble clic / doble tap) ────────
+        // El lock es una defensa de UX (evita que el usuario dispare 2 reclamos
+        // casi simultáneos desde el mismo cliente); la defensa REAL contra el
+        // dupeo vive en las reglas de Firestore, que rechazan cualquier segundo
+        // intento de reclamar un id ya presente en "reclamadas".
+        let reclamandoMision = false;
+        window.reclamarMision = async function(periodoTipo, id) {
+            if (reclamandoMision) return;
+            reclamandoMision = true;
+            const btn = document.getElementById(`mision-btn-${periodoTipo}-${id}`);
+            const spinner = document.getElementById(`mision-spinner-${periodoTipo}-${id}`);
+            if (btn) btn.disabled = true;
+            if (spinner) spinner.style.display = 'inline-block';
+
+            try {
+                const campoDoc = periodoTipo === 'diaria' ? 'misionesDiarias' : 'misionesSemanales';
+                const def = (periodoTipo === 'diaria' ? MISIONES_DIARIAS_DEF : MISIONES_SEMANALES_DEF).find(m => m.id === id);
+                if (!def) throw new Error('Misión desconocida');
+
+                const misionesActuales = gameData[campoDoc];
+                if (!misionesActuales) throw new Error('Misiones no inicializadas todavía, esperá un segundo.');
+                if ((misionesActuales.reclamadas || []).includes(id)) throw new Error('Ya reclamaste esta misión.');
+                if ((misionesActuales.progreso[id] || 0) < def.objetivo) throw new Error('Todavía no completaste esta misión.');
+
+                const upd = {
+                    [campoDoc]: {
+                        periodo: misionesActuales.periodo,
+                        progreso: misionesActuales.progreso,
+                        reclamadas: [...(misionesActuales.reclamadas || []), id]
+                    }
+                };
+                if (def.tipo === 'joyas') upd.points = (gameData.points || 0) + def.recompensa;
+                else upd.coins = (gameData.coins || 0) + def.recompensa;
+
+                await updateDoc(doc(db, "jugadores", auth.currentUser.uid), upd);
+                notif(`¡Misión reclamada! +💎 ${def.recompensa}`, 'ok');
+            } catch (e) {
+                console.error("[reclamarMision] Error:", e);
+                notif(e.message || "No se pudo reclamar la misión.", 'error');
+            } finally {
+                reclamandoMision = false;
+                if (btn) btn.disabled = false;
+                if (spinner) spinner.style.display = 'none';
+                renderizarMisiones();
+            }
+        };
+
+        function renderizarMisiones() {
+            const cont = document.getElementById('misiones-container');
+            if (!cont) return;
+            if (!gameData.misionesDiarias || !gameData.misionesSemanales) {
+                cont.innerHTML = `<div class="lb-loading">Cargando misiones...</div>`;
+                return;
+            }
+
+            const filaHtml = (periodoTipo, m, progresoObj, reclamadas) => {
+                const actual = Math.min(progresoObj[m.id] || 0, m.objetivo);
+                const completa = actual >= m.objetivo;
+                const reclamada = reclamadas.includes(m.id);
+                const pct = Math.round((actual / m.objetivo) * 100);
+                let btnHtml;
+                if (reclamada) {
+                    btnHtml = `<button class="btn-ui" disabled style="opacity:0.5; background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.5);">RECLAMADA ✓</button>`;
+                } else if (completa) {
+                    btnHtml = `
+                        <button class="btn-ui" id="mision-btn-${periodoTipo}-${m.id}" style="background:var(--primary); color:black;" onclick="reclamarMision('${periodoTipo}','${m.id}')">
+                            RECLAMAR 💎 ${m.recompensa}
+                        </button>
+                        <span id="mision-spinner-${periodoTipo}-${m.id}" class="mini-spinner" style="display:none;"></span>`;
+                } else {
+                    btnHtml = `<span style="color:rgba(255,255,255,0.5); font-size:0.9rem;">💎 ${m.recompensa}</span>`;
+                }
+                return `
+                    <div class="mision-item">
+                        <div class="mision-info">
+                            <span class="mision-texto">${m.texto}</span>
+                            <div class="mision-barra-bg">
+                                <div class="mision-barra-fill" style="width:${pct}%; background:${completa ? 'var(--primary)' : '#3399ff'};"></div>
+                            </div>
+                            <span class="mision-contador">${actual} / ${m.objetivo}</span>
+                        </div>
+                        <div class="mision-accion">${btnHtml}</div>
+                    </div>`;
+            };
+
+            const diarias = MISIONES_DIARIAS_DEF.map(m => filaHtml('diaria', m, gameData.misionesDiarias.progreso, gameData.misionesDiarias.reclamadas || [])).join('');
+            const semanales = MISIONES_SEMANALES_DEF.map(m => filaHtml('semanal', m, gameData.misionesSemanales.progreso, gameData.misionesSemanales.reclamadas || [])).join('');
+
+            const proximoResetDiario = (parseInt(gameData.misionesDiarias.periodo) + 1) * 86400000;
+            const proximoResetSemanal = (parseInt(gameData.misionesSemanales.periodo) + 1) * 604800000;
+            const fmtRestante = (ts) => {
+                const ms = ts - Date.now();
+                if (ms <= 0) return 'Actualizando...';
+                const h = Math.floor(ms / 3600000), m = Math.floor((ms % 3600000) / 60000);
+                return `${h}h ${m}m`;
+            };
+
+            cont.innerHTML = `
+                <div class="misiones-bloque">
+                    <div class="misiones-bloque-header">
+                        <h2 class="sub-titulo" style="margin:0;">MISIONES DIARIAS</h2>
+                        <span class="mision-reset-timer">Reinicia en ${fmtRestante(proximoResetDiario)}</span>
+                    </div>
+                    ${diarias}
+                </div>
+                <div class="misiones-bloque">
+                    <div class="misiones-bloque-header">
+                        <h2 class="sub-titulo" style="margin:0;">MISIONES SEMANALES</h2>
+                        <span class="mision-reset-timer">Reinicia en ${fmtRestante(proximoResetSemanal)}</span>
+                    </div>
+                    ${semanales}
+                </div>`;
+        };
+
+        // Refresca los timers de "reinicia en" sin re-pedir datos
+        setInterval(() => {
+            const sec = document.getElementById('misiones-section');
+            if (sec && (sec.style.display === 'block' || sec.style.display === 'flex')) {
+                renderizarMisiones();
+            }
+        }, 60000);
 
     </script>
 </body>
