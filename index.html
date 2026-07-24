@@ -2681,7 +2681,7 @@
                 if (metodoPago==='coins')  upd.coins  = gameData.coins  - cc;
                 if (metodoPago==='points') upd.points = gameData.points - cp;
                 await updateDoc(doc(db,"jugadores",auth.currentUser.uid), upd);
-                incrementarProgresoMision('sobres');
+                await incrementarProgresoMision('sobres');
                 mostrarAnimacionPack(elegido);
             } catch(e) {
                 console.error(e);
@@ -4804,6 +4804,7 @@
                 });
             } catch (e) {
                 console.error(`[misiones] Error al incrementar progreso "${campo}":`, e);
+                if (campo) notif('No se pudo registrar el progreso de la misión.', 'error');
             }
         }
 
